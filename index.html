@@ -91,6 +91,14 @@ label.field{display:flex;flex-direction:column;gap:6px}
 .dayb.today{border-color:var(--accent-text)}
 .dayb.sel{background:var(--accent);border-color:transparent}
 .dayb.sel .d,.dayb.sel .t,.dayb.sel .n{color:var(--accent-ink)}
+.dayb.burn{border-style:dashed;border-color:var(--accent-text)}
+.dayb.burn .t{color:var(--accent-text)}
+.dayb.missed .t{text-decoration:line-through}
+.dayb.missed .n{color:var(--bad)}
+.dayb.sel.missed .n,.dayb.sel.burn .t{color:var(--accent-ink)}
+.banner.warn{background:color-mix(in srgb,var(--bad) 12%,var(--surface));border-color:color-mix(in srgb,var(--bad) 40%,var(--line))}
+.banner.warn b{color:var(--bad)}
+.banner .grow{flex:1;min-width:0}
 .dayb .dot{position:absolute;top:4px;right:5px;width:5px;height:5px;border-radius:50%;background:var(--good)}
 .weekbar .icon{width:28px;height:44px}
 
@@ -234,6 +242,7 @@ label.field{display:flex;flex-direction:column;gap:6px}
       <div><div class="eyebrow" id="dayEyebrow"></div><h1 id="dayTitle"></h1></div>
       <button class="btn ghost small" id="backToday" hidden>Back to today</button>
     </div>
+    <div id="burnBanner" class="banner" hidden></div>
     <div id="dietBanner" class="banner" hidden></div>
     <div id="routineCard" class="card"></div>
     <div class="card" id="waterCard">
@@ -347,6 +356,7 @@ label.field{display:flex;flex-direction:column;gap:6px}
         <label class="field"><span class="label">Water per sitting (ml)</span><input type="number" id="setSit" step="50"></label>
         <label class="field"><span class="label">Daily water goal (L)</span><input type="number" id="setGoal" step="0.5"></label>
       </div>
+      <label class="row small"><input type="checkbox" id="setBurn"> Skipping a workout shifts the plan forward a day (uses up the next rest day)</label>
       <div class="seg">
         <button class="btn" data-theme-set="system">System theme</button>
         <button class="btn" data-theme-set="dark">Always dark</button>
@@ -471,8 +481,8 @@ function defaults(){
     v:2, logs:[], body:[], target:null,
     water:{}, workoutTimes:{},
     diet:{Mon:'',Tue:'',Wed:'',Thu:'',Fri:'',Sat:'Coconut water',Sun:''},
-    split: JSON.parse(JSON.stringify(PRESET)), overrides:{}, plateMode:{}, custom:[],
-    settings:{bar:20, minPlate:2.5, sitting:500, goalL:4, rest:90, autoRest:true, key:'', model:'gemini-2.5-flash', theme:'system'}
+    split: JSON.parse(JSON.stringify(PRESET)), overrides:{}, plateMode:{}, custom:[], since: todayStr(), skipped:{}, excused:{}, resync:{},
+    settings:{bar:20, minPlate:2.5, sitting:500, goalL:4, rest:90, autoRest:true, burnRest:true, key:'', model:'gemini-2.5-flash', theme:'system'}
   };
 }
 let S = defaults();
@@ -525,9 +535,32 @@ function isTwoPlate(name){
   return /bench press|squat|deadlift|overhead press|military press|clean|hip thrust|good morning|shrug/.test(n);
 }
 function stepFor(name){ const p = S.settings.minPlate || 2.5; return isTwoPlate(name) ? p*2 : p; }
+/* Skipping a training day shifts the schedule forward one day.
+   The shift is absorbed ("burns") at the next Rest slot, which puts you back on plan. */
+function planInfo(){
+  const out = {slot:{}, lag:{}, missed:{}, burned:{}};
+  const t = todayStr(), end = addDays(t, 28), on = S.settings.burnRest !== false;
+  const logged = new Set(S.logs.map(l => l.date));
+  let d = S.since || t; const floor = addDays(t, -60); if (d < floor) d = floor;
+  let k = 0;
+  for (; d <= end; d = addDays(d, 1)){
+    if ((S.resync||{})[d]) k = 0;
+    const wi = DAYS.indexOf(weekdayOf(d));
+    let p = ((wi - k) % 7 + 7) % 7;
+    while (k > 0 && !S.split[DAYS[p]].ex.length){ k--; p = (p + 1) % 7; }   // rest slot absorbs one day of shift
+    out.slot[d] = DAYS[p]; out.lag[d] = k;
+    if (!S.split[weekdayOf(d)].ex.length && S.split[DAYS[p]].ex.length) out.burned[d] = true;   // a real rest day now runs a workout
+    if (!on) continue;
+    const list = S.overrides[d] || S.split[DAYS[p]].ex;
+    if (list.length && !logged.has(d) && !S.excused[d] && (d < t || S.skipped[d])){ out.missed[d] = true; k = Math.min(k + 1, 6); }
+  }
+  return out;
+}
+const slotOf = (date, P = planInfo()) => P.slot[date] || weekdayOf(date);   // weekday whose workout runs on this date
+const dayName = (date, P) => S.split[slotOf(date, P)].name;
+const isShifted = (date, P) => slotOf(date, P) !== weekdayOf(date);
 function routineFor(date){
-  const wd = weekdayOf(date);
-  return S.overrides[date] ? S.overrides[date] : S.split[wd].ex;
+  return S.overrides[date] || S.split[slotOf(date)].ex;
 }
 function logsOn(date){ return S.logs.filter(l => l.date === date); }
 function lastSession(ex, beforeDate){
@@ -571,7 +604,7 @@ $('sheetWrap').addEventListener('click', e => { if (e.target === $('sheetWrap'))
 
 /* ---------- routine edits ---------- */
 function editRoutine(date, scope, fn){
-  const wd = weekdayOf(date);
+  const wd = slotOf(date);
   if (scope === 'always'){
     S.split[wd].ex = fn([...S.split[wd].ex]);
     if (S.overrides[date]) S.overrides[date] = fn([...S.overrides[date]]);
@@ -591,7 +624,7 @@ function removeExercise(date, name, scope){ editRoutine(date, scope, l => l.filt
 function scopePicker(date){
   return `<div class="seg" role="radiogroup">
     <button class="btn chip on" data-scope="today">Only ${esc(fmtDate(date,{weekday:'short',day:'numeric',month:'short'}))}</button>
-    <button class="btn chip" data-scope="always">Every ${DAY_FULL[weekdayOf(date)]}</button></div>`;
+    <button class="btn chip" data-scope="always">Every ${esc(dayName(date))} day</button></div>`;
 }
 function bindScope(root){
   let scope = 'today';
@@ -648,12 +681,12 @@ function openRemove(name){
 
 /* ---------- TODAY ---------- */
 function renderWeek(){
-  const t = todayStr();
+  const t = todayStr(), P = planInfo();
   $('weekStrip').innerHTML = DAYS.map((d,i) => {
     const date = addDays(ui.week, i);
     const has = S.logs.some(l => l.date === date);
-    return `<button class="dayb ${date===ui.date?'sel':''} ${date===t?'today':''}" data-date="${date}">
-      ${has ? '<span class="dot"></span>' : ''}<span class="d">${d}</span><span class="n">${parseYmd(date).getDate()}</span><span class="t">${esc(S.split[d].name)}</span></button>`;
+    return `<button class="dayb ${date===ui.date?'sel':''} ${date===t?'today':''} ${isShifted(date, P)?'burn':''} ${P.missed[date]?'missed':''}" data-date="${date}">
+      ${has ? '<span class="dot"></span>' : ''}<span class="d">${d}</span><span class="n">${parseYmd(date).getDate()}</span><span class="t">${esc(dayName(date, P))}</span></button>`;
   }).join('');
   $('weekStrip').querySelectorAll('.dayb').forEach(b => b.onclick = () => { ui.date = b.dataset.date; renderAll(); });
 }
@@ -661,10 +694,12 @@ function renderToday(){
   renderWeek();
   const date = ui.date, wd = weekdayOf(date), isToday = date === todayStr();
   $('dayEyebrow').textContent = (isToday ? 'Today · ' : '') + fmtDate(date, {weekday:'long', day:'numeric', month:'long'});
-  const split = S.split[wd];
+  const P = planInfo(), src = isShifted(date, P);
+  const split = {name: dayName(date, P)};
   const list = routineFor(date);
   const rest = !list.length && /rest/i.test(split.name);
   $('dayTitle').textContent = rest ? 'Rest day' : `${split.name} day`;
+  renderBurnBanner(date, P);
   $('backToday').hidden = isToday;
   const note = (S.diet[wd]||'').trim();
   $('dietBanner').hidden = !note;
@@ -692,7 +727,7 @@ function renderToday(){
           <button class="icon" data-rem="${esc(ex)}" aria-label="Remove ${esc(ex)}">✕</button>
           <button class="logpill" data-log="${esc(ex)}">Log</button></div></div>`;
       }).join('') + `</div>
-      <div class="row"><button class="btn" id="addEx">+ Add exercise</button>${S.overrides[date] ? '<button class="btn ghost" id="undoDay">Restore this day</button>' : ''}</div>`;
+      <div class="row"><button class="btn" id="addEx">+ Add exercise</button>${S.overrides[date] ? '<button class="btn ghost" id="undoDay">Restore this day</button>' : ''}${isToday && !done.length && !S.skipped[date] && S.settings.burnRest !== false ? '<button class="btn ghost" id="skipDay">Skipping today</button>' : ''}</div>`;
   }
   $('routineCard').innerHTML = html;
   const rc = $('routineCard');
@@ -701,10 +736,39 @@ function renderToday(){
   rc.querySelectorAll('[data-rem]').forEach(b => b.onclick = () => openRemove(b.dataset.rem));
   if ($('addEx')) $('addEx').onclick = openAdd;
   if ($('addOnRest')) $('addOnRest').onclick = openAdd;
+  if ($('skipDay')) $('skipDay').onclick = () => { toast(runAction({type:'skip_day', date})); renderAll(); };
   if ($('undoDay')) $('undoDay').onclick = () => { delete S.overrides[date]; save(); renderAll(); toast('Restored the weekly sheet for this day'); };
   if ($('restBwGo')) $('restBwGo').onclick = () => { const v = parseFloat($('restBw').value); if (logBodyWeight(v, '', date)) { renderAll(); } };
 
   renderWater(); renderMeal();
+}
+function renderBurnBanner(date, P){
+  const el = $('burnBanner'), t = todayStr(), name = esc(dayName(date, P));
+  const dates = Object.keys(P.slot).sort();
+  const lastMissed = dates.filter(x => x < date && P.missed[x]).pop();
+  const nextBurn = dates.find(x => x >= date && P.burned[x]);
+  let html = '', warn = false;
+  if (P.missed[date]){
+    warn = true; const nx = addDays(date, 1);
+    html = `<div class="grow"><b>${S.skipped[date] && date === t ? 'Skipping today' : 'Skipped'}</b>Everything moves forward a day: ${esc(fmtDate(nx))} runs ${esc(dayName(nx, P))}.</div>` +
+      `<button class="btn small" id="burnAct">${S.skipped[date] && date === t ? 'Not skipping' : 'Excuse it'}</button>`;
+  } else if (isShifted(date, P)){
+    const why = lastMissed ? `you skipped ${esc(fmtDate(lastMissed))}` : 'of a skipped day';
+    html = P.burned[date]
+      ? `<div class="grow"><b>Rest day burned</b>Running ${name} here because ${why}. You're back on plan after this.</div><button class="btn small" id="burnAct">Keep rest day</button>`
+      : `<div class="grow"><b>Shifted ${P.lag[date]} day${P.lag[date]>1?'s':''}</b>Running ${name} because ${why}.${nextBurn ? ` Your rest day on ${esc(fmtDate(nextBurn))} gets used, then you're back on plan.` : ''}</div><button class="btn small" id="burnAct">Back on plan</button>`;
+  } else if (S.excused[date] && S.split[weekdayOf(date)].ex.length && date <= t && !logsOn(date).length){
+    html = `<div class="grow"><b>Skip excused</b>This missed day doesn't shift your schedule.</div><button class="btn small" id="burnAct">Undo</button>`;
+  }
+  el.hidden = !html; el.classList.toggle('warn', warn); el.innerHTML = html;
+  const b = $('burnAct'); if (!b) return;
+  b.onclick = () => {
+    if (P.missed[date] && S.skipped[date] && date === t){ delete S.skipped[date]; save(); renderAll(); toast('Back on. Today is a training day again.'); }
+    else if (P.missed[date]){ S.excused[date] = true; save(); renderAll(); toast('Excused. Your schedule stays as planned.', () => { delete S.excused[date]; save(); renderAll(); }); }
+    else if (isShifted(date, P)){ S.resync = S.resync || {}; S.resync[date] = true; save(); renderAll();
+      toast(P.burned[date] ? 'Rest day kept. Back on your normal plan.' : 'Back on your normal plan from today.', () => { delete S.resync[date]; save(); renderAll(); }); }
+    else { delete S.excused[date]; save(); renderAll(); }
+  };
 }
 function renderWater(){
   const c = waterCount(ui.date), goal = waterGoalSittings(), sit = S.settings.sitting;
@@ -1011,12 +1075,12 @@ function renderHistory(){
     $('progNote').textContent = `Best estimated 1RM per session (Epley). Heaviest set: ${fmtKg(heavy.w)} kg × ${heavy.r} on ${fmtDate(heavy.date)}.`;
   } else { $('progChart').innerHTML = '<div class="small muted">Log a few sessions and your strength trend shows here.</div>'; $('progNote').textContent=''; }
 
-  const days = [...new Set(S.logs.map(l => l.date))].sort().reverse();
+  const days = [...new Set(S.logs.map(l => l.date))].sort().reverse(); const HP = planInfo();
   $('histList').innerHTML = days.length ? days.map((d, di) => {
     const sets = logsOn(d).sort((a,b) => a.t - b.t); const ton = sets.reduce((s,l)=>s+l.w*l.r,0);
     const order = []; sets.forEach(s => { if (!order.includes(s.ex)) order.push(s.ex); });
     return `<details class="hday" ${di===0?'open':''}><summary><div><div class="eyebrow">${fmtDate(d,{weekday:'long'})}</div><b class="num" style="font-size:1.25rem">${fmtDate(d,{day:'numeric',month:'short',year:'numeric'})}</b></div>
-      <div class="row"><span class="tag">${esc(S.split[weekdayOf(d)].name)}</span><span class="small muted">${sets.length} sets · ${fmtKg(ton)} kg</span></div></summary>
+      <div class="row"><span class="tag">${esc(dayName(d, HP))}</span><span class="small muted">${sets.length} sets · ${fmtKg(ton)} kg</span></div></summary>
       <div class="body">${order.map(ex => { const s = sets.filter(l=>l.ex===ex); return `<div><b>${esc(ex)}</b><div class="small muted">${s.map(l => `${fmtKg(l.w)}×${l.r}`).join(' · ')}</div></div>`; }).join('')}
       <div class="row"><button class="btn small" data-open="${d}">Open day</button><button class="btn small danger" data-ddel="${d}">Delete day</button></div></div></details>`;
   }).join('') : '<div class="card"><div class="small muted">No workouts yet. Your first logged set shows up here.</div></div>';
@@ -1037,11 +1101,13 @@ function renderPlan(){
     <div class="small muted" style="padding-left:42px">${S.split[d].ex.length ? S.split[d].ex.map(esc).join(' · ') : 'Rest'}</div></div>`).join('');
   $('splitList').querySelectorAll('[data-split]').forEach(i => i.onchange = () => { S.split[i.dataset.split].name = i.value.trim() || 'Day'; save(); renderAll(); });
   $('setBar').value = S.settings.bar; $('setPlate').value = S.settings.minPlate; $('setSit').value = S.settings.sitting; $('setGoal').value = S.settings.goalL;
+  $('setBurn').checked = S.settings.burnRest !== false;
   $('setKey').value = S.settings.key || ''; $('setModel').value = S.settings.model || '';
   document.querySelectorAll('[data-theme-set]').forEach(b => b.classList.toggle('primary', b.dataset.themeSet === (S.settings.theme||'system')));
 }
 const numSetting = (id, key, min) => $(id).onchange = e => { const v = parseFloat(e.target.value); if (v >= min) { S.settings[key] = v; save(); renderAll(); } else renderPlan(); };
 numSetting('setBar','bar',0); numSetting('setPlate','minPlate',0.25); numSetting('setSit','sitting',50); numSetting('setGoal','goalL',0.5);
+$('setBurn').onchange = e => { S.settings.burnRest = e.target.checked; save(); renderAll(); toast(e.target.checked ? 'Skips now shift your plan forward' : 'Skips no longer shift your plan'); };
 $('setKey').onchange = e => { S.settings.key = e.target.value.trim(); save(); renderCoachMode(); };
 $('setModel').onchange = e => { S.settings.model = e.target.value.trim() || 'gemini-2.5-flash'; save(); };
 document.querySelectorAll('[data-theme-set]').forEach(b => b.onclick = () => { S.settings.theme = b.dataset.themeSet; save(); applyTheme(); renderPlan(); });
@@ -1089,6 +1155,7 @@ const HELP = `Things I can do:
 • remove deadlift today
 • saturday diet: protein smoothie
 • rest 2 min
+• skipping today / back on plan
 • best squat / today summary`;
 const DAYMAP = {mon:'Mon',monday:'Mon',tue:'Tue',tues:'Tue',tuesday:'Tue',wed:'Wed',wednesday:'Wed',thu:'Thu',thur:'Thu',thurs:'Thu',thursday:'Thu',fri:'Fri',friday:'Fri',sat:'Sat',saturday:'Sat',sun:'Sun',sunday:'Sun'};
 function dateForDay(tok){
@@ -1124,6 +1191,15 @@ function runAction(a){
       return `Removed ${ex} from ${sc==='always' ? 'every '+DAY_FULL[weekdayOf(date)] : fmtDate(date)}.`; }
     case 'diet': { const d = DAYMAP[(a.day||'').toLowerCase()] || weekdayOf(date); S.diet[d] = String(a.note||'').trim(); save(); return `${DAY_FULL[d]} diet reminder: ${S.diet[d] || '(cleared)'}.`; }
     case 'rest_timer': { const s = Math.max(10, Math.min(900, +a.seconds||90)); startTimer(s); return `Rest timer started: ${s} s.`; }
+    case 'skip_day': { if (logsOn(date).length) return `You already logged sets on ${fmtDate(date)}, so it isn't a skip.`;
+      if (!routineFor(date).length) return `${fmtDate(date)} is already a rest day.`;
+      S.skipped[date] = true; delete S.excused[date]; save();
+      if (S.settings.burnRest === false) return `Marked ${fmtDate(date)} as skipped.`;
+      const P = planInfo(), nx = addDays(date, 1), burn = Object.keys(P.burned).sort().find(x => x > date);
+      return `Skipping ${fmtDate(date)}. Everything moves forward a day: ${fmtDate(nx)} runs ${dayName(nx, P)}.${burn ? ` Your rest day on ${fmtDate(burn)} gets used, then you're back on plan.` : ''}`; }
+    case 'keep_rest': case 'resync': { const P = planInfo(); let rd = isShifted(date, P) ? date : Object.keys(P.slot).sort().find(x => x >= todayStr() && isShifted(x, P));
+      if (!rd) return 'You are already on your normal plan.'; S.resync = S.resync || {}; S.resync[rd] = true; save();
+      return `Back on your normal plan from ${fmtDate(rd)}. ${fmtDate(rd)} runs ${dayName(rd)}.`; }
     case 'rename_day': { const d = DAYMAP[(a.day||'').toLowerCase()]; if (!d || !a.name) return 'Which day and what name?'; S.split[d].name = a.name; save(); return `${DAY_FULL[d]} is now ${a.name}.`; }
     default: return '';
   }
@@ -1157,6 +1233,10 @@ function localCommand(raw){
   if ((m = t.match(/^(?:remove|skip|drop|delete)\s+(.+?)(?:\s+(?:from\s+)?(today|tomorrow|every\s+\w+|\w+day))?\s*$/i)) && !/set|last/.test(lo)){
     const sc = m[2] && /every/i.test(m[2]) ? 'always' : 'today';
     return runAction({type:'remove_exercise', exercise:m[1], day: m[2] ? m[2].replace(/^every\s+/i,'') : 'today', scope:sc}); }
+  // skip day / keep rest day
+  if (/^(?:i'?m\s+|i am\s+|im\s+)?(?:skip|skipping|missing|not going)\s*(?:today|the gym|gym|workout|training)?\s*(?:today)?$/.test(lo) || /^(?:rest(?:ing)?|no gym|no workout)\s+today$/.test(lo))
+    return runAction({type:'skip_day', date: todayStr()});
+  if (/\b(keep|don'?t burn|do not burn|save)\b.*\brest\b|\b(back on (plan|schedule|track)|reset (my )?(schedule|plan)|resync)\b/.test(lo)) return runAction({type:'resync', date: todayStr()});
   // undo last set
   if (/^(undo|delete|remove)\s+(the\s+)?last\s+set/.test(lo)){ const l = [...S.logs].sort((a,b)=>b.t-a.t)[0]; if (!l) return 'No sets to undo.'; S.logs = S.logs.filter(x=>x!==l); save(); return `Deleted ${l.ex} ${fmtKg(l.w)}×${l.r}.`; }
   // target
@@ -1190,7 +1270,7 @@ function localCommand(raw){
   if (/\b(summary|today|volume|tonnage|how am i doing|status)\b/.test(lo)){
     const s = logsOn(ui.date), ton = s.reduce((a,l)=>a+l.w*l.r,0), wd = weekdayOf(ui.date);
     const left = routineFor(ui.date).filter(ex => !s.some(l => l.ex === ex));
-    return `${fmtDate(ui.date)} · ${S.split[wd].name}\nSets: ${s.length} · Volume: ${fmtKg(ton)} kg\nWater: ${fmtKg(waterCount(ui.date)*S.settings.sitting/1000)} / ${fmtKg(S.settings.goalL)} L${left.length ? '\nStill to do: '+left.join(', ') : ''}${S.diet[wd] ? '\nDiet: '+S.diet[wd] : ''}`; }
+    return `${fmtDate(ui.date)} · ${dayName(ui.date)}\nSets: ${s.length} · Volume: ${fmtKg(ton)} kg\nWater: ${fmtKg(waterCount(ui.date)*S.settings.sitting/1000)} / ${fmtKg(S.settings.goalL)} L${left.length ? '\nStill to do: '+left.join(', ') : ''}${S.diet[wd] ? '\nDiet: '+S.diet[wd] : ''}`; }
   return null;
 }
 function appContext(){
@@ -1199,7 +1279,7 @@ function appContext(){
     routineForSelectedDate: routineFor(d), setsOnSelectedDate: logsOn(d).map(l => ({ex:l.ex,w:l.w,r:l.r})),
     recentSets: [...S.logs].sort((a,b)=>b.t-a.t).slice(0,60).map(l => ({date:l.date, ex:l.ex, w:l.w, r:l.r})),
     bodyWeight: S.body.slice(-14), target: S.target, waterSittingsToday: waterCount(d), sittingMl: S.settings.sitting, waterGoalL: S.settings.goalL,
-    workoutTime: S.workoutTimes[d] || null, diet: S.diet, barKg: S.settings.bar, smallestPlateKg: S.settings.minPlate };
+    workoutTime: S.workoutTimes[d] || null, scheduleNext14Days: Object.fromEntries(Object.entries(planInfo().slot).filter(([k]) => k >= todayStr() && k <= addDays(todayStr(), 13)).map(([k,v]) => [k, S.split[v].name])), missedDays: Object.keys(planInfo().missed), diet: S.diet, barKg: S.settings.bar, smallestPlateKg: S.settings.minPlate };
 }
 const SYS = `You are PulseAI, the coach inside the IronPulse gym logging app. The user does an Upper/Lower/Rest/Push/Pull/Legs/Rest split and is bulking.
 You can change the app by returning actions. Reply ONLY with JSON: {"reply": string, "actions": [ ... ]}.
@@ -1215,6 +1295,8 @@ Action shapes (dates are YYYY-MM-DD; "day" may be a weekday name or "today"):
 {"type":"diet","day":str,"note":str}
 {"type":"rest_timer","seconds":int}
 {"type":"rename_day","day":str,"name":str}
+{"type":"skip_day","date":str?}  (user skips a training day; the whole schedule shifts forward one day until the next rest day absorbs it)
+{"type":"resync","date":str?}  (put the user back on their normal weekday plan from that date, dropping any shift)
 Use exercise names from the app state when they match. For questions, answer from the app state with no actions. Keep replies short, concrete and in kg.`;
 async function askGemini(text){
   const key = S.settings.key, model = S.settings.model || 'gemini-2.5-flash';
