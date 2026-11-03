@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0e1215">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="description" content="IronPulse: gym set logger, bulk tracker, water and meal timing.">
+<meta name="description" content="IronPulse: gym set logger, bulk diet plan, meal timing and water.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -188,7 +188,7 @@ label.field{display:flex;flex-direction:column;gap:6px}
 
 /* tabs */
 .tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
-.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr);gap:2px}
 .tab{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border-radius:10px;color:var(--muted);font-size:.7rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
 .tab svg{width:22px;height:22px}
 .tab.on{color:var(--fg)}
@@ -218,7 +218,46 @@ label.field{display:flex;flex-direction:column;gap:6px}
 .toast button{border:0;background:transparent;color:var(--accent);font-weight:800;text-transform:uppercase;letter-spacing:.06em}
 @media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .toast button{color:var(--accent)} }
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} }
+
+/* fuel: meal schedule */
+.inputs3{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.badrow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}
+.inputs3 .field{min-width:0}
+.bars{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bars .v{font-family:var(--display);font-size:1.25rem;font-weight:700;font-variant-numeric:tabular-nums}
+.bars .v small{font-size:.8rem;color:var(--muted);font-weight:600}
+.track.prot>i{background:var(--good)}
+.meal{display:grid;grid-template-columns:62px 1fr 40px;gap:8px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.meal:first-child{border-top:0}
+.meal .tm{font-family:var(--display);font-size:1.05rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.meal .info{border:0;background:transparent;text-align:left;padding:0;min-width:0}
+.meal .nm{font-weight:600;line-height:1.25}
+.meal .st{font-size:.8rem;color:var(--muted)}
+.meal .ck{width:36px;height:36px;border-radius:50%;border:2px solid var(--line);background:transparent;font-weight:800;padding:0}
+.meal.done .ck{background:var(--good);border-color:transparent;color:#fff}
+.meal.done .nm{color:var(--muted);text-decoration:line-through}
+.meal.next .tm,.meal.next .nm{color:var(--accent-text)}
+.meal.next .ck{border-color:var(--accent-text)}
+.meal.late:not(.done) .tm{color:var(--bad)}
+.meal.evt .nm{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em}
+.meal.evt{background:color-mix(in srgb,var(--accent) 7%,transparent);border-radius:10px;padding-inline:6px;margin-inline:-6px}
+.meal .opts{grid-column:1/-1;display:flex;flex-direction:column;gap:8px;background:var(--surface-2);border-radius:10px;padding:10px 12px}
+.note{font-size:.85rem;color:var(--muted);padding-left:12px;border-left:3px solid var(--accent)}
+.tbl{width:100%;border-collapse:collapse;font-size:.86rem}
+.tbl th,.tbl td{padding:7px 4px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+.tbl tr:first-child th,.tbl tr:first-child td{border-top:0}
+.tbl th{color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.tbl td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.big3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pill{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.pill.buy{background:var(--accent);color:var(--accent-ink)} .pill.have{background:color-mix(in srgb,var(--good) 25%,var(--surface-2));color:var(--good)}
+.pill.do{background:color-mix(in srgb,var(--water) 22%,var(--surface-2));color:var(--water)} .pill.maybe{background:var(--surface-2);color:var(--muted)}
+.check{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.check:first-child{border-top:0}
+.check input{width:20px;height:20px;accent-color:var(--accent)}
+.check.on span{color:var(--muted);text-decoration:line-through}
 </style>
+<script src="diet-plan.js"></script>
 </head>
 <body>
 
@@ -244,6 +283,7 @@ label.field{display:flex;flex-direction:column;gap:6px}
     </div>
     <div id="burnBanner" class="banner" hidden></div>
     <div id="dietBanner" class="banner" hidden></div>
+    <div id="mealBanner" class="banner" hidden></div>
     <div id="routineCard" class="card"></div>
     <div class="card" id="waterCard">
       <div class="between">
@@ -252,13 +292,20 @@ label.field{display:flex;flex-direction:column;gap:6px}
       </div>
       <div class="drops" id="drops"></div>
     </div>
-    <div class="card" id="mealCard">
-      <div class="between">
-        <div><div class="label">Meal timing</div><div class="small muted">Pre-workout meal 45 min before. Post-workout meal within 4 h of the pre-workout meal.</div></div>
-      </div>
-      <label class="field"><span class="label">Workout time</span><input type="time" id="workoutTime"></label>
-      <div id="mealOut"></div>
-    </div>
+    <div class="card" id="fuelCard"></div>
+  </section>
+
+  <!-- FUEL -->
+  <section id="v-fuel" class="view" hidden>
+    <div><div class="eyebrow" id="fuelEyebrow">Bulk diet plan</div><h1>Fuel</h1></div>
+    <div class="card" id="fuelTargets"></div>
+    <div class="card" id="fuelTiming"></div>
+    <div class="card" id="fuelSmoothie"></div>
+    <div class="card" id="fuelSupps"></div>
+    <div class="card" id="fuelMicros"></div>
+    <div class="card" id="fuelElectro"></div>
+    <div class="card" id="fuelGrocery"></div>
+    <div class="card" id="fuelSources"></div>
   </section>
 
   <!-- LOG -->
@@ -315,6 +362,7 @@ label.field{display:flex;flex-direction:column;gap:6px}
       <div class="chips" id="bwNoteChips"></div>
     </div>
     <div class="stats" id="bwStats"></div>
+    <div class="card" id="checkInCard"></div>
     <div class="card" id="goalCard"></div>
     <div class="card">
       <div class="between"><h2>Trend</h2><div class="chips" id="bwRange"></div></div>
@@ -356,6 +404,7 @@ label.field{display:flex;flex-direction:column;gap:6px}
         <label class="field"><span class="label">Water per sitting (ml)</span><input type="number" id="setSit" step="50"></label>
         <label class="field"><span class="label">Daily water goal (L)</span><input type="number" id="setGoal" step="0.5"></label>
       </div>
+      <label class="row small"><input type="checkbox" id="setWaterAuto"> Water goal follows the day (more on training and badminton days, from diet-plan.js)</label>
       <label class="row small"><input type="checkbox" id="setBurn"> Skipping a workout shifts the plan forward a day (uses up the next rest day)</label>
       <div class="seg">
         <button class="btn" data-theme-set="system">System theme</button>
@@ -400,6 +449,7 @@ label.field{display:flex;flex-direction:column;gap:6px}
 
 <nav class="tabs"><div class="in" id="tabs">
   <button class="tab on" data-tab="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Today</button>
+  <button class="tab" data-tab="fuel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v8a3 3 0 0 0 3 3v7M7 3v5M10 3v5M13 3v5"/><path d="M18 21V3c-2 1-3 4-3 7v4h3"/></svg>Fuel</button>
   <button class="tab" data-tab="log"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12h3M19 12h3M5 8v8M19 8v8M8 6v12M16 6v12M8 12h8"/></svg>Log</button>
   <button class="tab" data-tab="body"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 17l5-5 4 3 8-8"/><path d="M15 7h5v5"/></svg>Body</button>
   <button class="tab" data-tab="history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>History</button>
@@ -476,23 +526,33 @@ const fmtDur = ms => { const m = Math.max(0, Math.round(ms/60000)); const h = Ma
 
 /* ---------- state ---------- */
 const KEY = 'ironpulse.v2';
+const PLAN = window.IRONPULSE_PLAN || null;
+const PROFILE0 = () => ({wake:'05:45', sleepHours:7.5, workoutTime:'07:00', workoutMinutes:75, startWeightKg:65, ...((PLAN && PLAN.profile) || {})});
 function defaults(){
   return {
-    v:2, logs:[], body:[], target:null,
+    v:3, logs:[], body:[], target:null,
     water:{}, workoutTimes:{},
+    profile: PROFILE0(), wakeTimes:{}, badminton:{}, mealsDone:{}, mealChoice:{}, kcalAdjust:0, lastAdjust:null, proteinOpened:null, grocery:{},
     diet:{Mon:'',Tue:'',Wed:'',Thu:'',Fri:'',Sat:'Coconut water',Sun:''},
     split: JSON.parse(JSON.stringify(PRESET)), overrides:{}, plateMode:{}, custom:[], since: todayStr(), skipped:{}, excused:{}, resync:{},
-    settings:{bar:20, minPlate:2.5, sitting:500, goalL:4, rest:90, autoRest:true, burnRest:true, key:'', model:'gemini-2.5-flash', theme:'system'}
+    settings:{bar:20, minPlate:2.5, sitting:500, goalL:4, waterAuto:true, rest:90, autoRest:true, burnRest:true, key:'', model:'gemini-2.5-flash', theme:'system'}
   };
+}
+/* merge saved data over defaults, so older backups gain the new fields (v2 → v3) */
+function hydrate(p){
+  const d = defaults();
+  const out = {...d, ...p, settings:{...d.settings, ...(p.settings||{})}, profile:{...d.profile, ...(p.profile||{})}};
+  if (out.target == null && PLAN) out.target = PLAN.profile.targetWeightKg;
+  out.v = 3; return out;
 }
 let S = defaults();
 try {
   const raw = localStorage.getItem(KEY);
-  if (raw) { const p = JSON.parse(raw); S = {...defaults(), ...p, settings:{...defaults().settings, ...(p.settings||{})}}; }
+  S = hydrate(raw ? JSON.parse(raw) : {});
 } catch(e) {}
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} }
 
-const ui = { tab:'today', date: todayStr(), week: mondayOf(todayStr()), ex:'', w:20, r:8, bwRange:30 };
+const ui = { tab:'today', date: todayStr(), week: mondayOf(todayStr()), ex:'', w:20, r:8, bwRange:30, openMeal:null };
 
 /* ---------- domain ---------- */
 function allExerciseNames(){
@@ -576,7 +636,7 @@ function lastWeight(ex){
 }
 function bestE1(ex){ return S.logs.filter(l => l.ex === ex).reduce((m,l) => Math.max(m, e1rm(l.w,l.r)), 0); }
 function waterCount(date){ return S.water[date] || 0; }
-function waterGoalSittings(){ return Math.max(1, Math.round(S.settings.goalL*1000 / S.settings.sitting)); }
+function waterGoalSittings(date = ui.date){ return Math.max(1, Math.round(waterGoalL(date)*1000 / S.settings.sitting)); }
 function platesPerSide(total){
   const bar = S.settings.bar;
   if (total < bar) return {err:`Below the ${fmtKg(bar)} kg bar`};
@@ -740,7 +800,7 @@ function renderToday(){
   if ($('undoDay')) $('undoDay').onclick = () => { delete S.overrides[date]; save(); renderAll(); toast('Restored the weekly sheet for this day'); };
   if ($('restBwGo')) $('restBwGo').onclick = () => { const v = parseFloat($('restBw').value); if (logBodyWeight(v, '', date)) { renderAll(); } };
 
-  renderWater(); renderMeal();
+  renderWater(); renderFuelToday();
 }
 function renderBurnBanner(date, P){
   const el = $('burnBanner'), t = todayStr(), name = esc(dayName(date, P));
@@ -772,7 +832,7 @@ function renderBurnBanner(date, P){
 }
 function renderWater(){
   const c = waterCount(ui.date), goal = waterGoalSittings(), sit = S.settings.sitting;
-  $('waterBig').innerHTML = `${fmtKg(c*sit/1000)}<small>/ ${fmtKg(S.settings.goalL)} L</small>`;
+  $('waterBig').innerHTML = `${fmtKg(c*sit/1000)}<small>/ ${fmtKg(Math.round(waterGoalL(ui.date)*100)/100)} L</small>`;
   const n = Math.max(goal, c);
   $('drops').style.gridTemplateColumns = `repeat(${Math.min(n, 10)},1fr)`;
   $('drops').innerHTML = Array.from({length:n}, (_,i) => `<button class="drop ${i<c?'on':''}" data-i="${i+1}" aria-label="${i+1} sittings">${fmtKg((i+1)*sit/1000)}L</button>`).join('');
@@ -785,36 +845,243 @@ function addWater(n, date = ui.date){
 $('waterPlus').onclick = () => { const c = addWater(1); renderWater(); const g = waterGoalSittings(); toast(c >= g ? `Water goal hit: ${fmtKg(c*S.settings.sitting/1000)} L` : `${c} of ${g} sittings`); buzz(15); };
 $('waterMinus').onclick = () => { addWater(-1); renderWater(); };
 
-function mealTimes(date){
-  const t = S.workoutTimes[date]; if (!t) return null;
-  const [h,m] = t.split(':').map(Number); const w = parseYmd(date); w.setHours(h, m, 0, 0);
-  const pre = new Date(w.getTime() - 45*60000); const post = new Date(pre.getTime() + 240*60000);
-  return {pre, w, post};
+/* ---------- FUEL: targets + science-based meal schedule (all food data comes from diet-plan.js) ---------- */
+const toMin = s => { if (!s || !/^\d{1,2}:\d{2}$/.test(s)) return null; const [h,m] = s.split(':').map(Number); return h*60 + m; };
+const r15 = m => Math.round(m/15)*15;
+const f15 = m => Math.floor(m/15)*15;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+function fmtMin(m){ const d = new Date(2000, 0, 1, 0, 0, 0, 0); d.setMinutes(((Math.round(m) % 1440) + 1440) % 1440); return fmtTime12(d); }
+const nowMin = () => { const n = new Date(); return n.getHours()*60 + n.getMinutes(); };
+function currentKg(){ const b = [...S.body].sort((a,c) => a.date.localeCompare(c.date)).at(-1); return b ? b.w : (S.profile.startWeightKg || 65); }
+function isTraining(date){ return routineFor(date).length > 0; }
+const wakeOf = date => S.wakeTimes[date] || S.profile.wake || '05:45';
+const workoutOf = date => S.workoutTimes[date] || S.profile.workoutTime || '07:00';
+const MEAL_KEYS = d => d ? Object.keys(d.meals) : [];
+
+function targetsFor(date){
+  const T = PLAN.targets, kg = currentKg();
+  const base = kg*2.20462*T.maintenanceKcalPerLb*(1 + T.surplusPct/100) + T.extraKcal;
+  const bad = S.badminton[date] ? T.badmintonKcal : 0;
+  const kcal = Math.round((base + (S.kcalAdjust || 0))/50)*50 + bad;
+  return {kg, kcal, bad, base: Math.round(base/50)*50, pLo: Math.round(kg*T.proteinGPerKg[0]), pHi: Math.round(kg*T.proteinGPerKg[1]),
+    fLo: Math.round(kcal*T.fatPct[0]/100/9), fHi: Math.round(kcal*T.fatPct[1]/100/9)};
 }
-function renderMeal(){
-  const date = ui.date; $('workoutTime').value = S.workoutTimes[date] || '';
-  const mt = mealTimes(date);
-  if (!mt){ $('mealOut').innerHTML = `<div class="small muted">Set today's workout time and the meal plan appears here.</div>`; return; }
-  const span = mt.post - mt.pre, wPct = (mt.w - mt.pre)/span*100;
-  const now = new Date(); const isToday = date === todayStr();
-  let status = '', fill = 0, nowPct = null;
-  if (isToday){
-    nowPct = Math.min(100, Math.max(0, (now - mt.pre)/span*100)); fill = nowPct;
-    if (now < mt.pre) status = `Pre-workout meal in ${fmtDur(mt.pre - now)}`;
-    else if (now < mt.w) status = `Eat your pre-workout meal now. Training in ${fmtDur(mt.w - now)}`;
-    else if (now < mt.post) status = `Post-workout meal due by ${fmtTime12(mt.post)} (${fmtDur(mt.post - now)} left)`;
-    else status = `Meal window closed at ${fmtTime12(mt.post)}`;
+function waterGoalL(date = ui.date){
+  if (!PLAN || S.settings.waterAuto === false) return S.settings.goalL;
+  const w = PLAN.targets.waterL; return (isTraining(date) ? w.training : w.rest) + (S.badminton[date] ? w.badmintonExtra : 0);
+}
+function optionFor(key){ const slot = PLAN.meals[key]; const id = (S.mealChoice || {})[key]; return slot.options.find(o => o.id === id) || slot.options[0]; }
+
+/* Builds the day's timeline from wake, workout and sleep times.
+   Rules (diet-plan.js → timing): full pre-workout meal 60–90 min before training (Nippard), quick carbs if
+   there's under an hour, smoothie within 45 min after, ≥2.5 h between real meals, lunch kept in the
+   12:30–14:30 window, dinner ~1.75 h before lights out, milk 30 min before sleep. */
+function scheduleFor(date){
+  if (!PLAN) return null;
+  const T = PLAN.timing, items = [], notes = [];
+  const wake = toMin(wakeOf(date)), sleepH = S.profile.sleepHours || 7.5;
+  const sleep = wake + 1440 - Math.round(sleepH*60);
+  const add = (key, t, extra = {}) => items.push({key, t: Math.round(t), ...extra});
+  const training = isTraining(date);
+  let post, w = null, end = null, gap = null;
+  if (training){
+    w = toMin(workoutOf(date)); end = w + (S.profile.workoutMinutes || 75); gap = w - wake;
+    if (gap < 0) notes.push(`Your gym time is before your wake time (${fmtMin(wake)}). Check both.`);
+    if (gap >= 240){ add('breakfast', r15(wake + 45)); add('preQuick', w - 45); }
+    else if (gap >= T.preFullMinBefore + 15) add('preFull', Math.max(wake + 15, w - (T.preFullMinBefore + T.preFullMaxBefore)/2));
+    else if (gap >= T.preQuickMinBefore + 10) add('preQuick', Math.max(wake + 5, w - 40));
+    else add('preNone', Math.max(wake, w - 10));
+    add('gym', w, {end});
+    post = end + 15; add('smoothie', post);
+    if (gap >= 0 && gap < T.preFullMinBefore + 15) notes.push(`Only ${fmtDur(gap*60000)} between waking and the gym, so the pre-workout is light and the smoothie straight after does the heavy lifting.`);
+  } else {
+    const bf = r15(wake + T.restBreakfastAfterWakeMin); add('breakfast', bf);
+    post = bf + T.restSmoothieAfterBreakfastMin; add('smoothie', post);
   }
-  $('mealOut').innerHTML = `<div class="times">
-      <div><span class="label">Pre-meal</span><span class="v">${fmtTime12(mt.pre)}</span></div>
-      <div><span class="label">Workout</span><span class="v">${fmtTime12(mt.w)}</span></div>
-      <div><span class="label">Post-meal by</span><span class="v">${fmtTime12(mt.post)}</span></div></div>
-    <div class="tl"><div class="ln"></div><div class="fill" style="width:${fill}%"></div>
-      <div class="pt" style="left:0"><i></i></div><div class="pt" style="left:${wPct}%"><i></i></div><div class="pt" style="left:100%"><i></i></div>
-      ${nowPct !== null && nowPct > 0 && nowPct < 100 ? `<div class="now" style="left:${nowPct}%"></div>` : ''}</div>
-    ${status ? `<div class="status">${esc(status)}</div>` : ''}`;
+  const [lw0, lw1] = T.lunchWindow.map(toMin);
+  let lunch = r15(clamp(post + 210, lw0, lw1));
+  if (lunch < post + T.minGapBetweenMealsMin) lunch = r15(post + T.minGapBetweenMealsMin);
+  add('lunch', lunch);
+  let dinner = f15(Math.min(toMin(T.dinnerLatest), sleep - T.dinnerBeforeSleepMin));
+  if (dinner < lunch + 240) dinner = r15(lunch + 240);
+  let snack = r15((lunch + dinner)/2);
+  const bt = toMin(S.badminton[date]);
+  if (bt != null){
+    const bend = bt + 60; add('play', bt, {end: bend});
+    if (snack > bt - 60 && snack < bend) snack = Math.max(lunch + 90, r15(bt - 75));
+    let at = r15(bend + 30), withMeal = false;
+    for (const m of [lunch, dinner]) if (Math.abs(at - m) < 60){ at = m; withMeal = true; }
+    add('badminton', at, {withMeal});
+    notes.push('Badminton today: sip the electrolyte drink or coconut water while you play.');
+  }
+  add('snack', snack); add('dinner', dinner); add('bedtime', sleep - T.bedtimeSnackBeforeSleepMin);
+  const order = {gym:1, play:1};
+  items.sort((a,b) => a.t - b.t || (order[b.key]||0) - (order[a.key]||0));
+  const dn = PLAN.dayNotes;
+  if (training) notes.unshift(dn.heavyDays.test(dayName(date)) ? dn.heavy : dn.light); else notes.unshift(dn.rest);
+  notes.push(`Lights out by ${fmtMin(sleep)} for ${sleepH} h sleep before a ${fmtMin(wake)} wake-up.`);
+  return {date, wake, sleep, training, w, end, gap, items, notes};
 }
-$('workoutTime').addEventListener('change', e => { const v = e.target.value; if (v) S.workoutTimes[ui.date] = v; else delete S.workoutTimes[ui.date]; save(); renderMeal(); });
+const mealItems = sc => sc.items.filter(i => PLAN.meals[i.key]);
+function eatenTotals(date, sc = scheduleFor(date)){
+  const done = S.mealsDone[date] || {}, ms = mealItems(sc);
+  const sum = (list, f) => list.reduce((s,i) => s + optionFor(i.key)[f], 0);
+  return {k: sum(ms.filter(i => done[i.key]), 'kcal'), p: sum(ms.filter(i => done[i.key]), 'p'), planK: sum(ms, 'kcal'), planP: sum(ms, 'p')};
+}
+function scheduleSummary(date){
+  const sc = scheduleFor(date); if (!sc) return '';
+  return mealItems(sc).map(i => `${fmtMin(i.t)} ${PLAN.meals[i.key].label.toLowerCase()}`).join(' · ');
+}
+
+function renderFuelToday(){
+  const el = $('fuelCard'), date = ui.date;
+  if (!PLAN){ el.innerHTML = '<h2>Meals</h2><div class="small muted">The diet plan (diet-plan.js) did not load. Open the app once with internet.</div>'; return; }
+  if (el.contains(document.activeElement) && document.activeElement.tagName === 'INPUT') return;   // don't redraw under an open time picker
+  const sc = scheduleFor(date), tg = targetsFor(date), done = S.mealsDone[date] || {}, tot = eatenTotals(date, sc);
+  const isToday = date === todayStr(), nm = nowMin();
+  const meals = mealItems(sc);
+  const next = isToday ? meals.find(i => !done[i.key] && i.t >= nm - 30) : null;
+  let status = '';
+  if (isToday){
+    if (next) status = next.t > nm ? `Next: ${PLAN.meals[next.key].label} at ${fmtMin(next.t)} (in ${fmtDur((next.t - nm)*60000)})` : `${PLAN.meals[next.key].label} is due now`;
+    else if (meals.every(i => done[i.key])) status = 'All meals ticked off today. Nice.';
+  }
+  const mb = $('mealBanner');
+  mb.hidden = !(isToday && next);
+  if (isToday && next){ const o = optionFor(next.key);
+    mb.innerHTML = `<div class="grow"><b>${next.t > nm ? 'Next meal · ' + fmtMin(next.t) : 'Eat now'}</b>${esc(PLAN.meals[next.key].label)}: ${esc(o.what)}</div><button class="btn small" id="mbDone">Eaten</button>`;
+    $('mbDone').onclick = () => { S.mealsDone[date] = S.mealsDone[date] || {}; S.mealsDone[date][next.key] = Date.now(); save(); buzz(15); renderFuelToday(); toast(`${PLAN.meals[next.key].label} ticked`); }; }
+  const pct = (a, b) => Math.min(100, b ? a/b*100 : 0);
+  const row = i => {
+    if (i.key === 'gym' || i.key === 'play') return `<div class="meal evt"><span class="tm">${fmtMin(i.t)}</span>
+      <div><div class="nm">${i.key === 'gym' ? esc(dayName(date)) + ' session' : 'Badminton'}</div><div class="st">until ${fmtMin(i.end)}${i.key === 'gym' ? ' · sip 500–750 ml water' : ''}</div></div><span></span></div>`;
+    const slot = PLAN.meals[i.key], o = optionFor(i.key), d = !!done[i.key];
+    const late = isToday && !d && i.t < nm - 30;
+    return `<div class="meal ${d ? 'done' : ''} ${next === i ? 'next' : ''} ${late ? 'late' : ''}">
+      <span class="tm">${fmtMin(i.t)}</span>
+      <button class="info" data-mopen="${i.key}" aria-expanded="${ui.openMeal === i.key}"><div class="nm">${esc(slot.label)}${i.withMeal ? ' (add to that meal)' : ''}</div>
+        <div class="st">${esc(o.name)} · ${o.kcal} kcal · ${o.p} g protein</div></button>
+      <button class="ck" data-mdone="${i.key}" aria-label="${d ? 'Unmark' : 'Mark'} ${esc(slot.label)} as eaten">${d ? '✓' : ''}</button>
+      ${ui.openMeal === i.key ? `<div class="opts"><div class="small">${esc(o.what)}</div><div class="small muted">${esc(slot.why)}</div>
+        ${slot.options.length > 1 ? `<div class="chips">${slot.options.map(x => `<button class="chip ${x.id === o.id ? 'on' : ''}" data-mopt="${i.key}|${x.id}">${esc(x.name)}</button>`).join('')}</div><div class="small muted">Your pick becomes the default for this meal.</div>` : ''}</div>` : ''}
+    </div>`;
+  };
+  el.innerHTML = `<div class="between"><h2>Meals</h2><span class="small muted">${sc.training ? esc(dayName(date)) + ' day' : 'Rest day'} · plan ${esc(PLAN.version)}</span></div>
+    <div class="inputs3">
+      <label class="field"><span class="label">Woke up</span><input type="time" id="fWake" value="${esc(wakeOf(date))}"></label>
+      ${sc.training ? `<label class="field"><span class="label">Gym at</span><input type="time" id="fWork" value="${esc(workoutOf(date))}"></label>`
+        : `<div class="field"><span class="label">Gym</span><span class="small muted" style="padding-top:10px">Rest</span></div>`}
+    </div>
+    <div class="badrow"><label class="field"><span class="label">Badminton (optional)</span><input type="time" id="fBad" value="${esc(S.badminton[date] || '')}"></label>
+      ${S.badminton[date] ? `<button class="btn" id="fBadClear">Clear</button>` : ''}</div>
+    ${sc.training && !S.workoutTimes[date] ? `<div class="small muted">Using your usual gym time (${fmtMin(toMin(S.profile.workoutTime))}). Change it above and every meal moves with it.</div>` : ''}
+    <div class="bars">
+      <div><div class="label">Calories</div><div class="v">${tot.k}<small> / ${tg.kcal} kcal</small></div><div class="track"><i style="width:${pct(tot.k, tg.kcal)}%"></i></div></div>
+      <div><div class="label">Protein</div><div class="v">${tot.p}<small> / ${tg.pLo}–${tg.pHi} g</small></div><div class="track prot"><i style="width:${pct(tot.p, tg.pLo)}%"></i></div></div>
+    </div>
+    ${Math.abs(tot.planK - tg.kcal) > 250 ? `<div class="note">This plan adds up to ${tot.planK} kcal; your target is ${tg.kcal}. ${tot.planK < tg.kcal ? `Add ${tg.kcal - tot.planK} kcal: milk + nuts at bedtime, a ghee roti, or a protein muesli bowl.` : `Trim ${tot.planK - tg.kcal} kcal: plain milk at bedtime, or 1 cup rice at dinner.`}</div>` : ''}
+    ${status ? `<div class="status">${esc(status)}</div>` : ''}
+    <div>${sc.items.map(row).join('')}</div>
+    ${sc.notes.map(n => `<div class="note">${esc(n)}</div>`).join('')}`;
+  const setT = (id, store) => { const i = $(id); if (!i) return; i.onchange = () => { const v = i.value; if (v) store[date] = v; else delete store[date]; save(); i.blur(); renderToday(); }; };
+  setT('fWake', S.wakeTimes); setT('fWork', S.workoutTimes); setT('fBad', S.badminton);
+  if ($('fBadClear')) $('fBadClear').onclick = () => { delete S.badminton[date]; save(); renderToday(); };
+  el.querySelectorAll('[data-mopen]').forEach(b => b.onclick = () => { ui.openMeal = ui.openMeal === b.dataset.mopen ? null : b.dataset.mopen; renderFuelToday(); });
+  el.querySelectorAll('[data-mdone]').forEach(b => b.onclick = () => { const k = b.dataset.mdone; S.mealsDone[date] = S.mealsDone[date] || {};
+    if (S.mealsDone[date][k]) delete S.mealsDone[date][k]; else { S.mealsDone[date][k] = Date.now(); buzz(15); }
+    save(); renderFuelToday(); });
+  el.querySelectorAll('[data-mopt]').forEach(b => b.onclick = () => { const [k, id] = b.dataset.mopt.split('|'); S.mealChoice[k] = id; save(); renderFuelToday(); });
+}
+
+/* ---------- FUEL tab ---------- */
+function renderFuel(){
+  if (!PLAN){ $('fuelTargets').innerHTML = '<h2>Plan not loaded</h2><div class="small muted">diet-plan.js is missing. Open the app once online.</div>'; return; }
+  const date = ui.date, tg = targetsFor(date), T = PLAN.targets, P = S.profile;
+  $('fuelEyebrow').textContent = `Bulk diet plan · version ${PLAN.version}`;
+  const adj = S.kcalAdjust || 0;
+  $('fuelTargets').innerHTML = `<h2>Daily targets</h2>
+    <div class="small muted">Worked out from ${fmtKg(tg.kg)} kg (${S.body.length ? 'your latest weigh-in' : 'start weight below'}): bodyweight in lb × ${T.maintenanceKcalPerLb} + ${T.surplusPct}% + ${T.extraKcal} kcal${adj ? `, ${adj > 0 ? '+' : ''}${adj} kcal from check-ins` : ''}.</div>
+    <div class="big3">
+      <div class="stat"><div class="label">Calories</div><div class="v">${tg.kcal - tg.bad}</div><div class="small muted">+${T.badmintonKcal} badminton days</div></div>
+      <div class="stat"><div class="label">Protein</div><div class="v">${tg.pLo}–${tg.pHi}</div><div class="small muted">g / day</div></div>
+      <div class="stat"><div class="label">Fat</div><div class="v">${tg.fLo}–${tg.fHi}</div><div class="small muted">g · ${T.fatPct[0]}–${T.fatPct[1]}%</div></div>
+    </div>
+    <div class="small">Carbs fill the rest (rice, roti, oats, fruit). Water ${PLAN.targets.waterL.rest} L rest · ${PLAN.targets.waterL.training} L training · +${PLAN.targets.waterL.badmintonExtra} L badminton. Aim to gain ${T.gainPerWeekKg[0]}–${T.gainPerWeekKg[1]} kg a week.</div>
+    <div class="row"><span class="label">Adjust</span><button class="btn small" data-adj="-100">−100</button><button class="btn small" data-adj="100">+100</button>${adj ? '<button class="btn ghost small" data-adj="0">Reset</button>' : ''}</div>`;
+  $('fuelTargets').querySelectorAll('[data-adj]').forEach(b => b.onclick = () => { const v = +b.dataset.adj; S.kcalAdjust = v ? (S.kcalAdjust||0) + v : 0; save(); renderFuel(); toast(`Calorie target ${targetsFor(date).kcal - targetsFor(date).bad} kcal`); });
+
+  const tm = PLAN.timing;
+  $('fuelTiming').innerHTML = `<h2>Your timing</h2>
+    <div class="small muted">Usual times. Change today's on the Today screen; every meal re-times itself.</div>
+    <div class="stats">
+      <label class="field"><span class="label">Usual wake-up</span><input type="time" id="pWake" value="${esc(P.wake)}"></label>
+      <label class="field"><span class="label">Sleep (hours)</span><input type="number" id="pSleep" step="0.25" min="6" max="10" value="${P.sleepHours}"></label>
+      <label class="field"><span class="label">Usual gym time</span><input type="time" id="pWork" value="${esc(P.workoutTime)}"></label>
+      <label class="field"><span class="label">Session length (min)</span><input type="number" id="pDur" step="5" min="30" max="180" value="${P.workoutMinutes}"></label>
+      <label class="field"><span class="label">Start weight (kg)</span><input type="number" id="pStart" step="0.1" value="${P.startWeightKg}"></label>
+    </div>
+    <div class="label">How the times are set</div>
+    <div class="small">• 75+ min between waking and the gym: full pre-workout meal ${tm.preFullMinBefore}–${tm.preFullMaxBefore} min before (Nippard).<br>
+      • 40–75 min: quick carbs (banana + dates) about 40 min before.<br>
+      • Under 40 min: a banana on the way.<br>
+      • 4+ h: breakfast soon after waking, quick carbs before the gym.<br>
+      • Smoothie within ${tm.postWithinMin} min of finishing. Meals at least ${tm.minGapBetweenMealsMin/60} h apart, lunch ${tm.lunchWindow.join('–')}, dinner ~${Math.round(tm.dinnerBeforeSleepMin/15)*15/60} h before sleep, milk ${tm.bedtimeSnackBeforeSleepMin} min before.</div>`;
+  const prof = (id, key, num) => $(id).onchange = e => { const v = num ? parseFloat(e.target.value) : e.target.value; if (num ? v > 0 : v) { S.profile[key] = v; save(); toast('Saved. Meal times updated.'); } renderFuel(); };
+  prof('pWake','wake'); prof('pSleep','sleepHours',1); prof('pWork','workoutTime'); prof('pDur','workoutMinutes',1); prof('pStart','startWeightKg',1);
+
+  const sm = PLAN.smoothie;
+  $('fuelSmoothie').innerHTML = `<div class="between"><h2>${esc(sm.title)}</h2><span class="small muted">${sm.ml} ml</span></div>
+    <table class="tbl"><tr><th>Ingredient</th><th>Amount</th><th class="n">kcal</th><th class="n">P</th></tr>
+    ${sm.ingredients.map(([n,a,k,p]) => `<tr><td>${esc(n)}</td><td>${esc(a)}</td><td class="n">${k}</td><td class="n">${p} g</td></tr>`).join('')}
+    <tr><td><b>Total</b></td><td></td><td class="n"><b>~${sm.kcal}</b></td><td class="n"><b>~${sm.p} g</b></td></tr></table>
+    <div class="small muted">Also ~${sm.c} g carbs and ~${sm.f} g fat.</div>
+    ${sm.tips.map(t => `<div class="note">${esc(t)}</div>`).join('')}`;
+
+  const opened = S.proteinOpened, per = PLAN.proteinScoopsPerKg;
+  const used = opened ? Math.max(0, Math.round((parseYmd(todayStr()) - parseYmd(opened))/86400000) + 1) : null;
+  const left = used != null ? Math.max(0, per - used) : null;
+  $('fuelSupps').innerHTML = `<h2>Supplements</h2>
+    ${PLAN.supplements.map(s => `<div class="between check"><div><div><b>${esc(s.name)}</b></div><div class="small muted">${esc(s.dose)}</div></div><span class="pill ${s.status}">${({buy:'Buy',have:'Have',do:'Do once',maybe:'If needed'})[s.status] || esc(s.status)}</span></div>`).join('')}
+    <div class="label">Protein box</div>
+    <div class="row" style="flex-wrap:nowrap"><input type="date" id="protOpen" value="${esc(opened || '')}" style="flex:1"><button class="btn small" id="protToday">Opened today</button></div>
+    <div class="small ${left != null && left <= 7 ? 'danger' : 'muted'}">${left == null ? `Set the day you opened your current 1 kg box (${per} scoops) to get a reorder reminder.` : left > 0 ? `About ${left} scoops left. ${left <= 7 ? 'Reorder now.' : ''}` : 'The box should be empty by now. Reorder, then tap “Opened today” on the new one.'}</div>`;
+  $('protOpen').onchange = e => { S.proteinOpened = e.target.value || null; save(); renderFuel(); };
+  $('protToday').onclick = () => { S.proteinOpened = todayStr(); save(); renderFuel(); toast('New protein box logged'); };
+
+  $('fuelMicros').innerHTML = `<h2>Micronutrients</h2><div class="small muted">Daily targets for an adult man (ICMR-NIN 2020). This diet covers them; watch vitamin D and omega-3.</div>
+    <table class="tbl"><tr><th>Nutrient</th><th>Per day</th><th>From</th></tr>${PLAN.micros.map(([a,b,c]) => `<tr><td><b>${esc(a)}</b></td><td>${esc(b)}</td><td>${esc(c)}</td></tr>`).join('')}</table>`;
+  $('fuelElectro').innerHTML = `<h2>Electrolytes</h2>
+    <table class="tbl"><tr><th>Mineral</th><th>Per day</th><th>From</th></tr>${PLAN.electrolytes.map(([a,b,c]) => `<tr><td><b>${esc(a)}</b></td><td>${esc(b)}</td><td>${esc(c)}</td></tr>`).join('')}</table>
+    <div class="label">Homemade electrolyte drink</div><div class="small">${esc(PLAN.electrolyteDrink)}</div>`;
+  const wk = mondayOf(todayStr()), g = (S.grocery[wk] = S.grocery[wk] || {});
+  $('fuelGrocery').innerHTML = `<div class="between"><h2>This week's groceries</h2><span class="small muted">resets Monday</span></div>
+    <div>${PLAN.groceries.map(([n,q], i) => `<label class="check ${g[i] ? 'on' : ''}"><input type="checkbox" data-gro="${i}" ${g[i] ? 'checked' : ''}><span style="flex:1">${esc(n)}</span><span class="small muted">${esc(q)}</span></label>`).join('')}</div>`;
+  $('fuelGrocery').querySelectorAll('[data-gro]').forEach(c => c.onchange = () => { if (c.checked) g[c.dataset.gro] = true; else delete g[c.dataset.gro]; Object.keys(S.grocery).filter(k => k !== wk).forEach(k => delete S.grocery[k]); save(); renderFuel(); });
+  $('fuelSources').innerHTML = `<h2>Sources</h2><div class="small muted">To change any of this, edit diet-plan.js in the repo (see README).</div>
+    ${PLAN.sources.map(([n,u]) => `<a class="small" href="${esc(u)}" target="_blank" rel="noopener" style="color:var(--accent-text)">${esc(n)}</a>`).join('')}`;
+}
+
+/* ---------- weekly check-in (Body tab) ---------- */
+function renderCheckIn(st){
+  const el = $('checkInCard');
+  if (!PLAN){ el.hidden = true; return; } el.hidden = false;
+  const C = PLAN.checkIn, tg = targetsFor(todayStr());
+  let msg = '', act = null;
+  if (!st || st.b.length < 4) msg = 'Weigh yourself every morning after the toilet. After about two weeks this card tells you whether to eat more or less.';
+  else {
+    const days = Math.round((parseYmd(st.cur.date) - parseYmd(st.first.date))/86400000), r = st.rate;
+    const recent = S.lastAdjust && addDays(S.lastAdjust, 7) > todayStr();
+    if (days < 14) msg = `Keep logging: first real check-in after 2 weeks (${fmtDate(addDays(st.first.date, 14))}).`;
+    else if (r < C.slowBelowKgPerWeek){ msg = `Gaining ${fmtKg(Math.round(r*100)/100)} kg/week, under ${C.slowBelowKgPerWeek}. Eat ${C.addKcal} kcal more: a ghee roti, or milk + nuts at bedtime.`; act = C.addKcal; }
+    else if (r > C.fastAboveKgPerWeek && days > C.ignoreFirstDays){ msg = `Gaining ${fmtKg(Math.round(r*100)/100)} kg/week, faster than ${C.fastAboveKgPerWeek}. That's adding fat; eat ${C.removeKcal} kcal less (plain milk at bedtime, or 1 tbsp peanut butter in the smoothie).`; act = -C.removeKcal; }
+    else if (r > C.fastAboveKgPerWeek) msg = `Fast gain in the first 3 weeks is mostly water from creatine and carbs. Keep going.`;
+    else msg = `On track at ${fmtKg(Math.round(r*100)/100)} kg/week. Change nothing.`;
+    if (act && recent){ msg += ` You adjusted on ${fmtDate(S.lastAdjust)}; give it a week.`; act = null; }
+  }
+  el.innerHTML = `<div class="between"><h2>Weekly check-in</h2><span class="small muted">target ${tg.kcal} kcal</span></div><div class="small">${esc(msg)}</div>
+    ${act ? `<button class="btn primary" id="ciApply">${act > 0 ? 'Add' : 'Remove'} ${Math.abs(act)} kcal</button>` : ''}`;
+  if ($('ciApply')) $('ciApply').onclick = () => { S.kcalAdjust = (S.kcalAdjust||0) + act; S.lastAdjust = todayStr(); save(); renderBody(); toast(`New target ${targetsFor(todayStr()).kcal} kcal`); };
+}
 $('wkPrev').onclick = () => { ui.week = addDays(ui.week, -7); ui.date = ui.week; renderAll(); };
 $('wkNext').onclick = () => { ui.week = addDays(ui.week, 7); ui.date = ui.week; renderAll(); };
 $('backToday').onclick = () => { ui.date = todayStr(); ui.week = mondayOf(ui.date); renderAll(); };
@@ -996,6 +1263,7 @@ function renderBody(){
       <div class="stat"><div class="label">Net change</div><div class="v ${st.net>0?'up':st.net<0?'down':''}">${sign(st.net)}<small class="muted"> kg</small></div><div class="small muted">since ${fmtDate(st.first.date)}</div></div>
       <div class="stat"><div class="label">Weekly rate</div><div class="v ${r>0?'up':r<0?'down':''}">${r==null?'–':sign(Math.round(r*100)/100)}<small class="muted">${r==null?'':' kg/wk'}</small></div><div class="small muted">${r==null?'Needs 2+ entries':'last 3 weeks'}</div></div>`;
   }
+  renderCheckIn(st);
   // goal
   const tgt = S.target;
   let g = `<div class="between"><h2>Bulk goal</h2></div>
@@ -1102,11 +1370,13 @@ function renderPlan(){
   $('splitList').querySelectorAll('[data-split]').forEach(i => i.onchange = () => { S.split[i.dataset.split].name = i.value.trim() || 'Day'; save(); renderAll(); });
   $('setBar').value = S.settings.bar; $('setPlate').value = S.settings.minPlate; $('setSit').value = S.settings.sitting; $('setGoal').value = S.settings.goalL;
   $('setBurn').checked = S.settings.burnRest !== false;
+  $('setWaterAuto').checked = S.settings.waterAuto !== false; $('setGoal').disabled = S.settings.waterAuto !== false && !!PLAN;
   $('setKey').value = S.settings.key || ''; $('setModel').value = S.settings.model || '';
   document.querySelectorAll('[data-theme-set]').forEach(b => b.classList.toggle('primary', b.dataset.themeSet === (S.settings.theme||'system')));
 }
 const numSetting = (id, key, min) => $(id).onchange = e => { const v = parseFloat(e.target.value); if (v >= min) { S.settings[key] = v; save(); renderAll(); } else renderPlan(); };
 numSetting('setBar','bar',0); numSetting('setPlate','minPlate',0.25); numSetting('setSit','sitting',50); numSetting('setGoal','goalL',0.5);
+$('setWaterAuto').onchange = e => { S.settings.waterAuto = e.target.checked; save(); renderAll(); toast(e.target.checked ? 'Water goal now follows the day' : 'Water goal fixed at ' + fmtKg(S.settings.goalL) + ' L'); };
 $('setBurn').onchange = e => { S.settings.burnRest = e.target.checked; save(); renderAll(); toast(e.target.checked ? 'Skips now shift your plan forward' : 'Skips no longer shift your plan'); };
 $('setKey').onchange = e => { S.settings.key = e.target.value.trim(); save(); renderCoachMode(); };
 $('setModel').onchange = e => { S.settings.model = e.target.value.trim() || 'gemini-2.5-flash'; save(); };
@@ -1132,13 +1402,13 @@ $('expCsv').onclick = () => {
 $('copyJson').onclick = () => { const txt = JSON.stringify(S); navigator.clipboard.writeText(txt).then(() => toast('Backup copied. Paste it into a note or email to yourself.')).catch(() => { $('impText').value = txt; $('impText').select(); toast('Select-all and copy the text in the box'); }); };
 function importData(txt){
   try { const p = JSON.parse(txt); if (!p || !Array.isArray(p.logs)) throw 0;
-    S = {...defaults(), ...p, settings:{...defaults().settings, ...(p.settings||{})}}; save(); renderAll(); toast(`Imported ${S.logs.length} sets and ${S.body.length} weigh-ins`); }
+    S = hydrate(p); save(); renderAll(); toast(`Imported ${S.logs.length} sets and ${S.body.length} weigh-ins`); }
   catch(e){ toast('That file isn’t an IronPulse backup'); }
 }
 $('impFile').onchange = e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => importData(r.result); r.readAsText(f); e.target.value = ''; };
 $('impPaste').onclick = () => { if ($('impText').value.trim()) importData($('impText').value.trim()); };
 $('wipe').onclick = () => { const b = $('wipe'); if (b.dataset.armed !== '1'){ b.dataset.armed='1'; b.textContent='Tap again to erase everything'; setTimeout(()=>{b.dataset.armed='';b.textContent='Erase all data';},3000); return; }
-  const snap = JSON.stringify(S); S = defaults(); save(); renderAll(); toast('All data erased', () => { S = JSON.parse(snap); save(); renderAll(); }); };
+  const snap = JSON.stringify(S); S = hydrate({}); save(); renderAll(); toast('All data erased', () => { S = JSON.parse(snap); save(); renderAll(); }); };
 
 /* ---------- COACH ---------- */
 const chat = [];
@@ -1149,7 +1419,10 @@ const HELP = `Things I can do:
 • drank water / +2 sittings / drank 1L
 • weight 74.2   (body weight)
 • target 82
-• working out at 5:30 pm
+• gym at 7:30   (re-times every meal)
+• woke up at 6
+• badminton at 6 pm / no badminton today
+• ate smoothie / had lunch   (ticks the meal)
 • swap pec deck with cable crossover today
 • add lateral raise to thursday
 • remove deadlift today
@@ -1164,10 +1437,11 @@ function dateForDay(tok){
   const d = DAYMAP[tok.toLowerCase()]; if (!d) return ui.date;
   const base = mondayOf(todayStr()); let date = addDays(base, DAYS.indexOf(d)); if (date < todayStr()) date = addDays(date, 7); return date;
 }
-function parseTime(h, m, ap){
+function parseTime(h, m, ap, prefer = 'am'){
   h = +h; m = +(m||0); ap = (ap||'').toLowerCase();
   if (ap === 'pm' && h < 12) h += 12; if (ap === 'am' && h === 12) h = 0;
-  let assumed = false; if (!ap && h >= 1 && h <= 6) { h += 12; assumed = true; }
+  let assumed = false;   // morning lifter: 5–11 means AM; badminton: up to 9 means PM
+  if (!ap && h >= 1 && h <= (prefer === 'pm' ? 9 : 4)) { h += 12; assumed = 'PM'; } else if (!ap && h < 12) assumed = 'AM';
   return {str:`${pad(h)}:${pad(m)}`, assumed};
 }
 /* action executor shared by offline parser and Gemini */
@@ -1178,11 +1452,19 @@ function runAction(a){
       const n = Math.max(1, Math.min(10, a.sets||1)); for (let i=0;i<n;i++) logSet(ex, +a.weight||0, +a.reps, date);
       if (S.settings.autoRest) startTimer(S.settings.rest);
       return `Logged ${n>1?n+' × ':''}${ex}: ${fmtKg(+a.weight||0)} kg × ${a.reps}${date!==todayStr()?' on '+fmtDate(date):''}.`; }
-    case 'water': { const c = addWater(Math.round(a.sittings||1), date); return `Water: ${c} sittings (${fmtKg(c*S.settings.sitting/1000)} of ${fmtKg(S.settings.goalL)} L).`; }
+    case 'water': { const c = addWater(Math.round(a.sittings||1), date); return `Water: ${c} sittings (${fmtKg(c*S.settings.sitting/1000)} of ${fmtKg(waterGoalL(date))} L).`; }
     case 'body_weight': { const date = a.date && /^\d{4}-\d{2}-\d{2}$/.test(a.date) ? a.date : todayStr(); const v = +a.weight; if (!(v>20&&v<400)) return 'That body weight looks off.'; const ex = S.body.find(b=>b.date===date); if (ex) { ex.w=v; if(a.note) ex.note=a.note; } else S.body.push({date,w:v,note:a.note||''}); S.body.sort((x,y)=>x.date.localeCompare(y.date)); save(); return `Body weight ${fmtKg(v)} kg logged for ${date===todayStr()?'today':fmtDate(date)}.`; }
     case 'target': { const v = +a.weight; if (!(v>20)) return 'Target needs a weight in kg.'; S.target = v; save(); return `Bulk target set to ${fmtKg(v)} kg.`; }
-    case 'workout_time': { if (!/^\d{2}:\d{2}$/.test(a.time||'')) return 'Time should look like 17:30.'; S.workoutTimes[date] = a.time; save(); const mt = mealTimes(date);
-      return `Workout ${fmtTime12(mt.w)}${date!==todayStr()?' on '+fmtDate(date):''}. Pre-workout meal at ${fmtTime12(mt.pre)}, post-workout meal by ${fmtTime12(mt.post)}.`; }
+    case 'workout_time': { if (!/^\d{2}:\d{2}$/.test(a.time||'')) return 'Time should look like 07:30.'; S.workoutTimes[date] = a.time; save();
+      if (!isTraining(date)) return `Saved gym time ${fmtMin(toMin(a.time))} for ${fmtDate(date)}, but that's a rest day on your plan, so meals follow the rest-day timing.`;
+      return `Gym at ${fmtMin(toMin(a.time))}${date!==todayStr()?' on '+fmtDate(date):''}. Meals: ${scheduleSummary(date)}.`; }
+    case 'wake_time': { if (!/^\d{2}:\d{2}$/.test(a.time||'')) return 'Time should look like 05:45.'; S.wakeTimes[date] = a.time; save();
+      return `Woke at ${fmtMin(toMin(a.time))}. Meals: ${scheduleSummary(date)}.`; }
+    case 'badminton': { if (!a.time){ delete S.badminton[date]; save(); return `No badminton on ${fmtDate(date)}.`; }
+      if (!/^\d{2}:\d{2}$/.test(a.time)) return 'Time should look like 18:00.'; S.badminton[date] = a.time; save();
+      return `Badminton at ${fmtMin(toMin(a.time))}: +${PLAN ? PLAN.targets.badmintonKcal : 350} kcal today. Meals: ${scheduleSummary(date)}.`; }
+    case 'meal_done': { const k = a.meal; if (!PLAN || !PLAN.meals[k]) return 'Which meal?'; S.mealsDone[date] = S.mealsDone[date] || {}; S.mealsDone[date][k] = Date.now(); save();
+      const t = eatenTotals(date), tg = targetsFor(date); return `${PLAN.meals[k].label} ticked. ${t.k} of ${tg.kcal} kcal, ${t.p} g protein so far.`; }
     case 'swap': { const from = fuzzyExercise(a.from||''), to = canonical(a.to||''); if (!from || !to) return 'Tell me what to swap and what to swap it with.';
       const sc = a.scope === 'always' ? 'always' : 'today'; swapExercise(date, from, to, sc); return `Swapped ${from} → ${to} ${sc==='always' ? 'every '+DAY_FULL[weekdayOf(date)] : 'for '+fmtDate(date)}.`; }
     case 'add_exercise': { const ex = canonical(a.exercise||''); if (!ex) return 'Which exercise?'; const sc = a.scope === 'today' ? 'today' : 'always'; addExercise(date, ex, sc);
@@ -1211,12 +1493,24 @@ function localCommand(raw){
   // rest timer
   if ((m = lo.match(/^(?:start\s+)?(?:rest|timer)\s*(?:for\s*)?(\d+(?:\.\d+)?)\s*(s|sec|secs|seconds|m|min|mins|minutes)?\b/))){
     const s = /^m/.test(m[2]||'') || (!m[2] && +m[1] <= 5) ? +m[1]*60 : +m[1]; return runAction({type:'rest_timer', seconds:s}); }
+  // badminton
+  if (/\b(no|not|skip(?:ping)?|cancel)\b.*\bbadminton\b/.test(lo)) return runAction({type:'badminton', time:null});
+  if ((m = lo.match(/badminton\b.*?\b(?:at|@)\s*(\d{1,2})(?:[:.](\d{2}))?\s*(am|pm)?/))){
+    const {str, assumed} = parseTime(m[1], m[2], m[3], 'pm'); return runAction({type:'badminton', time:str}) + (assumed ? ` (I assumed ${assumed}.)` : ''); }
+  // wake time
+  if ((m = lo.match(/\b(?:woke|wake|waking|got up|up)\b.*?\b(?:at|@)\s*(\d{1,2})(?:[:.](\d{2}))?\s*(am|pm)?/))){
+    const {str} = parseTime(m[1], m[2], m[3], 'am'); return runAction({type:'wake_time', time:str, date: todayStr()}); }
+  // meal ticked
+  if ((m = lo.match(/^(?:i\s+)?(?:ate|had|done|finished|drank)\s+(?:my\s+|the\s+)?(pre[- ]?workout|breakfast|smoothie|shake|lunch|snack|dinner|bedtime|milk|post[- ]?badminton)/))){
+    const k = {breakfast:'breakfast', smoothie:'smoothie', shake:'smoothie', lunch:'lunch', snack:'snack', dinner:'dinner', bedtime:'bedtime', milk:'bedtime'}[m[1]] ||
+      (/^pre/.test(m[1]) ? (scheduleFor(ui.date).items.find(i => /^pre/.test(i.key)) || {key:'preFull'}).key : 'badminton');
+    return runAction({type:'meal_done', meal:k}); }
   // workout time
   if ((m = lo.match(/(?:work(?:ing)?\s*out|workout|training|train|gym|lifting|session)\b.*?\b(?:at|@)\s*(\d{1,2})(?:[:.](\d{2}))?\s*(am|pm)?/))){
     const dm = lo.match(/\b(today|tomorrow|mon(?:day)?|tue(?:s|sday)?|wed(?:nesday)?|thu(?:rs|rsday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\b/);
     const {str, assumed} = parseTime(m[1], m[2], m[3]);
     const date = dm && dm[1] !== 'today' ? dateForDay(dm[1]) : ui.date;
-    return runAction({type:'workout_time', time:str, date}) + (assumed ? ' (I assumed PM.)' : ''); }
+    return runAction({type:'workout_time', time:str, date}) + (assumed ? ` (I assumed ${assumed}.)` : ''); }
   // diet reminder
   if ((m = t.match(/\b(mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\b[^:>\-=]*?(?:diet|reminder|supplement|meal)s?[^:>\-=]*?(?:\bto\b|:|->|=|\bis\b)\s*(.+)$/i)) ||
       (m = t.match(/^(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\s*(?:->|:|=|→)\s*(.+)$/i)))
@@ -1270,7 +1564,7 @@ function localCommand(raw){
   if (/\b(summary|today|volume|tonnage|how am i doing|status)\b/.test(lo)){
     const s = logsOn(ui.date), ton = s.reduce((a,l)=>a+l.w*l.r,0), wd = weekdayOf(ui.date);
     const left = routineFor(ui.date).filter(ex => !s.some(l => l.ex === ex));
-    return `${fmtDate(ui.date)} · ${dayName(ui.date)}\nSets: ${s.length} · Volume: ${fmtKg(ton)} kg\nWater: ${fmtKg(waterCount(ui.date)*S.settings.sitting/1000)} / ${fmtKg(S.settings.goalL)} L${left.length ? '\nStill to do: '+left.join(', ') : ''}${S.diet[wd] ? '\nDiet: '+S.diet[wd] : ''}`; }
+    return `${fmtDate(ui.date)} · ${dayName(ui.date)}\nSets: ${s.length} · Volume: ${fmtKg(ton)} kg\nWater: ${fmtKg(waterCount(ui.date)*S.settings.sitting/1000)} / ${fmtKg(waterGoalL(ui.date))} L${left.length ? '\nStill to do: '+left.join(', ') : ''}${S.diet[wd] ? '\nDiet: '+S.diet[wd] : ''}`; }
   return null;
 }
 function appContext(){
@@ -1278,17 +1572,22 @@ function appContext(){
   return { today: todayStr(), selectedDate: d, weekday: wd, split: Object.fromEntries(DAYS.map(x => [x, {name:S.split[x].name, exercises:S.split[x].ex}])),
     routineForSelectedDate: routineFor(d), setsOnSelectedDate: logsOn(d).map(l => ({ex:l.ex,w:l.w,r:l.r})),
     recentSets: [...S.logs].sort((a,b)=>b.t-a.t).slice(0,60).map(l => ({date:l.date, ex:l.ex, w:l.w, r:l.r})),
-    bodyWeight: S.body.slice(-14), target: S.target, waterSittingsToday: waterCount(d), sittingMl: S.settings.sitting, waterGoalL: S.settings.goalL,
-    workoutTime: S.workoutTimes[d] || null, scheduleNext14Days: Object.fromEntries(Object.entries(planInfo().slot).filter(([k]) => k >= todayStr() && k <= addDays(todayStr(), 13)).map(([k,v]) => [k, S.split[v].name])), missedDays: Object.keys(planInfo().missed), diet: S.diet, barKg: S.settings.bar, smallestPlateKg: S.settings.minPlate };
+    bodyWeight: S.body.slice(-14), target: S.target, waterSittingsToday: waterCount(d), sittingMl: S.settings.sitting, waterGoalL: waterGoalL(d),
+    workoutTime: S.workoutTimes[d] || null, scheduleNext14Days: Object.fromEntries(Object.entries(planInfo().slot).filter(([k]) => k >= todayStr() && k <= addDays(todayStr(), 13)).map(([k,v]) => [k, S.split[v].name])), missedDays: Object.keys(planInfo().missed), diet: S.diet, barKg: S.settings.bar, smallestPlateKg: S.settings.minPlate,
+    fuel: PLAN ? (() => { const sc = scheduleFor(d), tg = targetsFor(d), t = eatenTotals(d, sc); return { targets: tg, eaten: {kcal: t.k, protein: t.p}, wake: wakeOf(d), workout: sc.training ? workoutOf(d) : null, badminton: S.badminton[d] || null,
+      meals: sc.items.filter(i => PLAN.meals[i.key]).map(i => ({key: i.key, time: fmtMin(i.t), food: optionFor(i.key).what, kcal: optionFor(i.key).kcal, protein: optionFor(i.key).p, done: !!(S.mealsDone[d]||{})[i.key]})) }; })() : null };
 }
-const SYS = `You are PulseAI, the coach inside the IronPulse gym logging app. The user does an Upper/Lower/Rest/Push/Pull/Legs/Rest split and is bulking.
+const SYS = `You are PulseAI, the coach inside the IronPulse gym logging app. The user does an Upper/Lower/Rest/Push/Pull/Legs/Rest split, trains in the morning and is lean-bulking (non-veg Indian home food, a 1,150 kcal smoothie after the gym, creatine 5 g, yeast protein). appState.fuel has today's calorie/protein targets, the meal schedule and what's been eaten.
 You can change the app by returning actions. Reply ONLY with JSON: {"reply": string, "actions": [ ... ]}.
 Action shapes (dates are YYYY-MM-DD; "day" may be a weekday name or "today"):
 {"type":"log_set","exercise":str,"weight":num,"reps":int,"sets":int?,"date":str?}
 {"type":"water","sittings":int}  (one sitting = sittingMl ml; negative to remove)
 {"type":"body_weight","weight":num,"note":str?,"date":str?}
 {"type":"target","weight":num}
-{"type":"workout_time","time":"HH:MM","date":str?}  (pre-workout meal is auto 45 min before; post meal within 4 h of pre meal)
+{"type":"workout_time","time":"HH:MM","date":str?}  (the app re-times every meal around it; the user trains in the morning)
+{"type":"wake_time","time":"HH:MM","date":str?}
+{"type":"badminton","time":"HH:MM"|null,"date":str?}  (adds calories and an after-play meal; null clears)
+{"type":"meal_done","meal":"preFull"|"preQuick"|"preNone"|"breakfast"|"smoothie"|"lunch"|"snack"|"dinner"|"bedtime"|"badminton","date":str?}
 {"type":"swap","from":str,"to":str,"day":str,"scope":"today"|"always"}
 {"type":"add_exercise","exercise":str,"day":str,"scope":"today"|"always"}
 {"type":"remove_exercise","exercise":str,"day":str,"scope":"today"|"always"}
@@ -1328,13 +1627,13 @@ $('coachFab').onclick = () => { $('coachWrap').hidden = false; renderCoachMode()
 $('coachClose').onclick = () => { $('coachWrap').hidden = true; };
 $('coachWrap').addEventListener('click', e => { if (e.target === $('coachWrap')) $('coachWrap').hidden = true; });
 $('coachForm').addEventListener('submit', e => { e.preventDefault(); const v = $('coachInput').value.trim(); if (!v) return; $('coachInput').value = ''; handleCoach(v); });
-$('coachChips').innerHTML = ['help','drank water','today summary','working out at 6 pm','rest 90'].map(c => `<button class="chip" type="button" data-c="${c}">${c}</button>`).join('');
+$('coachChips').innerHTML = ['help','drank water','ate smoothie','gym at 7:30','badminton at 6 pm','today summary'].map(c => `<button class="chip" type="button" data-c="${c}">${c}</button>`).join('');
 $('coachChips').querySelectorAll('[data-c]').forEach(b => b.onclick = () => handleCoach(b.dataset.c));
 
 /* ---------- tabs & boot ---------- */
 function showTab(tab){
   ui.tab = tab;
-  ['today','log','body','history','plan'].forEach(t => $('v-'+t).hidden = t !== tab);
+  ['today','fuel','log','body','history','plan'].forEach(t => $('v-'+t).hidden = t !== tab);
   document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
   renderAll(); window.scrollTo({top:0});
 }
@@ -1343,6 +1642,7 @@ function renderAll(){
   $('topDate').textContent = fmtDate(todayStr(), {weekday:'short', day:'numeric', month:'short'});
   if (ui.tab === 'today') renderToday();
   if (ui.tab === 'log') { renderLog(); renderRestChips(); }
+  if (ui.tab === 'fuel') renderFuel();
   if (ui.tab === 'body') renderBody();
   if (ui.tab === 'history') renderHistory();
   if (ui.tab === 'plan') renderPlan();
@@ -1353,7 +1653,7 @@ window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferr
 $('installBtn').onclick = async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; $('installBtn').hidden = true; };
 // day rollover + meal countdown refresh
 let lastDay = todayStr();
-setInterval(() => { const t = todayStr(); if (t !== lastDay){ if (ui.date === lastDay) { ui.date = t; ui.week = mondayOf(t); } lastDay = t; renderAll(); } else if (ui.tab === 'today') renderMeal(); }, 30000);
+setInterval(() => { const t = todayStr(); if (t !== lastDay){ if (ui.date === lastDay) { ui.date = t; ui.week = mondayOf(t); } lastDay = t; renderAll(); } else if (ui.tab === 'today') renderFuelToday(); }, 30000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) renderAll(); });
 
 applyTheme();

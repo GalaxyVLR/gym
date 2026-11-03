@@ -1,7 +1,7 @@
 {
  "name": "IronPulse",
  "short_name": "IronPulse",
- "description": "Gym logger, bulk tracker, water and meal timing",
+ "description": "Gym logger, bulk diet planner, meal timing and water tracker",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
