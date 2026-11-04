@@ -15,7 +15,7 @@
    Numbers are approximate (labels + Indian food tables). Sources at the end.
    ===================================================================== */
 window.IRONPULSE_PLAN = {
-  version: '2026-11-04',
+  version: '2026-11-04c',
 
   /* ---------- defaults for a new install (the app's Fuel > Settings can change them) ---------- */
   profile: {
@@ -37,7 +37,8 @@ window.IRONPULSE_PLAN = {
     proteinGPerKg: [2.0, 2.5], // ≥1.6 g/kg is enough for growth (Morton 2018, BJSM)
     fatPct: [25, 35],          // keep ≥25%: low-fat diets lower testosterone (Whittaker & Wu 2021)
     gainPerWeekKg: [0.25, 0.4],
-    waterL: { rest: 3.25, training: 4, badmintonExtra: 0.75 }
+    waterL: { rest: 3.5, training: 4.5, badmintonExtra: 1 },  // ACSM: replace sweat; creatine + Pune heat need more
+    waterMaxLPerHour: 1,       // kidneys clear ~0.8–1 L/h; more than that at once risks low sodium
   },
 
   /* ---------- weekly check-in rules (Body tab) ---------- */
@@ -52,10 +53,11 @@ window.IRONPULSE_PLAN = {
      Timing is worked out by the app from your wake, workout and sleep times. */
   meals: {
     preFull: {
-      label: 'Pre-workout', why: 'Low-fat carbs + some protein, 60–90 min before (Nippard).',
+      label: 'Pre-workout', why: 'Carbs + some protein, 60–90 min before (Nippard). No cooking: eggs boiled in a batch, bread and fruit straight from the shelf.',
       options: [
-        { id: 'pre-a', name: 'Banana, bread, egg whites', what: '1 large banana + 2 bread slices with 1 tbsp jam or honey + 3 boiled egg whites', kcal: 365, p: 17 },
-        { id: 'pre-b', name: 'Poha + egg whites', what: '1 plate kanda poha + 3 boiled egg whites', kcal: 320, p: 16 }
+        { id: 'pre-a', name: 'Banana, bread, boiled eggs', what: '1 large banana + 2 bread slices with 1 tbsp jam or honey + 2 boiled whole eggs (boil 6–8 at once, they keep 5 days in the fridge)', kcal: 465, p: 19 },
+        { id: 'pre-b', name: 'Bread, honey, milk (no eggs)', what: '1 banana + 2 bread slices with 1 tbsp honey + 200 ml milk', kcal: 500, p: 13 },
+        { id: 'pre-e', name: 'Last night\'s roti', what: '2 leftover roti with a little jaggery or ghee + 1 banana', kcal: 400, p: 8 }
       ]
     },
     preQuick: {
@@ -70,10 +72,11 @@ window.IRONPULSE_PLAN = {
       options: [ { id: 'pre-d', name: 'Banana', what: '1 banana on the way to the gym', kcal: 120, p: 1 } ]
     },
     breakfast: {
-      label: 'Breakfast', why: 'Rest day: an easy first meal, the smoothie follows.',
+      label: 'Breakfast', why: 'Rest day: whatever is made at home, or no-cook; the smoothie follows.',
       options: [
-        { id: 'bf-a', name: 'Poha + egg whites', what: '1 plate kanda poha or upma + 3 boiled egg whites', kcal: 365, p: 17 },
-        { id: 'bf-b', name: 'Omelette + bread', what: '2-egg omelette + 2 bread slices', kcal: 330, p: 15 }
+        { id: 'bf-a', name: 'Bread omelette', what: '2-egg omelette + 2 bread slices (or whatever eggs mom makes)', kcal: 330, p: 15 },
+        { id: 'bf-b', name: 'Home breakfast', what: '2 roti or 1 paratha + sabzi + 100 g curd (the usual home breakfast)', kcal: 400, p: 13 },
+        { id: 'bf-c', name: 'Boiled eggs + bread', what: '2 boiled whole eggs + 2 bread slices + 1 banana', kcal: 410, p: 19 }
       ]
     },
     smoothie: {
@@ -181,6 +184,14 @@ window.IRONPULSE_PLAN = {
     ['Potassium', '3,500 mg+', 'Smoothie ~1,700 mg, dal, potatoes, curd, coconut water'],
     ['Magnesium', '440 mg', 'Smoothie ~300 mg, nuts, whole wheat'],
     ['Calcium', '1,000 mg', 'Smoothie ~520 mg, curd, roti']
+  ],
+  hydration: [
+    '500 ml right after waking (before the pre-workout snack)',
+    '500–750 ml during the gym session, sipped between sets',
+    '250–500 ml with the smoothie and with each meal',
+    'Electrolyte drink or coconut water on Lower, Legs and badminton days',
+    'Stop big drinks 1–1.5 h before bed so sleep is not broken',
+    'Urine pale yellow = on track; dark = drink now'
   ],
   electrolyteDrink: '500 ml water + 1/4 tsp salt + 1 tbsp sugar or honey + half a lemon. Or 250–300 ml coconut water, or 1 Electral/ORS sachet in 1 L.',
 
