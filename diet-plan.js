@@ -15,13 +15,14 @@
    Numbers are approximate (labels + Indian food tables). Sources at the end.
    ===================================================================== */
 window.IRONPULSE_PLAN = {
-  version: '2026-11-04c',
+  version: '2026-11-13',
 
   /* ---------- defaults for a new install (the app's Fuel > Settings can change them) ---------- */
   profile: {
     heightCm: 188,
     startWeightKg: 65,      // used until you log your first body weight
     targetWeightKg: 75,
+    age: null,              // years; used only for the BMR sanity check in Fuel
     wake: '05:45',          // usual wake-up time
     sleepHours: 7.5,        // 7–9 h protects testosterone (Leproult & Van Cauter 2011, JAMA)
     workoutTime: '07:00',   // default gym start; set the real time on Today each day
@@ -34,7 +35,7 @@ window.IRONPULSE_PLAN = {
     surplusPct: 15,            // Nippard: 10–20% for a faster beginner bulk
     extraKcal: 650,            // tall, active, low-appetite lifters burn more than the formula; puts 65 kg at ~3,450 kcal = the meal plan
     badmintonKcal: 350,        // ~250–400 kcal per hour of play
-    proteinGPerKg: [2.0, 2.5], // ≥1.6 g/kg is enough for growth (Morton 2018, BJSM)
+    proteinGPerKg: [1.6, 2.2], // gains plateau ~1.6 g/kg, upper bound ~2.2 (Morton 2018, BJSM)
     fatPct: [25, 35],          // keep ≥25%: low-fat diets lower testosterone (Whittaker & Wu 2021)
     gainPerWeekKg: [0.25, 0.4],
     waterL: { rest: 3.5, training: 4.5, badmintonExtra: 1 },  // ACSM: replace sweat; creatine + Pune heat need more
@@ -49,80 +50,81 @@ window.IRONPULSE_PLAN = {
   },
 
   /* ---------- meal slots ----------
-     Each option: id, name, what, kcal, p (protein g). The first option is the default.
+     Each option: id, name, what, kcal, p (protein g), c (carbs g), f (fat g). The first option is the default.
+     You can also add, edit and delete options inside the app (Fuel > Meal options); those edits stay on the phone.
      Timing is worked out by the app from your wake, workout and sleep times. */
   meals: {
     preFull: {
       label: 'Pre-workout', why: 'Carbs + some protein, 60–90 min before (Nippard). No cooking: eggs boiled in a batch, bread and fruit straight from the shelf.',
       options: [
-        { id: 'pre-a', name: 'Banana, bread, boiled eggs', what: '1 large banana + 2 bread slices with 1 tbsp jam or honey + 2 boiled whole eggs (boil 6–8 at once, they keep 5 days in the fridge)', kcal: 465, p: 19 },
-        { id: 'pre-b', name: 'Bread, honey, milk (no eggs)', what: '1 banana + 2 bread slices with 1 tbsp honey + 200 ml milk', kcal: 500, p: 13 },
-        { id: 'pre-e', name: 'Last night\'s roti', what: '2 leftover roti with a little jaggery or ghee + 1 banana', kcal: 400, p: 8 }
+        { id: 'pre-a', name: 'Banana, bread, boiled eggs', what: '1 large banana + 2 bread slices with 1 tbsp jam or honey + 2 boiled whole eggs (boil 6–8 at once, they keep 5 days in the fridge)', kcal: 465, p: 19, c: 69, f: 12 },
+        { id: 'pre-b', name: 'Bread, honey, milk (no eggs)', what: '1 banana + 2 bread slices with 1 tbsp honey + 200 ml milk', kcal: 500, p: 13, c: 80, f: 14 },
+        { id: 'pre-e', name: 'Last night\'s roti', what: '2 leftover roti with a little jaggery or ghee + 1 banana', kcal: 400, p: 8, c: 70, f: 10 }
       ]
     },
     preQuick: {
       label: 'Quick pre-workout', why: 'Under an hour to go: small, fast carbs only.',
       options: [
-        { id: 'pre-c', name: 'Banana + dates', what: '1 banana + 2 dates', kcal: 170, p: 2 },
-        { id: 'pre-c2', name: 'Banana + milk', what: '1 banana + 200 ml toned milk', kcal: 250, p: 7 }
+        { id: 'pre-c', name: 'Banana + dates', what: '1 banana + 2 dates', kcal: 170, p: 2, c: 39, f: 1 },
+        { id: 'pre-c2', name: 'Banana + milk', what: '1 banana + 200 ml toned milk', kcal: 250, p: 7, c: 42, f: 6 }
       ]
     },
     preNone: {
       label: 'On the way', why: 'Training right after waking: eat a banana, the smoothie straight after does the work.',
-      options: [ { id: 'pre-d', name: 'Banana', what: '1 banana on the way to the gym', kcal: 120, p: 1 } ]
+      options: [ { id: 'pre-d', name: 'Banana', what: '1 banana on the way to the gym', kcal: 120, p: 1, c: 29, f: 0 } ]
     },
     breakfast: {
       label: 'Breakfast', why: 'Rest day: whatever is made at home, or no-cook; the smoothie follows.',
       options: [
-        { id: 'bf-a', name: 'Bread omelette', what: '2-egg omelette + 2 bread slices (or whatever eggs mom makes)', kcal: 330, p: 15 },
-        { id: 'bf-b', name: 'Home breakfast', what: '2 roti or 1 paratha + sabzi + 100 g curd (the usual home breakfast)', kcal: 400, p: 13 },
-        { id: 'bf-c', name: 'Boiled eggs + bread', what: '2 boiled whole eggs + 2 bread slices + 1 banana', kcal: 410, p: 19 }
+        { id: 'bf-a', name: 'Bread omelette', what: '2-egg omelette + 2 bread slices (or whatever eggs mom makes)', kcal: 330, p: 15, c: 29, f: 17 },
+        { id: 'bf-b', name: 'Home breakfast', what: '2 roti or 1 paratha + sabzi + 100 g curd (the usual home breakfast)', kcal: 400, p: 13, c: 58, f: 13 },
+        { id: 'bf-c', name: 'Boiled eggs + bread', what: '2 boiled whole eggs + 2 bread slices + 1 banana', kcal: 410, p: 19, c: 57, f: 12 }
       ]
     },
     smoothie: {
       label: 'Smoothie', why: 'Post-workout: protein + carbs inside the 4–5 h window. Add 5 g creatine.',
-      options: [ { id: 'sm', name: 'Morning smoothie', what: 'See the recipe in Fuel. Drink within 45 min of finishing.', kcal: 1150, p: 59 } ]
+      options: [ { id: 'sm', name: 'Morning smoothie', what: 'See the recipe in Fuel. Drink within 45 min of finishing.', kcal: 1150, p: 59, c: 112, f: 54 } ]
     },
     lunch: {
       label: 'Lunch', why: 'Protein portion + roti or rice.',
       options: [
-        { id: 'lu-a', name: 'Roti, dal, chicken', what: '2 roti + 1 bowl dal + 150 g chicken curry + half bowl sabzi + 100 g curd', kcal: 770, p: 50 },
-        { id: 'lu-b', name: 'Fish thali', what: '2 roti + dal + 150 g surmai/bangda fry + 100 g curd', kcal: 760, p: 50 },
-        { id: 'lu-c', name: 'Egg curry thali', what: '2 roti + dal + 3-egg curry + sabzi + curd', kcal: 760, p: 38 },
-        { id: 'lu-d', name: 'Biryani + raita', what: '1 large plate chicken or mutton biryani + raita', kcal: 750, p: 35 }
+        { id: 'lu-a', name: 'Roti, dal, chicken', what: '2 roti + 1 bowl dal + 150 g chicken curry + half bowl sabzi + 100 g curd', kcal: 770, p: 50, c: 73, f: 31 },
+        { id: 'lu-b', name: 'Fish thali', what: '2 roti + dal + 150 g surmai/bangda fry + 100 g curd', kcal: 760, p: 50, c: 82, f: 26 },
+        { id: 'lu-c', name: 'Egg curry thali', what: '2 roti + dal + 3-egg curry + sabzi + curd', kcal: 760, p: 38, c: 60, f: 41 },
+        { id: 'lu-d', name: 'Biryani + raita', what: '1 large plate chicken or mutton biryani + raita', kcal: 750, p: 35, c: 96, f: 25 }
       ]
     },
     snack: {
       label: 'Evening snack', why: 'Keeps protein coming every 3–4 h.',
       options: [
-        { id: 'sn-a', name: 'Curd, fruit, chana', what: '150 g curd + 1 fruit (guava, orange, papaya) + 2 tbsp roasted chana', kcal: 270, p: 12 },
-        { id: 'sn-b', name: 'Eggs + bread', what: '2 boiled eggs + 1 bread slice', kcal: 220, p: 14 },
-        { id: 'sn-c', name: 'Protein muesli', what: '50 g high-protein muesli + 200 ml milk', kcal: 375, p: 20 }
+        { id: 'sn-a', name: 'Curd, fruit, chana', what: '150 g curd + 1 fruit (guava, orange, papaya) + 2 tbsp roasted chana', kcal: 270, p: 12, c: 42, f: 6 },
+        { id: 'sn-b', name: 'Eggs + bread', what: '2 boiled eggs + 1 bread slice', kcal: 220, p: 14, c: 16, f: 11 },
+        { id: 'sn-c', name: 'Protein muesli', what: '50 g high-protein muesli + 200 ml milk', kcal: 375, p: 20, c: 38, f: 16 }
       ]
     },
     dinner: {
       label: 'Dinner', why: 'Biggest carb meal on Lower, Pull and Legs days.',
       options: [
-        { id: 'di-a', name: 'Rice, dal, chicken', what: '1.5 cups rice (or 3 roti) + 1 bowl dal + 150 g chicken', kcal: 750, p: 44 },
-        { id: 'di-b', name: 'Rice, dal, fish', what: '1.5 cups rice + dal + 150 g fish curry or fry', kcal: 765, p: 47 },
-        { id: 'di-c', name: 'Rice, dal, egg curry', what: '1.5 cups rice + dal + 3-egg curry', kcal: 765, p: 33 },
-        { id: 'di-d', name: 'Roti + keema', what: '3 roti + 150 g chicken keema + salad', kcal: 760, p: 45 }
+        { id: 'di-a', name: 'Rice, dal, chicken', what: '1.5 cups rice (or 3 roti) + 1 bowl dal + 150 g chicken', kcal: 750, p: 44, c: 101, f: 19 },
+        { id: 'di-b', name: 'Rice, dal, fish', what: '1.5 cups rice + dal + 150 g fish curry or fry', kcal: 765, p: 47, c: 102, f: 19 },
+        { id: 'di-c', name: 'Rice, dal, egg curry', what: '1.5 cups rice + dal + 3-egg curry', kcal: 765, p: 33, c: 93, f: 29 },
+        { id: 'di-d', name: 'Roti + keema', what: '3 roti + 150 g chicken keema + salad', kcal: 760, p: 45, c: 84, f: 27 }
       ]
     },
     bedtime: {
       label: 'Bedtime', why: 'Slow protein before sleep.',
       options: [
-        { id: 'bt-a', name: 'Warm milk', what: '200 ml warm milk (haldi optional)', kcal: 180, p: 6 },
-        { id: 'bt-b', name: 'Milk + nuts', what: '200 ml milk + 10 almonds + 2 walnuts', kcal: 300, p: 10 }
+        { id: 'bt-a', name: 'Warm milk', what: '200 ml warm milk (haldi optional)', kcal: 180, p: 6, c: 12, f: 12 },
+        { id: 'bt-b', name: 'Milk + nuts', what: '200 ml milk + 10 almonds + 2 walnuts', kcal: 300, p: 10, c: 13, f: 23 }
       ]
     },
     badminton: {
       label: 'After badminton', why: 'Replaces the ~250–400 kcal burned. Within 2 h of playing.',
       options: [
-        { id: 'bd-b', name: 'Roti + milk', what: '1 roti with 1 tsp ghee + 250 ml milk', kcal: 390, p: 11 },
-        { id: 'bd-a', name: 'Protein muesli bowl', what: '80 g high-protein muesli + 250 ml milk', kcal: 560, p: 28 },
-        { id: 'bd-c', name: 'Eggs, bread, banana', what: '3 boiled eggs + 2 bread slices + 1 banana', kcal: 485, p: 25 },
-        { id: 'bd-d', name: 'Nuts + milk', what: '250 ml milk + 10 almonds + 2 walnuts + 2 dates', kcal: 410, p: 12 }
+        { id: 'bd-b', name: 'Roti + milk', what: '1 roti with 1 tsp ghee + 250 ml milk', kcal: 390, p: 11, c: 36, f: 22 },
+        { id: 'bd-a', name: 'Protein muesli bowl', what: '80 g high-protein muesli + 250 ml milk', kcal: 560, p: 28, c: 65, f: 21 },
+        { id: 'bd-c', name: 'Eggs, bread, banana', what: '3 boiled eggs + 2 bread slices + 1 banana', kcal: 485, p: 25, c: 58, f: 17 },
+        { id: 'bd-d', name: 'Nuts + milk', what: '250 ml milk + 10 almonds + 2 walnuts + 2 dates', kcal: 410, p: 12, c: 32, f: 26 }
       ]
     }
   },

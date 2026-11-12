@@ -1,0 +1,15 @@
+{
+  "appId": "com.galaxyvlr.ironpulse",
+  "appName": "IronPulse",
+  "webDir": "www",
+  "backgroundColor": "#0e1215",
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_ironpulse",
+      "iconColor": "#F4B63C"
+    }
+  }
+}
