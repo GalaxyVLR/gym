@@ -1,6 +1,6 @@
 # IronPulse
 
-A phone app for my lean bulk to 75–80 kg: gym set logger with research-based targets and rest times, a rest timer that notifies the phone, a bulk diet plan with meals that re-time themselves around my workout, a food log, body-weight check-ins, water and a coach.
+A phone app for my lean bulk to 75–80 kg: gym set logger with research-based targets and rest times, a rest timer that notifies the phone, a bulk diet plan with meals that re-time themselves around my workout, a food log, a daily checklist with streaks, sleep and readiness, lift goals, reminders, body-weight check-ins, water and a coach.
 
 Two ways to run it:
 
@@ -11,12 +11,13 @@ Data stays on the phone (export a backup from Plan → Backup).
 
 ## Daily use
 
-1. **Today**: enter the time you woke up and your gym time; every meal moves with them. Each exercise shows its target (sets × reps @ RIR, rest). Tap an exercise name to change its targets. Tick meals as you eat them: they go straight into the food log.
+1. **Today**: the **morning check-in** (bedtime last night, wake time, energy and soreness 1–5) gives a readiness call: *Ready to push*, *Normal day* or *Take it easy* (keep 2–3 reps in reserve, no weight increases). The **daily checklist** ticks itself as you log: train (75% of planned sets), calories (95% of target), protein, water, weigh-in, creatine (via the smoothie) and sleep, plus any habits you add with Edit. Streak pills show calorie days, training sessions in a row and perfect days. Enter the time you woke up and your gym time; every meal moves with them. Each exercise shows its target (sets × reps @ RIR, rest). Tap an exercise name to change its targets. Tick meals as you eat them: they go straight into the food log.
 2. **Log**: pick an exercise. The target card shows the focus (strength or hypertrophy), set count, cue, what weight to use today (double progression: once every set reaches the top of the rep range, add the smallest step) and warm-up sets for the four strength lifts. The rest box shows this exercise's rest: change it with −15 / +15, a chip, or type any number of seconds. The timer starts after each set and alerts you when rest is over.
 3. **Fuel**: the **food log** (anything you eat, with kcal, protein, carbs, fat; quick-add from your plan meals, saved foods and ~55 Indian staples), daily targets, meal options, timing, smoothie, supplements, groceries. Every section has an **Edit** button.
-4. **Body**: weigh in every morning. The weekly check-in tells you to add 200 kcal, remove 150 or change nothing.
-5. **Plan**: the **workout editor** (pick a day, reorder, add or remove exercises, turn a rest day into a training day, set targets per exercise), the exercise library, rest timer and alert settings, diet reminders, backup.
-6. **Coach**: type things like `gym at 7:30`, `woke up at 6`, `badminton at 6 pm`, `ate smoothie`, `bench 80 x 8`, `rest 2 min`.
+4. **Body**: weigh in every morning. The weekly check-in tells you to add 200 kcal, remove 150 or change nothing. **Consistency** shows current and best streaks, your 7- and 30-day checklist score, 7-day average sleep, a 12-week heatmap (tap a day to open it) and each habit's 30-day hit rate, weakest first, with a tip for the weakest.
+5. **History**: **lift goals** (e.g. Bench Press 80 kg × 5). Each shows what you can do now at the goal's reps (estimated from your best recent set), a projected date from your last 10 weeks of progress, and is marked hit the moment you log it. The goal also appears as a dashed line on the progress chart and in the Log screen.
+6. **Plan**: the **workout editor** (pick a day, reorder, add or remove exercises, turn a rest day into a training day, set targets per exercise), the exercise library, **alerts & reminders** (meals and smoothie at their planned times, morning weigh-in, bedtime; on time or 10/15 min early; meals you've ticked are skipped), diet notes, backup.
+7. **Coach**: type things like `gym at 7:30`, `woke up at 6`, `badminton at 6 pm`, `ate smoothie`, `bench 80 x 8`, `rest 2 min`.
 
 ## Training targets
 
@@ -41,6 +42,8 @@ The workflow in `.github/workflows/android.yml` builds the APK on GitHub every t
 **Move your data from the web app:** in the web app go to Plan → Backup → **Export JSON** (or Copy backup). In the Android app: Plan → Backup → **Import file** (or paste). The browser and the app keep separate data.
 
 **Updates:** download the new APK from Releases and install it over the old one; your data stays. If a build fails, open the Actions tab to see why, or run it again with "Run workflow".
+
+Reminders are planned 3 days ahead and re-planned whenever you change a wake, gym or meal time; open the app every couple of days to keep them topped up. In the browser version, reminders only arrive while the app is open or recently in the background.
 
 If alerts arrive late: Android Settings → Apps → IronPulse → allow **Alarms & reminders** and set battery to **Unrestricted**.
 
@@ -75,5 +78,7 @@ Keep the commas and quotes as they are. If the app shows "diet plan did not load
 | `.github/workflows/android.yml` | Builds the APK and publishes it to Releases |
 
 `android-res/debug.keystore` is a debug-type signing key, committed so every build is signed the same way and updates install over each other. It only matters for apps you sideload yourself; don't reuse it for anything published.
+
+Daily checklist, streaks, reminders, sleep check-in and lift goals were modelled on the Beacon: 1% Better Every Day app.
 
 Plan sources: Jeff Nippard (pre/post-workout and bulking guides), ICMR-NIN 2020 RDAs, Morton 2018 (BJSM), Whittaker & Wu 2021, ACSM 2007, Singer et al. 2024 (rest intervals), Schoenfeld et al. 2016 and 2021, Senna et al. 2011, Pelland et al. 2024. Review: https://claude.ai/artifact/XGgh9jcEJEWv2asv9HzL53

@@ -297,6 +297,60 @@ label.field{display:flex;flex-direction:column;gap:6px}
 .rowedit input,.rowedit select{padding:8px;font-size:.85rem}
 .rowedit .x{width:30px;height:30px;border:0;background:transparent;color:var(--muted);font-size:1rem}
 .rowedit.head .label{font-size:.62rem}
+
+/* morning check-in + readiness */
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.scale .chip{display:flex;flex-direction:column;align-items:center;padding:6px 2px;border-radius:10px;min-width:0}
+.scale .chip b{font-family:var(--display);font-size:1.05rem}
+.scale .chip small{font-size:.58rem;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.pill.rd-good{background:color-mix(in srgb,var(--good) 20%,var(--surface-2));color:var(--good);font-size:.66rem;padding:2px 8px}
+.pill.rd-normal{background:var(--surface-2);color:var(--muted);font-size:.66rem;padding:2px 8px}
+.pill.rd-easy{background:color-mix(in srgb,var(--bad) 20%,var(--surface-2));color:var(--bad);font-size:.66rem;padding:2px 8px}
+.note.rd-note.rd-good{border-left-color:var(--good)} .note.rd-note.rd-easy{border-left-color:var(--bad)}
+.badge.ghostbadge{background:transparent}
+/* checklist */
+.ckscore{font-family:var(--display);font-weight:800;font-size:1.25rem}
+.ckscore.full{color:var(--good)}
+.streaks{display:flex;gap:6px;flex-wrap:wrap}
+.spill{font-size:.74rem;padding:4px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.spill b{font-family:var(--display);font-size:.95rem;color:var(--fg)}
+.spill.lit{border-color:var(--accent);color:var(--accent-text)} .spill.lit b{color:var(--accent-text)}
+.cklist{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ckitem{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);color:var(--fg);text-align:left;min-width:0;font:inherit}
+.ckitem .ckbox{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:.8rem;font-weight:800}
+.ckitem.done .ckbox{background:var(--good);border-color:var(--good);color:#fff}
+.ckitem .cktxt{display:flex;flex-direction:column;min-width:0}
+.ckitem .cklabel{font-weight:600;font-size:.86rem;line-height:1.2}
+.ckitem.done .cklabel{color:var(--muted)}
+.ckitem .ckdet{font-size:.7rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.clrow{padding:4px 0}
+/* consistency heatmap */
+.heat{display:flex;gap:4px;align-items:flex-start}
+.hdays{display:grid;grid-template-rows:repeat(7,1fr);gap:3px;font-size:.58rem;color:var(--muted);padding-top:1px}
+.hdays span{height:20px;line-height:20px}
+.hgrid{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;flex:1}
+.hcol{display:grid;grid-template-rows:repeat(7,1fr);gap:3px}
+.hcell{display:inline-block;height:20px;min-width:0;border-radius:4px;border:0;padding:0;background:var(--surface-2)}
+.hlegend .hcell{width:12px;height:12px}
+.hcell.h-none{background:transparent;border:1px dashed var(--line)}
+.hcell.h-future{background:transparent}
+.hcell.h0{background:color-mix(in srgb,var(--bad) 30%,var(--surface-2))}
+.hcell.h1{background:color-mix(in srgb,var(--accent) 22%,var(--surface-2))}
+.hcell.h2{background:color-mix(in srgb,var(--accent) 45%,var(--surface-2))}
+.hcell.h3{background:color-mix(in srgb,var(--accent) 72%,var(--surface-2))}
+.hcell.h4{background:var(--good)}
+.hcell.htoday{outline:2px solid var(--fg);outline-offset:1px}
+.hlegend{gap:4px;align-items:center}
+.rates{display:grid;gap:6px}
+.rate{display:grid;grid-template-columns:96px 1fr 40px;gap:8px;align-items:center;font-size:.82rem}
+.rate .num{text-align:right}
+.track.bad>i{background:var(--bad)}
+/* lift goals */
+.goal{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
+.goal:first-of-type{border-top:0}
+.icon.sm{width:28px;height:28px;font-size:.8rem}
+label.row:has(> input[type=checkbox]){flex-wrap:nowrap;align-items:flex-start}
+label.row > input[type=checkbox]{flex:none;margin-top:2px}
 </style>
 <script src="diet-plan.js"></script>
 </head>
@@ -325,6 +379,8 @@ label.field{display:flex;flex-direction:column;gap:6px}
     <div id="burnBanner" class="banner" hidden></div>
     <div id="dietBanner" class="banner" hidden></div>
     <div id="mealBanner" class="banner" hidden></div>
+    <div id="readyCard" class="card" hidden></div>
+    <div id="checkCard" class="card"></div>
     <div id="routineCard" class="card"></div>
     <div class="card" id="waterCard">
       <div class="between">
@@ -398,7 +454,7 @@ label.field{display:flex;flex-direction:column;gap:6px}
 
   <!-- BODY -->
   <section id="v-body" class="view" hidden>
-    <div><div class="eyebrow">Bulk tracking</div><h1>Body weight</h1></div>
+    <div><div class="eyebrow">Bulk tracking</div><h1>Body &amp; consistency</h1></div>
     <div class="card">
       <div class="row" style="flex-wrap:nowrap">
         <input type="number" id="bwInput" inputmode="decimal" step="0.1" placeholder="Weight in kg" style="flex:1">
@@ -408,6 +464,7 @@ label.field{display:flex;flex-direction:column;gap:6px}
       <div class="chips" id="bwNoteChips"></div>
     </div>
     <div class="stats" id="bwStats"></div>
+    <div class="card" id="consistCard"></div>
     <div class="card" id="checkInCard"></div>
     <div class="card" id="goalCard"></div>
     <div class="card">
@@ -420,6 +477,7 @@ label.field{display:flex;flex-direction:column;gap:6px}
   <!-- HISTORY -->
   <section id="v-history" class="view" hidden>
     <div><div class="eyebrow">Every set, by day</div><h1>History</h1></div>
+    <div class="card" id="goalsCard"></div>
     <div class="card">
       <div class="between"><h2>Progress</h2></div>
       <select id="progEx" aria-label="Exercise"></select>
@@ -431,7 +489,7 @@ label.field{display:flex;flex-direction:column;gap:6px}
 
   <!-- PLAN -->
   <section id="v-plan" class="view" hidden>
-    <div><div class="eyebrow">Workouts, alerts, diet reminders, settings</div><h1>Plan</h1></div>
+    <div><div class="eyebrow">Workouts, alerts and reminders, settings</div><h1>Plan</h1></div>
     <div class="card">
       <div class="between"><h2>Workouts</h2><button class="btn small" id="resetAll">Reset to preset</button></div>
       <div class="small muted">Pick a day. Tap an exercise to set its sets, reps, RIR and rest; arrows reorder. Adding an exercise to a rest day makes it a training day.</div>
@@ -638,8 +696,15 @@ function defaults(){
     food:{},         // food log: {date: [{id, time, name, qty, kcal, p, c, f, meal?}]}
     foods:[],        // saved foods (favourites) for quick-add
     dietEdits:{},    // in-app changes layered over diet-plan.js
+    sleep:{},        // {date: {bed:'23:15' (went to bed the night before), energy:1–5, sore:1–5}}; wake time lives in wakeTimes
+    checks:{},       // daily checklist ticks: {date: {itemId: ts}}
+    habits:[],       // your own checklist items: [{id, name, since}]
+    checklistOff:{}, // built-in checklist items you turned off: {id: true}
+    checklistSince: todayStr(),
+    liftGoals:[],    // [{id, ex, w, r, created, start (e1RM then), hit?: date}]
+    celebrated:{},   // streak milestones already shown
     settings:{bar:20, minPlate:2.5, sitting:500, goalL:4, waterAuto:true, rest:90, autoRest:true, burnRest:true, key:'', model:'gemini-2.5-flash', theme:'system',
-      notify:true, wakeLock:true}
+      notify:true, wakeLock:true, reminders:{meals:true, weigh:true, bed:true, lead:0}}
   };
 }
 /* v3 → v4: per-day targets, plus the split changes approved in the Nov 2026 review (only where your split still matches the old one) */
@@ -659,7 +724,7 @@ let MIGRATION = null;   // {notes, before} when this load upgraded old data; sho
 function hydrate(p){
   const d = defaults();
   const fresh = !p || !Object.keys(p).length;
-  const out = {...d, ...p, settings:{...d.settings, ...(p.settings||{})}, profile:{...d.profile, ...(p.profile||{})}};
+  const out = {...d, ...p, settings:{...d.settings, ...(p.settings||{}), reminders:{...d.settings.reminders, ...((p.settings||{}).reminders||{})}}, profile:{...d.profile, ...(p.profile||{})}};
   if (out.target == null && BASE_PLAN) out.target = BASE_PLAN.profile.targetWeightKg;
   if (!fresh && (p.v || 0) < 4){
     const before = JSON.stringify(out.split);
@@ -678,7 +743,12 @@ try {
 rebuildPlan();
 // ask the browser not to evict localStorage under storage pressure
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch(e) {}
-function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) { toast && toast('Could not save: phone storage is full'); } }
+function save(){
+  PI_CACHE = null;
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) { toast && toast('Could not save: phone storage is full'); }
+  clearTimeout(save.t); save.t = setTimeout(() => { try { scheduleReminders(); } catch(e) {} }, 1500);   // keep phone reminders in step with your data
+}
+let PI_CACHE = null;
 /* diet-plan.js stays the source; your in-app edits replace whole pieces of it (a meal slot's options, the smoothie, a list) */
 function rebuildPlan(){
   if (!BASE_PLAN) { PLAN = null; return; }
@@ -772,6 +842,11 @@ const focusLabel = f => f === 'strength' ? 'Strength · heavy, low reps' : 'Hype
 /* Skipping a training day shifts the schedule forward one day.
    The shift is absorbed ("burns") at the next Rest slot, which puts you back on plan. */
 function planInfo(){
+  const ck = todayStr();
+  if (PI_CACHE && PI_CACHE.k === ck) return PI_CACHE.v;   // cleared by save() and every render
+  const v = planInfoRaw(); PI_CACHE = {k: ck, v}; return v;
+}
+function planInfoRaw(){
   const out = {slot:{}, lag:{}, missed:{}, burned:{}};
   const t = todayStr(), end = addDays(t, 28), on = S.settings.burnRest !== false;
   const logged = new Set(S.logs.map(l => l.date));
@@ -1033,7 +1108,96 @@ function renderToday(){
   if ($('undoDay')) $('undoDay').onclick = () => { delete S.overrides[date]; save(); renderAll(); toast('Restored the weekly sheet for this day'); };
   if ($('restBwGo')) $('restBwGo').onclick = () => { const v = parseFloat($('restBw').value); if (logBodyWeight(v, '', date)) { renderAll(); } };
 
-  renderWater(); renderFuelToday();
+  renderReady(); renderWater(); renderFuelToday(); renderChecklist();
+}
+/* ---------- TODAY: morning check-in (sleep + readiness) ---------- */
+const ENERGY = ['Drained','Low','OK','Good','Great'], SORE = ['None','Light','Some','Sore','Very sore'];
+function renderReady(){
+  const el = $('readyCard'), date = ui.date, t = todayStr();
+  if (date > t) { el.hidden = true; return; }
+  el.hidden = false;
+  if (el.contains(document.activeElement) && document.activeElement.tagName === 'INPUT') return;
+  const s = sleepOf(date), h = sleepHours(date), r = readiness(date), goal = sleepGoal();
+  const filled = s.bed && s.energy && s.sore;
+  const open = ui.readyOpen === date || (!filled && date === t && ui.readyOpen !== 'closed:' + date);
+  const pill = r ? `<span class="pill rd-${r.level}">${esc(r.label)}</span>` : '';
+  if (!open){
+    el.innerHTML = `<div class="between"><div class="label">Morning check-in</div><button class="badge" id="rdEdit">${filled || s.bed ? 'Edit' : 'Fill in'}</button></div>
+      ${s.bed || s.energy || s.sore ? `<div class="row small"><b class="num">${h != null ? fmtHours(h) + ' sleep' : 'Sleep not logged'}</b>${s.energy ? `<span class="muted">· energy ${s.energy}/5</span>` : ''}${s.sore ? `<span class="muted">· soreness ${s.sore}/5</span>` : ''}${pill}</div>
+      ${r ? `<div class="small">${esc(r.text)}</div>` : ''}` : `<div class="small muted">Not filled in for this day.</div>`}`;
+    $('rdEdit').onclick = () => { ui.readyOpen = date; renderReady(); };
+    return;
+  }
+  el.innerHTML = `<div class="between"><h2>Morning check-in</h2>${filled ? '<button class="badge" id="rdDone">Done</button>' : '<button class="badge ghostbadge" id="rdLater">Later</button>'}</div>
+    <div class="inputs3">
+      <label class="field"><span class="label">Bedtime last night</span><input type="time" id="rdBed" value="${esc(s.bed || '')}"></label>
+      <label class="field"><span class="label">Woke up</span><input type="time" id="rdWake" value="${esc(wakeOf(date))}"></label>
+    </div>
+    <div class="small ${h != null && h < goal - 0.5 ? 'danger' : 'muted'}">${h != null ? `${fmtHours(h)} in bed · goal ${goal} h${S.wakeTimes[date] ? '' : ' (using your usual wake time; change it above)'}` : `Enter when you went to bed. Goal: ${goal} h.`}</div>
+    <div class="label">Energy</div>
+    <div class="scale">${ENERGY.map((l, i) => `<button class="chip ${s.energy === i+1 ? 'on' : ''}" data-en="${i+1}"><b>${i+1}</b><small>${l}</small></button>`).join('')}</div>
+    <div class="label">Muscle soreness</div>
+    <div class="scale">${SORE.map((l, i) => `<button class="chip ${s.sore === i+1 ? 'on' : ''}" data-so="${i+1}"><b>${i+1}</b><small>${l}</small></button>`).join('')}</div>
+    ${r ? `<div class="note rd-note rd-${r.level}"><b>${esc(r.label)}</b>${r.flags.length ? ` · ${esc(r.flags.join(', '))}` : ''}<br>${esc(r.text)}</div>` : ''}`;
+  $('rdBed').onchange = e => { setSleep(date, {bed: e.target.value || null}); e.target.blur(); renderReady(); renderChecklist(); };
+  $('rdWake').onchange = e => { if (e.target.value) S.wakeTimes[date] = e.target.value; else delete S.wakeTimes[date]; save(); e.target.blur(); renderToday(); };
+  el.querySelectorAll('[data-en]').forEach(b => b.onclick = () => { setSleep(date, {energy: +b.dataset.en === s.energy ? null : +b.dataset.en}); renderReady(); });
+  el.querySelectorAll('[data-so]').forEach(b => b.onclick = () => { setSleep(date, {sore: +b.dataset.so === s.sore ? null : +b.dataset.so}); renderReady(); });
+  if ($('rdDone')) $('rdDone').onclick = () => { ui.readyOpen = null; renderReady(); };
+  if ($('rdLater')) $('rdLater').onclick = () => { ui.readyOpen = 'closed:' + date; renderReady(); };
+}
+/* ---------- TODAY: daily checklist + streaks ---------- */
+let ckQueued = false;
+function queueChecklist(){ if (ckQueued) return; ckQueued = true; requestAnimationFrame(() => { ckQueued = false; if (ui.tab === 'today') renderChecklist(); }); }
+function renderChecklist(){
+  const el = $('checkCard'), date = ui.date, t = todayStr(), list = checklistFor(date), st = streaks();
+  const d = list.filter(x => x.done).length;
+  if (date === t) celebrate(st);
+  const sp = (n, u, label, s) => `<span class="spill ${s.todayDone ? 'lit' : ''}" title="Best: ${s.best} ${u}"><b class="num">${n}</b> ${label}</span>`;
+  el.innerHTML = `<div class="between"><h2>Daily checklist</h2><span class="row"><span class="num ckscore ${d === list.length && list.length ? 'full' : ''}">${d}/${list.length}</span><button class="badge" id="ckEdit">Edit</button></span></div>
+    <div class="streaks">${sp(st.kcal.cur, 'days', `day${st.kcal.cur === 1 ? '' : 's'} on calories`, st.kcal)}${sp(st.train.cur, 'sessions', `session${st.train.cur === 1 ? '' : 's'} in a row`, st.train)}${sp(st.perfect.cur, 'days', `perfect day${st.perfect.cur === 1 ? '' : 's'}`, st.perfect)}</div>
+    <div class="cklist">${list.map(x => `<button class="ckitem ${x.done ? 'done' : ''}" data-ck="${esc(x.id)}"><span class="ckbox">${x.done ? '✓' : ''}</span><span class="cktxt"><span class="cklabel">${esc(x.label)}</span>${x.detail ? `<span class="ckdet">${esc(x.detail)}</span>` : ''}</span></button>`).join('')}</div>
+    ${date > t ? '<div class="small muted">A future day: items tick as you log.</div>' : '<div class="small muted">Most items tick themselves from what you log. Tap one to go there.</div>'}`;
+  $('ckEdit').onclick = openChecklistSheet;
+  el.querySelectorAll('[data-ck]').forEach(b => b.onclick = () => checkAction(date, b.dataset.ck));
+}
+function checkAction(date, id){
+  const it = checklistFor(date).find(x => x.id === id); if (!it) return;
+  if (!it.auto || id === 'creatine'){
+    if (id === 'creatine' && ((S.mealsDone||{})[date] || {}).smoothie) { toast('Ticked by the smoothie (it has the 5 g)'); return; }
+    if (toggleCheck(date, id)) buzz(15); renderChecklist(); return;
+  }
+  if (id === 'train'){ const left = routineFor(date).find(x => !logsOn(date).some(l => l.ex === x)) || routineFor(date)[0]; if (left) setExercise(left); showTab('log'); return; }
+  if (id === 'kcal' || id === 'protein'){ showTab('fuel'); return; }
+  if (id === 'water'){ const c = addWater(1, date); renderWater(); renderChecklist(); buzz(15); toast(`${fmtKg(c*S.settings.sitting/1000)} L water`); return; }
+  if (id === 'sleep'){ ui.readyOpen = date; renderReady(); $('readyCard').scrollIntoView({behavior:'smooth', block:'start'}); setTimeout(() => $('rdBed') && $('rdBed').focus(), 350); return; }
+  if (id === 'weigh'){
+    const last = [...S.body].sort((a,b) => a.date.localeCompare(b.date)).at(-1);
+    openSheet(`<h2>Weigh in</h2><div class="small muted">Morning, after the toilet, before food: same conditions every day.</div>
+      <input type="number" id="wiVal" inputmode="decimal" step="0.1" placeholder="${last ? 'Last: ' + fmtKg(last.w) + ' kg' : 'Weight in kg'}">
+      <div class="seg"><button class="btn" data-close>Cancel</button><button class="btn primary" id="wiGo">Log weight</button></div>`, root => {
+      root.querySelector('[data-close]').onclick = closeSheet;
+      setTimeout(() => root.querySelector('#wiVal').focus(), 60);
+      root.querySelector('#wiGo').onclick = () => { if (logBodyWeight(parseFloat(root.querySelector('#wiVal').value), 'Fasted morning', date)) { closeSheet(); renderAll(); } };
+    });
+  }
+}
+function openChecklistSheet(){
+  const draw = root => {
+    const off = S.checklistOff || {};
+    root.querySelector('#clBody').innerHTML = `<div class="label">Ticks itself</div>
+      ${CHECK_BUILTIN.map(b => `<label class="row small clrow"><input type="checkbox" data-cb="${b.id}" ${off[b.id] ? '' : 'checked'}> ${esc(b.label)}</label>`).join('')}
+      <div class="label" style="margin-top:8px">Your habits (tick by hand)</div>
+      ${(S.habits||[]).map((h, i) => `<div class="row" style="flex-wrap:nowrap"><input type="text" data-hn="${i}" value="${esc(h.name)}" style="flex:1" aria-label="Habit name"><button class="icon" data-hdel="${i}" aria-label="Delete ${esc(h.name)}">✕</button></div>`).join('') || '<div class="small muted">None yet. Ideas: stretch 10 min, no junk food, 10k steps, bed by 11.</div>'}
+      <div class="row" style="flex-wrap:nowrap"><input type="text" id="clNew" placeholder="New habit" style="flex:1" autocomplete="off"><button class="btn" id="clAdd">Add</button></div>`;
+    root.querySelectorAll('[data-cb]').forEach(c => c.onchange = () => { S.checklistOff = S.checklistOff || {}; if (c.checked) delete S.checklistOff[c.dataset.cb]; else S.checklistOff[c.dataset.cb] = true; save(); });
+    root.querySelectorAll('[data-hn]').forEach(i => i.onchange = () => { const v = i.value.trim(); if (v) { S.habits[+i.dataset.hn].name = v; save(); } });
+    root.querySelectorAll('[data-hdel]').forEach(b => b.onclick = () => { const i = +b.dataset.hdel, [h] = S.habits.splice(i, 1); save(); draw(root); toast(`Deleted ${h.name}`, () => { S.habits.splice(i, 0, h); save(); draw(root); }); });
+    const add = () => { const v = root.querySelector('#clNew').value.trim(); if (!v) return; S.habits = [...(S.habits||[]), {id: 'h-' + uid(), name: v, since: todayStr()}]; save(); draw(root); root.querySelector('#clNew').focus(); };
+    root.querySelector('#clAdd').onclick = add; root.querySelector('#clNew').onkeydown = e => { if (e.key === 'Enter') add(); };
+  };
+  openSheet(`<h2>Daily checklist</h2><div class="small muted">Turned-off items don't count toward your score or perfect days.</div><div id="clBody" class="stack" style="gap:8px"></div>
+    <button class="btn primary" data-close>Done</button>`, root => { draw(root); root.querySelector('[data-close]').onclick = () => { closeSheet(); renderAll(); }; });
 }
 function renderBurnBanner(date, P){
   const el = $('burnBanner'), t = todayStr(), name = esc(dayName(date, P));
@@ -1070,6 +1234,7 @@ function renderWater(){
   $('drops').style.gridTemplateColumns = `repeat(${Math.min(n, 10)},1fr)`;
   $('drops').innerHTML = Array.from({length:n}, (_,i) => `<button class="drop ${i<c?'on':''}" data-i="${i+1}" aria-label="${i+1} sittings">${fmtKg((i+1)*sit/1000)}L</button>`).join('');
   $('drops').querySelectorAll('.drop').forEach(b => b.onclick = () => { const i = +b.dataset.i; S.water[ui.date] = (i === c ? i-1 : i); save(); renderWater(); });
+  queueChecklist();
 }
 function addWater(n, date = ui.date){
   S.water[date] = Math.max(0, waterCount(date) + n); save();
@@ -1230,6 +1395,7 @@ function renderFuelToday(){
   el.querySelectorAll('[data-mopen]').forEach(b => b.onclick = () => { ui.openMeal = ui.openMeal === b.dataset.mopen ? null : b.dataset.mopen; renderFuelToday(); });
   el.querySelectorAll('[data-mdone]').forEach(b => b.onclick = () => { if (tickMeal(date, b.dataset.mdone)) buzz(15); renderFuelToday(); });
   if ($('fLogOther')) $('fLogOther').onclick = () => openFoodSheet(date);
+  queueChecklist();
   el.querySelectorAll('[data-mopt]').forEach(b => b.onclick = () => { const [k, id] = b.dataset.mopt.split('|'); S.mealChoice[k] = id; save();
     if ((S.mealsDone[date]||{})[k]) { tickMeal(date, k, false); tickMeal(date, k, true); }   // ticked already: log the new pick instead
     renderFuelToday(); });
@@ -1621,6 +1787,183 @@ function bmrLine(tg){
   return `<div class="note">Standard estimate (Mifflin–St Jeor, age ${age}, ${h} cm, ${fmtKg(tg.kg)} kg): BMR ~${Math.round(bmr/10)*10} kcal, maintenance ~${lo}–${hi} kcal with 5 training days. Your ${k} kcal target is ${d1 >= 0 ? '+' : ''}${d1} to ${d2 >= 0 ? '+' : ''}${d2} kcal, ${verdict}</div>`;
 }
 
+/* ---------- SLEEP + READINESS ----------
+   Bedtime is stored on the morning it ends (S.sleep[date].bed = when you went to bed the night before);
+   wake time is the same one the meal planner uses. */
+const sleepOf = date => (S.sleep || {})[date] || {};
+function sleepHours(date){
+  const bed = toMin(sleepOf(date).bed); if (bed == null) return null;
+  const wake = toMin(wakeOf(date));
+  const mins = ((wake - bed) % 1440 + 1440) % 1440;
+  return mins >= 120 ? Math.round(mins/6)/10 : null;   // under 2 h is almost certainly a typo
+}
+const sleepGoal = () => +S.profile.sleepHours || 7.5;
+const fmtHours = h => h == null ? '–' : `${Math.floor(h)} h${Math.round((h % 1)*60) ? ' ' + Math.round((h % 1)*60) + ' min' : ''}`;
+function setSleep(date, patch){
+  S.sleep = S.sleep || {};
+  const v = {...sleepOf(date), ...patch};
+  Object.keys(v).forEach(k => { if (v[k] == null || v[k] === '') delete v[k]; });
+  if (Object.keys(v).length) S.sleep[date] = v; else delete S.sleep[date];
+  save();
+}
+/* readiness: sleep, energy and soreness → how hard to push today. Short sleep mostly costs reps on later sets of big lifts. */
+function readiness(date){
+  const h = sleepHours(date), s = sleepOf(date), goal = sleepGoal();
+  if (h == null && !s.energy && !s.sore) return null;
+  const flags = [], good = [];
+  if (h != null){ if (h < 6) flags.push(`${fmtHours(h)} sleep`); else if (h >= goal - 0.25) good.push('slept enough'); }
+  if (s.energy){ if (s.energy <= 2) flags.push('low energy'); else if (s.energy >= 4) good.push('good energy'); }
+  if (s.sore){ if (s.sore >= 4) flags.push('very sore'); else if (s.sore <= 2) good.push('fresh'); }
+  if (S.badminton[addDays(date, -1)]) flags.push('badminton last night');
+  const training = isTraining(date);
+  if (flags.length >= 2 || (h != null && h < 5)) return {level:'easy', label:'Take it easy', flags,
+    text: training ? 'Keep 2–3 reps in reserve, skip weight increases today and drop the last set of isolation work if you feel flat. A lighter session still counts. Sleep early tonight.' : 'Rest day: eat everything and get to bed early tonight.'};
+  if (flags.length === 1) return {level:'normal', label:'Normal day', flags,
+    text: training ? `Train as planned, but don't chase a new weight on the first lift if it feels heavy (${flags[0]}).` : 'Rest, eat, hydrate.'};
+  return {level:'good', label: good.length >= 2 ? 'Ready to push' : 'Normal day', flags, good,
+    text: training ? (good.length >= 2 ? 'Good day for the weight increases the Log screen suggests.' : 'Train as planned.') : 'Rest, eat, hydrate.'};
+}
+
+/* ---------- DAILY CHECKLIST ----------
+   Built-in items tick themselves from what you log; your own habits are ticked by hand. */
+const CHECK_BUILTIN = [
+  {id:'train', label:'Train'}, {id:'kcal', label:'Hit calories'}, {id:'protein', label:'Hit protein'}, {id:'water', label:'Drink water'},
+  {id:'weigh', label:'Weigh in'}, {id:'creatine', label:'Creatine 5 g'}, {id:'sleep', label:'Sleep enough'}
+];
+/* a training day counts as done once 75% of its planned working sets are logged */
+function trainStatus(date){
+  const list = routineFor(date); if (!list.length || S.excused[date]) return null;
+  const slot = slotOf(date), planned = list.reduce((a, ex) => a + targetFor(ex, slot).sets, 0), n = logsOn(date).length;
+  return {planned, n, done: n >= Math.ceil(planned * 0.75)};
+}
+const hasDayData = date => logsOn(date).length || foodList(date).length || Object.keys((S.mealsDone||{})[date] || {}).length || waterCount(date) || S.body.some(b => b.date === date) || (S.sleep||{})[date];
+function checklistFor(date){
+  const out = [], ticks = (S.checks || {})[date] || {}, off = S.checklistOff || {}, t = todayStr();
+  const add = (id, label, counted, done, detail, auto = true) => { if (!off[id]) out.push({id, label, counted, done: !!done, detail, auto}); };
+  // train: rest days and excused skips don't count
+  const tr = trainStatus(date);
+  if (tr) add('train', 'Train', true, tr.done, `${tr.n}/${tr.planned} sets`);
+  if (PLAN){
+    const tg = targetsFor(date), tot = eatenTotals(date);
+    add('kcal', 'Hit calories', true, tot.k >= tg.kcal * 0.95, `${tot.k}/${tg.kcal}`);
+    add('protein', 'Hit protein', true, tot.p >= tg.pLo, `${tot.p}/${tg.pLo} g`);
+  }
+  const wg = waterGoalSittings(date), wc = waterCount(date);
+  add('water', 'Drink water', true, wc >= wg, `${fmtKg(wc*S.settings.sitting/1000)}/${fmtKg(Math.round(wg*S.settings.sitting/100)/10)} L`);
+  add('weigh', 'Weigh in', true, S.body.some(b => b.date === date), S.body.find(b => b.date === date) ? fmtKg(S.body.find(b => b.date === date).w) + ' kg' : 'morning');
+  add('creatine', 'Creatine 5 g', true, ticks.creatine || ((S.mealsDone||{})[date] || {}).smoothie, ((S.mealsDone||{})[date] || {}).smoothie ? 'in smoothie' : 'tap when taken', !((S.mealsDone||{})[date] || {}).smoothie);
+  const h = sleepHours(date);
+  add('sleep', 'Sleep enough', true, h != null && h >= sleepGoal() - 0.5, h == null ? 'log bedtime' : `${fmtHours(h)}`);
+  (S.habits || []).forEach(x => { if (!x.since || x.since <= date) out.push({id: x.id, label: x.name, counted: true, done: !!ticks[x.id], detail: '', auto: false, custom: true}); });
+  return out.filter(x => x.counted);
+}
+function dayScore(date){
+  const l = checklistFor(date); if (!l.length) return null;
+  const d = l.filter(x => x.done).length;
+  return {done: d, total: l.length, pct: d / l.length};
+}
+function toggleCheck(date, id){
+  S.checks = S.checks || {}; const c = S.checks[date] = S.checks[date] || {};
+  if (c[id]) delete c[id]; else c[id] = Date.now();
+  if (!Object.keys(c).length) delete S.checks[date];
+  save(); return !!(c && c[id]);
+}
+
+/* ---------- STREAKS + CONSISTENCY ----------
+   Streaks count back from yesterday; today extends the streak once it's done, and doesn't break it while it's still in progress.
+   Days before you started tracking (no data at all, before checklistSince) don't count. */
+const trackStart = () => { const f = addDays(todayStr(), -179); let first = S.checklistSince || todayStr();
+  ['logs','body'].forEach(k => S[k].forEach(x => { if (x.date < first) first = x.date; }));
+  [S.food, S.mealsDone, S.water].forEach(o => Object.keys(o || {}).forEach(d => { if (d < first) first = d; }));
+  return first < f ? f : first; };
+function counted(date){ return date >= (S.checklistSince || todayStr()) || hasDayData(date); }
+function kcalHit(date){ if (!PLAN) return null; return eatenTotals(date).k >= targetsFor(date).kcal * 0.95; }
+function streakOf(test, {unit = 'days'} = {}){
+  const t = todayStr(), start = trackStart();
+  let cur = 0, best = 0, run = 0, curDone = false;
+  // walk forward for best, then read the current run
+  for (let d = start; d <= t; d = addDays(d, 1)){
+    const r = test(d);
+    if (r === null) continue;                     // not applicable (rest day, nothing planned)
+    if (r) { run++; best = Math.max(best, run); }
+    else if (d === t) { /* today still in progress */ }
+    else run = 0;
+  }
+  cur = run; curDone = test(t) === true;
+  return {cur, best, todayDone: curDone, unit};
+}
+function streaks(){
+  const t = todayStr();
+  const train = d => { const s = trainStatus(d); if (!s) return null; if (s.done) return true; return d === t ? null : false; };
+  const perfect = d => { if (!counted(d)) return null; const s = dayScore(d); return s ? s.done === s.total : null; };
+  const kcal = d => counted(d) ? kcalHit(d) : null;
+  return {kcal: streakOf(kcal), train: streakOf(train, {unit:'sessions'}), perfect: streakOf(perfect)};
+}
+function consistency(days){
+  const t = todayStr(), res = {days:0, score:0, items:{}};
+  for (let i = 1; i <= days; i++){
+    const d = addDays(t, -i); if (!counted(d)) continue;
+    const l = checklistFor(d); if (!l.length) continue;
+    res.days++; res.score += l.filter(x => x.done).length / l.length;
+    l.forEach(x => { const it = res.items[x.id] = res.items[x.id] || {label: x.label, hit:0, n:0}; it.n++; if (x.done) it.hit++; });
+  }
+  res.pct = res.days ? Math.round(res.score / res.days * 100) : null;
+  const sl = []; for (let i = 0; i < 7; i++){ const h = sleepHours(addDays(t, -i)); if (h != null) sl.push(h); }
+  res.sleepAvg = sl.length ? Math.round(sl.reduce((a,b) => a+b, 0) / sl.length * 10) / 10 : null;
+  return res;
+}
+const MILESTONES = [3, 7, 14, 21, 30, 50, 75, 100, 150, 200, 365];
+function celebrate(st){
+  const t = todayStr(); S.celebrated = S.celebrated || {};
+  for (const [k, name] of [['kcal','Calorie'],['train','Training'],['perfect','Perfect-day']]){
+    const s = st[k], key = `${k}-${s.cur}`;
+    if (s.todayDone && MILESTONES.includes(s.cur) && !S.celebrated[key]){
+      S.celebrated[key] = t; save();
+      toast(`${name} streak: ${s.cur} ${s.unit} in a row. Keep it going.`); buzz([60, 40, 60]); return;
+    }
+  }
+}
+
+/* ---------- LIFT GOALS ----------
+   Goal = a weight × reps you want to hit. Progress uses estimated 1RM (Epley); "can do now" converts that back to your goal's reps. */
+const repsWeight = (e1, r) => r === 1 ? e1 : e1 / (1 + r/30);
+function recentE1(ex, days = 42){
+  const cut = addDays(todayStr(), -days), l = S.logs.filter(x => x.ex === ex && x.date >= cut);
+  return l.length ? Math.max(...l.map(x => e1rm(x.w, x.r))) : bestE1(ex);
+}
+/* least-squares slope of best e1RM per session over the last 10 weeks, in kg per week */
+function e1Trend(ex){
+  const cut = addDays(todayStr(), -70), byDay = {};
+  S.logs.filter(l => l.ex === ex && l.date >= cut).forEach(l => { byDay[l.date] = Math.max(byDay[l.date] || 0, e1rm(l.w, l.r)); });
+  const pts = Object.keys(byDay).sort().map(d => [parseYmd(d).getTime() / 6048e5, byDay[d]]);
+  if (pts.length < 3 || pts.at(-1)[0] - pts[0][0] < 2) return null;
+  const n = pts.length, mx = pts.reduce((a,p) => a + p[0], 0)/n, my = pts.reduce((a,p) => a + p[1], 0)/n;
+  const sxx = pts.reduce((a,p) => a + (p[0]-mx)**2, 0); if (!sxx) return null;
+  return {slope: pts.reduce((a,p) => a + (p[0]-mx)*(p[1]-my), 0) / sxx, sessions: n};
+}
+function goalStatus(g){
+  const goalE = e1rm(g.w, g.r), now = recentE1(g.ex), start = g.start || 0;
+  const pct = g.hit ? 100 : goalE <= start ? (now >= goalE ? 100 : 0) : Math.max(0, Math.min(100, (now - start) / (goalE - start) * 100));
+  const canNow = now ? Math.floor(repsWeight(now, g.r) / 0.5) * 0.5 : 0;
+  let eta = '';
+  if (g.hit) eta = `Hit on ${fmtDate(g.hit, {day:'numeric', month:'short', year:'numeric'})}.`;
+  else if (!now) eta = `Log ${g.ex} to start tracking.`;
+  else if (now >= goalE) eta = `Your estimated strength is there. Try ${fmtKg(g.w)} kg × ${g.r} on a good day.`;
+  else {
+    const tr = e1Trend(g.ex);
+    if (!tr) eta = 'Projection appears after 3 sessions over 2+ weeks.';
+    else if (tr.slope <= 0.05) eta = 'Not moving up lately. Check sleep, calories and that you add weight when the app suggests it.';
+    else { const wk = (goalE - now) / tr.slope;
+      eta = wk > 104 ? 'More than 2 years at the current rate.' : `About ${fmtDate(addDays(todayStr(), Math.round(wk*7)), {day:'numeric', month:'short', year:'numeric'})} at your current rate (${sign(Math.round(tr.slope*10)/10)} kg e1RM/week; gains slow as you get stronger).`; }
+  }
+  return {goalE, now, pct, canNow, eta};
+}
+/* a logged set that meets a goal marks it hit */
+function checkGoals(set){
+  (S.liftGoals || []).forEach(g => { if (!g.hit && g.ex === set.ex && set.w >= g.w && set.r >= g.r){ g.hit = set.date; save();
+    setTimeout(() => { toast(`Goal hit: ${g.ex} ${fmtKg(g.w)} kg × ${g.r}. Set the next one in History.`); buzz([80, 50, 80, 50, 160]); }, 400); } });
+}
+
 /* ---------- weekly check-in (Body tab) ---------- */
 function renderCheckIn(st){
   const el = $('checkInCard');
@@ -1682,6 +2025,8 @@ function renderTargetCard(){
   const t = targetOn(ex), slot = slotForEx(ex), sug = suggestNext(ex);
   const done = logsOn(ui.date).filter(l => l.ex === ex).length;
   const wu = t.focus === 'strength' || STRENGTH_LIFTS.test(ex) ? warmupsFor(ex, sug ? sug.w : ui.w) : [];
+  const rd = ui.date === todayStr() ? readiness(ui.date) : null;
+  const goal = (S.liftGoals || []).find(g => g.ex === ex && !g.hit), gs = goal ? goalStatus(goal) : null;
   el.innerHTML = `<div class="between"><div><div class="label">${slot ? 'Target · ' + esc(S.split[slot].name) + ' day' : 'Target · extra exercise'}</div>
       <div class="tline">${t.sets} × ${t.reps[0] === t.reps[1] ? t.reps[0] : t.reps[0] + '–' + t.reps[1]} <small>@ RIR ${esc(t.rir)}</small></div></div>
       <button class="badge" id="tgEdit">Edit</button></div>
@@ -1689,6 +2034,8 @@ function renderTargetCard(){
       <span class="muted">· ${done >= t.sets ? `all ${t.sets} sets done ✓` : `set ${done + 1} of ${t.sets}`}</span></div>
     ${t.cue ? `<div class="small muted">${esc(t.cue)}</div>` : ''}
     ${sug ? `<div class="note ${sug.kind === 'up' ? 'up-note' : ''}">${esc(sug.msg)}${sug.w !== ui.w && sug.w > 0 ? ` <button class="chip" id="tgUse">Use ${fmtKg(sug.w)} kg</button>` : ''}</div>` : '<div class="small muted">First session: pick a weight you could lift for ' + (t.reps[1] + 2) + ' reps, then adjust.</div>'}
+    ${rd && rd.level === 'easy' ? `<div class="note rd-note rd-easy"><b>Take it easy today</b> · ${esc(rd.flags.join(', '))}. ${sug && sug.kind === 'up' ? `Stay at ${fmtKg(sug.w - stepFor(ex))} kg instead of going up, and keep` : 'Keep'} 2–3 reps in reserve.</div>` : ''}
+    ${goal ? `<div class="small">Goal ${fmtKg(goal.w)} kg × ${goal.r}: ${gs.now >= gs.goalE ? 'your estimate says you are ready.' : `about ${fmtKg(Math.max(0, Math.round((goal.w - gs.canNow)*2)/2))} kg to go at ${goal.r} reps (now ~${fmtKg(gs.canNow)} kg × ${goal.r}).`}</div>` : ''}
     ${wu.length ? `<div><div class="label">Warm-up first (not logged)</div><div class="chips">${wu.map(x => `<span class="chip ghostchip">${fmtKg(x.w)} × ${x.r}</span>`).join('')}</div><div class="small muted">60–90 s between warm-up sets.</div></div>` : ''}`;
   $('tgEdit').onclick = () => openTargetEditor(ex, slot);
   if ($('tgUse')) $('tgUse').onclick = () => { ui.w = sug.w; renderLoggerControls(); };
@@ -1769,7 +2116,7 @@ function deleteSet(id){
 }
 function logSet(ex, w, r, date = ui.date){
   const rec = {id:uid(), date, t:Date.now(), ex, w:+w, r:+r};
-  S.logs.push(rec); save(); return rec;
+  S.logs.push(rec); save(); checkGoals(rec); return rec;
 }
 $('exInput').addEventListener('change', e => { if (e.target.value.trim()) setExercise(e.target.value); });
 $('exInput').addEventListener('input', e => { const v = e.target.value.trim().toLowerCase(); const hit = allExerciseNames().find(n => n.toLowerCase() === v); if (hit && hit !== ui.ex) setExercise(hit); });
@@ -1981,7 +2328,7 @@ function renderBody(){
       <div class="stat"><div class="label">Net change</div><div class="v ${st.net>0?'up':st.net<0?'down':''}">${sign(st.net)}<small class="muted"> kg</small></div><div class="small muted">since ${fmtDate(st.first.date)}</div></div>
       <div class="stat"><div class="label">Weekly rate</div><div class="v ${r>0?'up':r<0?'down':''}">${r==null?'–':sign(Math.round(r*100)/100)}<small class="muted">${r==null?'':' kg/wk'}</small></div><div class="small muted">${r==null?'Needs 2+ entries':'last 3 weeks'}</div></div>`;
   }
-  renderCheckIn(st);
+  renderCheckIn(st); renderConsistency();
   // goal
   const tgt = S.target;
   let g = `<div class="between"><h2>Bulk goal</h2></div>
@@ -2047,18 +2394,146 @@ function lineChart(pts, {unit='', target=null} = {}){
   </svg>`;
 }
 
+/* ---------- REMINDERS (meals incl. smoothie, morning weigh-in, bedtime) ----------
+   Times come from each day's meal schedule, so they move with your wake and gym time.
+   Android app: scheduled with the system 3 days ahead and re-planned whenever your data changes, so they fire with the app closed.
+   Browser: shown while the app is open or recently in the background (Chrome can't schedule hours ahead). */
+const REM_BASE = 3000, REM_SLOTS = 3*16;
+function remindersFor(date){
+  const R = S.settings.reminders || {}, out = [], sc = PLAN && scheduleFor(date); if (!sc) return out;
+  const lead = +R.lead || 0, done = (S.mealsDone || {})[date] || {}, base = parseYmd(date).getTime();
+  const at = m => new Date(base + m*60000);   // minutes past midnight on that date (bedtime may pass midnight)
+  if (R.meals) mealItems(sc).forEach(i => { if (done[i.key]) return;
+    const o = optionFor(i.key), label = PLAN.meals[i.key].label;
+    out.push({key: 'meal-' + i.key, at: at(i.t - lead), title: lead ? `${label} in ${lead} min: ${o.name}` : `${label}: ${o.name}`, body: o.what}); });
+  if (R.weigh && !S.body.some(b => b.date === date)) out.push({key: 'weigh', at: at(sc.wake + 10), title: 'Weigh in', body: 'Before breakfast, after the toilet. Log it in the checklist.'});
+  if (R.bed) out.push({key: 'bed', at: at(sc.sleep - 15), title: 'Lights out in 15 min', body: `Bed by ${fmtMin(sc.sleep)} for ${sleepGoal()} h before your ${fmtMin(sc.wake)} wake-up. Phone away.`});
+  return out.sort((a, b) => a.at - b.at);
+}
+function upcomingReminders(days = 3){
+  if (!PLAN || S.settings.notify === false) return [];
+  const now = Date.now(), list = [];
+  for (let i = -1; i < days; i++){ const d = addDays(todayStr(), i); remindersFor(d).forEach(r => { if (r.at.getTime() > now + 20000) list.push({...r, date: d}); }); }
+  return list.sort((a, b) => a.at - b.at);
+}
+let remSig = null;
+async function scheduleReminders(){
+  if (!NATIVE || !LN) return;
+  const list = upcomingReminders(3).slice(0, REM_SLOTS);
+  const sig = list.map(r => r.key + r.at.getTime()).join('|');
+  if (sig === remSig) return;
+  if (!(await nativeSetup())) return;
+  try { await LN.createChannel({id:'reminders', name:'Meal, weigh-in and bedtime reminders', importance:4, visibility:1, vibration:true}); } catch(e) {}
+  try { await LN.cancel({notifications: Array.from({length: REM_SLOTS}, (_, i) => ({id: REM_BASE + i}))}); } catch(e) {}
+  if (list.length) try { await LN.schedule({notifications: list.map((r, i) => ({id: REM_BASE + i, title: r.title, body: r.body, channelId: 'reminders', autoCancel: true,
+    schedule: {at: r.at, allowWhileIdle: true}}))}); } catch(e) {}
+  remSig = sig;
+}
+/* browser: fire due reminders while the page is alive */
+const REM_FIRED = 'ironpulse.remfired';
+function webReminderTick(){
+  if (NATIVE || !PLAN || S.settings.notify === false) return;
+  let fired = {}; try { fired = JSON.parse(localStorage.getItem(REM_FIRED) || '{}'); } catch(e) {}
+  const now = Date.now(), t = todayStr();
+  [addDays(t, -1), t].forEach(d => remindersFor(d).forEach(r => {
+    const k = d + '|' + r.key, due = r.at.getTime();
+    if (fired[k] || due > now || now - due > 10*60000) return;
+    fired[k] = now;
+    const canNotify = 'Notification' in window && Notification.permission === 'granted';
+    if (document.visibilityState === 'visible' || !canNotify) { toast(`${r.title}: ${r.body}`); buzz([200, 100, 200]); }
+    else navigator.serviceWorker && navigator.serviceWorker.ready.then(reg => reg.showNotification(r.title, {body: r.body, tag: 'rem-' + r.key, icon: 'icon-192.png', badge: 'icon-192.png', vibrate: [200, 100, 200]})).catch(() => {});
+  }));
+  Object.keys(fired).forEach(k => { if (k.slice(0, 10) < addDays(t, -3)) delete fired[k]; });
+  try { localStorage.setItem(REM_FIRED, JSON.stringify(fired)); } catch(e) {}
+}
+setInterval(webReminderTick, 30000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { webReminderTick(); scheduleReminders(); } });
+
+/* ---------- BODY: consistency (streaks, score, per-habit rates, 12-week heatmap) ---------- */
+function renderConsistency(){
+  const el = $('consistCard'), st = streaks(), c7 = consistency(7), c30 = consistency(30), t = todayStr();
+  const big = (s, label) => `<div class="stat"><div class="label">${label}</div><div class="v">${s.cur}<small class="muted"> ${s.unit}</small></div><div class="small muted">best ${s.best}${s.todayDone ? ' · today ✓' : ''}</div></div>`;
+  const items = Object.entries(c30.items).map(([id, x]) => ({id, ...x, r: x.n ? x.hit / x.n : 0})).sort((a, b) => a.r - b.r);
+  const weakest = items.find(x => x.r < 0.8);
+  // heatmap: 12 weeks, Monday-first columns, newest on the right
+  const start = addDays(mondayOf(t), -77), cols = [];
+  for (let w = 0; w < 12; w++){
+    const cells = [];
+    for (let d = 0; d < 7; d++){
+      const date = addDays(start, w*7 + d);
+      let cls = 'h-none', tip = fmtDate(date, {day:'numeric', month:'short'});
+      if (date > t) cls = 'h-future';
+      else if (counted(date)){ const sc = dayScore(date); if (sc){ const p = sc.pct; cls = p >= 1 ? 'h4' : p >= 0.75 ? 'h3' : p >= 0.5 ? 'h2' : p > 0 ? 'h1' : 'h0'; tip += ` · ${sc.done}/${sc.total}`; } }
+      cells.push(`<button class="hcell ${cls} ${date === t ? 'htoday' : ''}" data-hd="${date}" title="${esc(tip)}" aria-label="${esc(tip)}" ${date > t ? 'disabled' : ''}></button>`);
+    }
+    cols.push(`<div class="hcol">${cells.join('')}</div>`);
+  }
+  el.innerHTML = `<div class="between"><h2>Consistency</h2><span class="small muted">${c7.pct != null ? `7 days ${c7.pct}% · 30 days ${c30.pct}%` : 'builds as you log'}</span></div>
+    <div class="stats">${big(st.kcal, 'Calorie streak')}${big(st.train, 'Training streak')}${big(st.perfect, 'Perfect days')}<div class="stat"><div class="label">Sleep, 7-day avg</div><div class="v">${c7.sleepAvg != null ? c7.sleepAvg : '–'}<small class="muted"> h</small></div><div class="small muted">goal ${sleepGoal()} h</div></div></div>
+    <div class="heat"><div class="hdays"><span>M</span><span></span><span>W</span><span></span><span>F</span><span></span><span>S</span></div><div class="hgrid">${cols.join('')}</div></div>
+    <div class="row small muted hlegend"><span>Checklist: none</span><i class="hcell h0"></i><i class="hcell h1"></i><i class="hcell h2"></i><i class="hcell h3"></i><i class="hcell h4"></i><span>all</span><span>· tap a day to open it</span></div>
+    ${items.length ? `<div class="label">Last 30 days, weakest first</div>
+    <div class="rates">${items.map(x => `<div class="rate"><span>${esc(x.label)}</span><div class="track ${x.r < 0.5 ? 'bad' : ''}"><i style="width:${Math.round(x.r*100)}%"></i></div><span class="num small">${x.hit}/${x.n}</span></div>`).join('')}</div>
+    ${weakest ? `<div class="note">Biggest lever right now: <b>${esc(weakest.label.toLowerCase())}</b> (${weakest.hit} of ${weakest.n} days). ${({kcal:'For a hard gainer this is what moves the scale. Use liquid calories: the smoothie and bedtime milk are the easiest 1,300 kcal of the day.', protein:'Add a curd bowl or 2 boiled eggs to the snack.', water:'Fill a 1 L bottle after each meal; three refills covers most of it.', sleep:'Muscle is built while you sleep. Set the bedtime reminder in Plan → Alerts & reminders.', train:'Missed sessions shift your week; even a 30-minute version of the session keeps the streak.', weigh:'Weighing daily makes the weekly check-in accurate. Do it before breakfast.', creatine:'Take it with the smoothie or any meal, every day, including rest days.'})[weakest.id] || 'Tick it as soon as it\'s done so it doesn\'t slip.'}</div>` : '<div class="small muted">Every habit above 80% over 30 days. That\'s the 1% better every day.</div>'}` : ''}`;
+  el.querySelectorAll('[data-hd]').forEach(b => b.onclick = () => { ui.date = b.dataset.hd; ui.week = mondayOf(ui.date); showTab('today'); });
+}
+
+/* ---------- HISTORY: lift goals ---------- */
+function renderGoals(){
+  const el = $('goalsCard'), all = S.liftGoals || [], open = all.filter(g => !g.hit), done = all.filter(g => g.hit).sort((a,b) => b.hit.localeCompare(a.hit));
+  el.innerHTML = `<div class="between"><h2>Lift goals</h2><button class="badge" id="lgAdd">+ Goal</button></div>
+    ${open.length ? open.map(g => { const s = goalStatus(g); return `<div class="goal">
+      <div class="between"><div><b>${esc(g.ex)}</b> <span class="num">${fmtKg(g.w)} kg × ${g.r}</span></div><span class="row"><span class="small muted">${Math.round(s.pct)}%</span><button class="icon sm" data-lgdel="${g.id}" aria-label="Delete goal">✕</button></span></div>
+      <div class="track"><i style="width:${s.pct}%"></i></div>
+      <div class="small">${s.now ? `Now ~${fmtKg(s.canNow)} kg × ${g.r} (estimated from your best recent set).` : ''} ${esc(s.eta)}</div></div>`; }).join('') : '<div class="small muted">Set a target like Bench Press 80 kg × 5. The app estimates where you are now from your sets, projects a date from your trend, and marks it hit when you log it.</div>'}
+    ${done.length ? `<details class="small"><summary class="muted">${done.length} goal${done.length > 1 ? 's' : ''} hit</summary>${done.map(g => `<div class="row"><span>✓ ${esc(g.ex)} ${fmtKg(g.w)} kg × ${g.r}</span><span class="muted">${fmtDate(g.hit, {day:'numeric', month:'short', year:'numeric'})}</span><button class="icon sm" data-lgdel="${g.id}" aria-label="Delete">✕</button></div>`).join('')}</details>` : ''}`;
+  $('lgAdd').onclick = openGoalSheet;
+  el.querySelectorAll('[data-lgdel]').forEach(b => b.onclick = () => { const i = S.liftGoals.findIndex(g => g.id === b.dataset.lgdel); const [g] = S.liftGoals.splice(i, 1); save(); renderHistory();
+    toast(`Deleted goal ${g.ex} ${fmtKg(g.w)} × ${g.r}`, () => { S.liftGoals.splice(i, 0, g); save(); renderHistory(); }); });
+}
+function openGoalSheet(){
+  const pick = progSel || 'Bench Press';
+  const draw = (root, ex) => {
+    const e = recentE1(ex), step = stepFor(ex);
+    const now5 = e ? Math.floor(repsWeight(e, 5) / step) * step : 0;
+    root.querySelector('#gsHint').textContent = e ? `Now: about ${fmtKg(now5)} kg × 5 (estimated). A good 3-month goal for you is +5–10% on that.` : 'No sets logged for this exercise yet.';
+    const wi = root.querySelector('#gsW'); if (!wi.dataset.touched && e) wi.value = Math.ceil(now5 * 1.1 / step) * step;
+  };
+  openSheet(`<h2>New lift goal</h2>
+    <label class="field"><span class="label">Exercise</span><input type="text" id="gsEx" list="exList" value="${esc(pick)}" autocomplete="off"></label>
+    <div class="tgrid two"><label class="field"><span class="label">Weight (kg)</span><input type="number" id="gsW" step="0.5" inputmode="decimal"></label>
+      <label class="field"><span class="label">Reps</span><input type="number" id="gsR" value="5" min="1" max="20" inputmode="numeric"></label></div>
+    <div class="small muted" id="gsHint"></div>
+    <div class="seg"><button class="btn" data-close>Cancel</button><button class="btn primary" id="gsGo">Set goal</button></div>`, root => {
+    root.querySelector('[data-close]').onclick = closeSheet;
+    draw(root, pick);
+    root.querySelector('#gsW').oninput = e => { e.target.dataset.touched = '1'; };
+    root.querySelector('#gsEx').onchange = e => draw(root, canonical(e.target.value));
+    root.querySelector('#gsGo').onclick = () => {
+      const ex = canonical(root.querySelector('#gsEx').value), w = parseFloat(root.querySelector('#gsW').value), r = parseInt(root.querySelector('#gsR').value, 10);
+      if (!ex || !(w > 0) || !(r > 0)) { toast('Pick an exercise, a weight and reps'); return; }
+      if (w > 400 || r > 30) { toast('That looks like a typo: check the weight and reps'); return; }
+      if (S.logs.some(l => l.ex === ex && l.w >= w && l.r >= r)) { toast(`You've already lifted ${fmtKg(w)} kg × ${r} on ${ex}. Aim higher.`); return; }
+      S.liftGoals = [...(S.liftGoals || []).filter(g => !(g.ex === ex && !g.hit)), {id: 'g-' + uid(), ex, w, r, created: todayStr(), start: Math.round(recentE1(ex)*10)/10}];
+      save(); closeSheet(); progSel = ex; renderHistory(); toast(`Goal set: ${ex} ${fmtKg(w)} kg × ${r}`);
+    };
+  });
+}
+
 /* ---------- HISTORY ---------- */
 let progSel = '';
 function renderHistory(){
+  renderGoals();
   const exs = [...new Set(S.logs.map(l => l.ex))].sort();
   if (!progSel || !exs.includes(progSel)) progSel = exs[0] || '';
   $('progEx').innerHTML = exs.length ? exs.map(e => `<option ${e===progSel?'selected':''}>${esc(e)}</option>`).join('') : '<option>No exercises logged yet</option>';
   if (progSel){
     const byDay = {}; S.logs.filter(l => l.ex === progSel).forEach(l => { byDay[l.date] = Math.max(byDay[l.date]||0, e1rm(l.w,l.r)); });
     const pts = Object.keys(byDay).sort().map(d => ({x: parseYmd(d).getTime(), y: Math.round(byDay[d]*10)/10, label: fmtDate(d,{day:'numeric',month:'short'})}));
-    $('progChart').innerHTML = lineChart(pts, {unit:'kg'});
+    const pg = (S.liftGoals || []).find(g => g.ex === progSel && !g.hit);
+    $('progChart').innerHTML = lineChart(pts, {unit:'kg', target: pg ? Math.round(e1rm(pg.w, pg.r)*10)/10 : null});
     const heavy = S.logs.filter(l => l.ex === progSel).reduce((m,l) => (!m || l.w > m.w || (l.w===m.w && l.r>m.r)) ? l : m, null);
-    $('progNote').textContent = `Best estimated 1RM per session (Epley). Heaviest set: ${fmtKg(heavy.w)} kg × ${heavy.r} on ${fmtDate(heavy.date)}.`;
+    $('progNote').textContent = `Best estimated 1RM per session (Epley). Heaviest set: ${fmtKg(heavy.w)} kg × ${heavy.r} on ${fmtDate(heavy.date)}.${pg ? ` Dashed line: your goal ${fmtKg(pg.w)} kg × ${pg.r} as a 1RM.` : ''}`;
   } else { $('progChart').innerHTML = '<div class="small muted">Log a few sessions and your strength trend shows here.</div>'; $('progNote').textContent=''; }
 
   const days = [...new Set(S.logs.map(l => l.date))].sort().reverse(); const HP = planInfo();
@@ -2136,15 +2611,26 @@ $('libAdd').onclick = () => openSheet(`<h2>New exercise</h2>
 });
 function renderAlertCard(){
   const st = alertStatus(), el = $('alertCard');
-  el.innerHTML = `<h2>Rest timer &amp; alerts</h2>
+  const R = S.settings.reminders || {}, next = upcomingReminders(2).slice(0, 5);
+  el.innerHTML = `<h2>Alerts &amp; reminders</h2>
     <div class="small ${st.on ? '' : 'danger'}">${st.on ? '✓ ' : ''}${esc(st.text)}</div>
     <div class="row">${st.on ? '<button class="btn" id="alOff">Turn alerts off</button>' : '<button class="btn primary" id="alOn">Turn on alerts</button>'}<button class="btn" id="alTest">Test (5 s)</button>
       ${NATIVE && nativeState.exact === 'denied' && LN && LN.changeExactNotificationSetting ? '<button class="btn" id="alExact">Allow exact alarms</button>' : ''}</div>
     <label class="row small"><input type="checkbox" id="alWake" ${S.settings.wakeLock !== false ? 'checked' : ''}> Keep the screen on during a workout (timer running or a set logged in the last 10 min)</label>
     <label class="field"><span class="label">Default rest for exercises without a target (seconds)</span><input type="number" id="alRest" min="10" max="900" step="5" value="${S.settings.rest || 90}" inputmode="numeric"></label>
-    <div class="small muted">${NATIVE ? 'Android app: alerts are scheduled with the system, so they ring even if the screen is off.' : 'In Chrome the alert reaches you while the app is open or recently in the background. For alerts with the phone fully locked, install the Android app (see the README on GitHub).'} Each exercise's own rest is set in its targets or on the Log screen.</div>`;
+    <div class="small muted">${NATIVE ? 'Android app: alerts are scheduled with the system, so they ring even if the screen is off.' : 'In Chrome the alert reaches you while the app is open or recently in the background. For alerts with the phone fully locked, install the Android app (see the README on GitHub).'} Each exercise's own rest is set in its targets or on the Log screen.</div>
+    <div class="label" style="margin-top:6px">Reminders</div>
+    <label class="row small"><input type="checkbox" data-rem="meals" ${R.meals ? 'checked' : ''}> Every meal and the smoothie, at its planned time (skipped once ticked)</label>
+    <label class="row small"><input type="checkbox" data-rem="weigh" ${R.weigh ? 'checked' : ''}> Morning weigh-in, 10 min after waking</label>
+    <label class="row small"><input type="checkbox" data-rem="bed" ${R.bed ? 'checked' : ''}> Bedtime, 15 min before lights out</label>
+    <div class="row small"><span class="muted">Meal reminders</span>${[[0,'On time'],[10,'10 min early'],[15,'15 min early']].map(([v,l]) => `<button class="chip ${(+R.lead||0) === v ? 'on' : ''}" data-lead="${v}">${l}</button>`).join('')}</div>
+    ${st.on && next.length ? `<div class="small"><span class="muted">Next:</span> ${next.map(r => `${esc(fmtTime12(r.at))} ${esc(r.title.split(':')[0])}`).join(' · ')}</div>` : ''}
+    <div class="small muted">${NATIVE ? 'Planned 3 days ahead with the system and updated whenever you change a wake, gym or meal time, so they arrive with the app closed. Open the app once every couple of days to keep them topped up.' : 'In the browser, reminders only arrive while IronPulse is open or recently in the background. Install the Android app for reminders with the app closed.'}</div>`;
+  el.querySelectorAll('[data-rem]').forEach(c => c.onchange = () => { S.settings.reminders = {...R, [c.dataset.rem]: c.checked}; save();
+    if (c.checked && !alertStatus().on) enableAlerts().then(renderAlertCard); else renderAlertCard(); });
+  el.querySelectorAll('[data-lead]').forEach(b => b.onclick = () => { S.settings.reminders = {...R, lead: +b.dataset.lead}; save(); renderAlertCard(); });
   if ($('alOn')) $('alOn').onclick = () => { S.settings.notify = true; save(); enableAlerts().then(renderAlertCard); };
-  if ($('alOff')) $('alOff').onclick = () => { S.settings.notify = false; save(); nativeCancel(); swPost({type:'rest-cancel'}); renderAlertCard(); toast('Rest alerts off'); };
+  if ($('alOff')) $('alOff').onclick = () => { S.settings.notify = false; save(); nativeCancel(); swPost({type:'rest-cancel'}); renderAlertCard(); toast('Alerts and reminders off'); };
   $('alTest').onclick = () => { startTimer(5, 'Test: rest over. Alerts work.'); toast('Lock the phone or switch apps now to test'); };
   if ($('alExact')) $('alExact').onclick = async () => { try { await LN.changeExactNotificationSetting(); nativeReady = null; await nativeSetup(); } catch(e) {} renderAlertCard(); };
   $('alWake').onchange = e => { S.settings.wakeLock = e.target.checked; save(); keepAwake(e.target.checked && workoutActive()); };
@@ -2185,6 +2671,7 @@ $('expCsv').onclick = () => {
   [...S.logs].sort((a,b)=>a.t-b.t).forEach(l => csv += ['set',l.date,q(l.ex),l.w,l.r,Math.round(e1rm(l.w,l.r)*10)/10,''].join(',') + '\n');
   S.body.forEach(b => csv += ['bodyweight',b.date,'',b.w,'','',q(b.note||'')].join(',') + '\n');
   Object.entries(S.water).forEach(([d,c]) => csv += ['water',d,'',(c*S.settings.sitting/1000),c,'',q('litres, sittings')].join(',') + '\n');
+  Object.keys(S.sleep||{}).sort().forEach(d => { const x = S.sleep[d], h = sleepHours(d); csv += ['sleep',d,'',h ?? '','','',q(`bed ${x.bed || '?'} · wake ${wakeOf(d)} · energy ${x.energy || '-'} · soreness ${x.sore || '-'}`)].join(',') + '\n'; });
   Object.keys(S.food||{}).sort().forEach(d => foodList(d).forEach(x => csv += ['food',d,q(x.name),'','','',q(`${x.time} · ${x.qty} · ${x.kcal} kcal · P ${x.p} · C ${x.c} · F ${x.f}`)].join(',') + '\n'));
   download(`ironpulse-${stamp()}.csv`, csv, 'text/csv');
 };
@@ -2428,6 +2915,7 @@ function showTab(tab){
 }
 document.querySelectorAll('.tab').forEach(b => b.onclick = () => showTab(b.dataset.tab));
 function renderAll(){
+  PI_CACHE = null;
   $('topDate').textContent = fmtDate(todayStr(), {weekday:'short', day:'numeric', month:'short'});
   if (ui.tab === 'today') renderToday();
   if (ui.tab === 'log') { renderLog(); renderRestChips(); }
@@ -2446,7 +2934,8 @@ setInterval(() => { const t = todayStr(); if (t !== lastDay){ if (ui.date === la
 document.addEventListener('visibilitychange', () => { if (!document.hidden) renderAll(); });
 
 applyTheme();
-if (NATIVE) nativeSetup().then(() => { if (ui.tab === 'plan') renderPlan(); });
+if (NATIVE) nativeSetup().then(() => { scheduleReminders(); if (ui.tab === 'plan') renderPlan(); });
+setTimeout(webReminderTick, 1500);
 if (MIGRATION) setTimeout(() => {
   const m = MIGRATION; MIGRATION = null;
   toast(`Plan updated: ${m.notes.join('; ')}`, () => { S.split = JSON.parse(m.before); DAYS.forEach(d => { S.split[d].cfg = S.split[d].cfg || {}; }); save(); renderAll(); });
@@ -2454,6 +2943,8 @@ if (MIGRATION) setTimeout(() => {
 if (!ui.ex){ const r = routineFor(ui.date); if (r.length) { ui.ex = r[0]; } }
 if (ui.ex) { $('exInput').value = ui.ex; const lw = lastWeight(ui.ex); ui.w = lw != null ? lw : (isTwoPlate(ui.ex) ? S.settings.bar : 10); }
 renderAll();
+// debugging aid: open index.html?debug and run __ip('S') in the console to inspect app state
+if (/[?&]debug\b/.test(location.search)) window.__ip = code => eval(code);
 })();
 </script>
 <script>
