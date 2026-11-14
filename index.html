@@ -2914,6 +2914,41 @@ function showTab(tab){
   renderAll(); window.scrollTo({top:0});
 }
 document.querySelectorAll('.tab').forEach(b => b.onclick = () => showTab(b.dataset.tab));
+
+/* ---------- Android back button ----------
+   Back steps out like a normal Android app: close an open sheet or the coach → leave a past/future day →
+   return to Today → "press back again" → leave. The app (Capacitor) gets the button through the App plugin;
+   the browser/home-screen version gets it through one guard history entry that is re-armed after each use. */
+function handleBack(){
+  if (!$('sheetWrap').hidden) { closeSheet(); return true; }
+  if (!$('coachWrap').hidden) { $('coachWrap').hidden = true; return true; }
+  if (ui.tab !== 'today') { showTab('today'); return true; }
+  if (ui.date !== todayStr()) { ui.date = todayStr(); ui.week = mondayOf(ui.date); renderAll(); window.scrollTo({top:0}); return true; }
+  return false;
+}
+let backArmedAt = 0;
+function backAtRoot(leave){
+  if (Date.now() - backArmedAt < 2200) { backArmedAt = 0; leave(); return; }
+  backArmedAt = Date.now(); toast('Press back again to close IronPulse');
+}
+const CapApp = NATIVE && window.Capacitor.registerPlugin ? window.Capacitor.registerPlugin('App') : null;
+if (CapApp && CapApp.addListener) {
+  CapApp.addListener('backButton', () => {
+    if (handleBack()) return;
+    backAtRoot(() => { (CapApp.minimizeApp ? CapApp.minimizeApp() : CapApp.exitApp()).catch(() => CapApp.exitApp()); });
+  });
+} else if (!NATIVE) {
+  // Chrome ignores history entries added before the first tap, so arm the guard on the first interaction
+  let guard = false;
+  const arm = () => { if (!guard) { history.pushState({ironpulse: 'guard'}, ''); guard = true; } };
+  ['pointerdown', 'keydown'].forEach(ev => window.addEventListener(ev, arm, {capture: true, passive: true}));
+  window.addEventListener('popstate', () => {
+    guard = false;
+    if (handleBack()) { arm(); return; }
+    // at the root: leave the guard unarmed, so the next back press closes the app (a tap in between re-arms it)
+    toast('Press back again to close IronPulse');
+  });
+}
 function renderAll(){
   PI_CACHE = null;
   $('topDate').textContent = fmtDate(todayStr(), {weekday:'short', day:'numeric', month:'short'});
