@@ -298,59 +298,37 @@ label.field{display:flex;flex-direction:column;gap:6px}
 .rowedit .x{width:30px;height:30px;border:0;background:transparent;color:var(--muted);font-size:1rem}
 .rowedit.head .label{font-size:.62rem}
 
-/* morning check-in + readiness */
-.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
-.scale .chip{display:flex;flex-direction:column;align-items:center;padding:6px 2px;border-radius:10px;min-width:0}
-.scale .chip b{font-family:var(--display);font-size:1.05rem}
-.scale .chip small{font-size:.58rem;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-.pill.rd-good{background:color-mix(in srgb,var(--good) 20%,var(--surface-2));color:var(--good);font-size:.66rem;padding:2px 8px}
-.pill.rd-normal{background:var(--surface-2);color:var(--muted);font-size:.66rem;padding:2px 8px}
-.pill.rd-easy{background:color-mix(in srgb,var(--bad) 20%,var(--surface-2));color:var(--bad);font-size:.66rem;padding:2px 8px}
-.note.rd-note.rd-good{border-left-color:var(--good)} .note.rd-note.rd-easy{border-left-color:var(--bad)}
-.badge.ghostbadge{background:transparent}
-/* checklist */
-.ckscore{font-family:var(--display);font-weight:800;font-size:1.25rem}
-.ckscore.full{color:var(--good)}
-.streaks{display:flex;gap:6px;flex-wrap:wrap}
-.spill{font-size:.74rem;padding:4px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
-.spill b{font-family:var(--display);font-size:.95rem;color:var(--fg)}
-.spill.lit{border-color:var(--accent);color:var(--accent-text)} .spill.lit b{color:var(--accent-text)}
-.cklist{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.ckitem{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);color:var(--fg);text-align:left;min-width:0;font:inherit}
-.ckitem .ckbox{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:.8rem;font-weight:800}
-.ckitem.done .ckbox{background:var(--good);border-color:var(--good);color:#fff}
-.ckitem .cktxt{display:flex;flex-direction:column;min-width:0}
-.ckitem .cklabel{font-weight:600;font-size:.86rem;line-height:1.2}
-.ckitem.done .cklabel{color:var(--muted)}
-.ckitem .ckdet{font-size:.7rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
-.clrow{padding:4px 0}
-/* consistency heatmap */
-.heat{display:flex;gap:4px;align-items:flex-start}
-.hdays{display:grid;grid-template-rows:repeat(7,1fr);gap:3px;font-size:.58rem;color:var(--muted);padding-top:1px}
-.hdays span{height:20px;line-height:20px}
-.hgrid{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;flex:1}
-.hcol{display:grid;grid-template-rows:repeat(7,1fr);gap:3px}
-.hcell{display:inline-block;height:20px;min-width:0;border-radius:4px;border:0;padding:0;background:var(--surface-2)}
-.hlegend .hcell{width:12px;height:12px}
-.hcell.h-none{background:transparent;border:1px dashed var(--line)}
-.hcell.h-future{background:transparent}
-.hcell.h0{background:color-mix(in srgb,var(--bad) 30%,var(--surface-2))}
-.hcell.h1{background:color-mix(in srgb,var(--accent) 22%,var(--surface-2))}
-.hcell.h2{background:color-mix(in srgb,var(--accent) 45%,var(--surface-2))}
-.hcell.h3{background:color-mix(in srgb,var(--accent) 72%,var(--surface-2))}
-.hcell.h4{background:var(--good)}
-.hcell.htoday{outline:2px solid var(--fg);outline-offset:1px}
-.hlegend{gap:4px;align-items:center}
-.rates{display:grid;gap:6px}
-.rate{display:grid;grid-template-columns:96px 1fr 40px;gap:8px;align-items:center;font-size:.82rem}
-.rate .num{text-align:right}
-.track.bad>i{background:var(--bad)}
 /* lift goals */
 .goal{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
 .goal:first-of-type{border-top:0}
 .icon.sm{width:28px;height:28px;font-size:.8rem}
 label.row:has(> input[type=checkbox]){flex-wrap:nowrap;align-items:flex-start}
 label.row > input[type=checkbox]{flex:none;margin-top:2px}
+/* muscle map */
+.mmwrap{display:flex;flex-direction:column;gap:10px}
+.mmfigs{display:flex;justify-content:center;gap:18px;background:var(--surface-2);border-radius:12px;padding:10px 0 6px}
+.mmfig{display:flex;flex-direction:column;align-items:center;gap:2px}
+.mmfig span{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.mmap{width:118px;height:260px;display:block}
+.mm-body{fill:var(--bg)}
+.mmap path:not(.mm-body):not(.mm-line){stroke:var(--surface-2);stroke-width:.9}
+.mm-o{fill:color-mix(in srgb,var(--fg) 16%,var(--bg))}
+.mm-s{fill:color-mix(in srgb,var(--accent) 45%,var(--bg))}
+.mm-p{fill:var(--accent)}
+.mm-line{stroke:var(--surface-2);stroke-width:1.2;fill:none}
+.mmleg{display:flex;flex-direction:column;gap:6px;min-width:0;font-size:.86rem}
+.mmrow{display:flex;gap:8px;align-items:flex-start;line-height:1.3}
+.mmdot{flex:none;width:10px;height:10px;border-radius:3px;margin-top:4px}
+.mmdot.p{background:var(--accent)} .mmdot.s{background:color-mix(in srgb,var(--accent) 45%,var(--bg))}
+.mmnote{line-height:1.35}
+.mmtoggle{border-top:1px solid var(--line);padding-top:8px}
+.linkbtn{border:0;background:none;color:var(--accent-text);font:inherit;font-weight:600;font-size:.84rem;padding:0}
+/* on-screen back button (top bar stays visible while scrolling) */
+.top{position:sticky;top:0;z-index:20;background:var(--bg)}
+.backbtn{border:1px solid var(--line);background:var(--surface-2);color:var(--fg);font:inherit;font-weight:700;font-size:.95rem;padding:7px 14px 7px 10px;border-radius:999px;min-height:40px}
+.backbtn:active{background:var(--line)}
+.sheet .sheethead{display:flex;justify-content:flex-end;margin:-8px -6px -18px}
+.sheet .sheetx{width:36px;height:36px;border:0;border-radius:50%;background:var(--surface-2);color:var(--muted);font-size:1rem}
 </style>
 <script src="diet-plan.js"></script>
 </head>
@@ -358,7 +336,8 @@ label.row > input[type=checkbox]{flex:none;margin-top:2px}
 
 <div class="app">
   <header class="top">
-    <div class="mark"><i></i>IRONPULSE</div>
+    <button id="backBtn" class="backbtn" hidden aria-label="Back">‹ <span id="backLbl">Today</span></button>
+    <div class="mark" id="brandMark"><i></i>IRONPULSE</div>
     <div class="row">
       <button id="installBtn" class="btn small" hidden>Install app</button>
       <span id="topDate" class="eyebrow"></span>
@@ -379,8 +358,6 @@ label.row > input[type=checkbox]{flex:none;margin-top:2px}
     <div id="burnBanner" class="banner" hidden></div>
     <div id="dietBanner" class="banner" hidden></div>
     <div id="mealBanner" class="banner" hidden></div>
-    <div id="readyCard" class="card" hidden></div>
-    <div id="checkCard" class="card"></div>
     <div id="routineCard" class="card"></div>
     <div class="card" id="waterCard">
       <div class="between">
@@ -454,7 +431,7 @@ label.row > input[type=checkbox]{flex:none;margin-top:2px}
 
   <!-- BODY -->
   <section id="v-body" class="view" hidden>
-    <div><div class="eyebrow">Bulk tracking</div><h1>Body &amp; consistency</h1></div>
+    <div><div class="eyebrow">Bulk tracking</div><h1>Body weight</h1></div>
     <div class="card">
       <div class="row" style="flex-wrap:nowrap">
         <input type="number" id="bwInput" inputmode="decimal" step="0.1" placeholder="Weight in kg" style="flex:1">
@@ -464,7 +441,6 @@ label.row > input[type=checkbox]{flex:none;margin-top:2px}
       <div class="chips" id="bwNoteChips"></div>
     </div>
     <div class="stats" id="bwStats"></div>
-    <div class="card" id="consistCard"></div>
     <div class="card" id="checkInCard"></div>
     <div class="card" id="goalCard"></div>
     <div class="card">
@@ -591,57 +567,57 @@ label.row > input[type=checkbox]{flex:none;margin-top:2px}
 /* ---------- constants ---------- */
 const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const DAY_FULL = {Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thu:'Thursday',Fri:'Friday',Sat:'Saturday',Sun:'Sunday'};
-/* Weekly split. `cfg` holds targets that differ on that day (e.g. heavy bench on Monday, moderate on Thursday);
-   everything else comes from EX_INFO. Changes vs the first version (approved review, Nov 2026):
-   Sat Romanian Deadlift removed (hinge 24 h after deadlifts), Thu Incline Bench → Incline Dumbbell Press,
-   Thu Overhead Press → Cable Lateral Raise, Mon + Lateral Raise (side delts 4 → 10 sets a week). */
+/* Weekly split, Plan v2 (Nov 2026). `cfg` holds targets that differ on that day; everything else comes from EX_INFO.
+   Built so the next exercise isn't wrecked by the last one: heaviest lift for each muscle first, muscles alternate,
+   ≤ ~8 direct sets per muscle per session (gains flatten past ~11; Remmert 2025), 14–18 working sets a session, 84 a week.
+   Pull-ups lead Friday and Deadlift moved to Saturday, so pull-ups no longer follow deadlift + rows + pullover. */
 const PRESET = {
-  Mon:{name:'Upper', ex:['Bench Press','Chest Supported T-Bar Row','Overhead Press','Pull-up','Weighted Dips','Preacher Curl','Reverse Pec Deck','Lateral Raise','Dumbbell Wrist Curls & Extensions'],
-    cfg:{'Bench Press':{focus:'strength',reps:[4,6],sets:3,rir:'2',rest:210}, 'Overhead Press':{focus:'strength',reps:[5,8],sets:3,rir:'1–2',rest:180}, 'Lateral Raise':{sets:3}}},
-  Tue:{name:'Lower', ex:['Squat','Romanian Deadlift','Seated Leg Curl','Leg Extension','Standing Calf Raise','Nautilus Glute Drive','Cable Crunch'],
-    cfg:{'Squat':{focus:'strength',reps:[4,6],sets:3,rir:'2',rest:240}, 'Nautilus Glute Drive':{sets:3}}},
+  Mon:{name:'Upper', ex:['Bench Press','Pull-up','Overhead Press','Chest Supported T-Bar Row','Lateral Raise','Preacher Curl','Overhead Cable Triceps Extension'],
+    cfg:{'Chest Supported T-Bar Row':{sets:2}, 'Overhead Cable Triceps Extension':{sets:2}}},
+  Tue:{name:'Lower', ex:['Squat','Romanian Deadlift','Leg Extension','Seated Leg Curl','Standing Calf Raise','Cable Crunch'], cfg:{}},
   Wed:{name:'Rest', ex:[], cfg:{}},
-  Thu:{name:'Push', ex:['Bench Press','Incline Dumbbell Press','Cable Lateral Raise','Machine Pec Deck','Weighted Dips','Overhead Cable Triceps Extension','Lateral Raise'],
-    cfg:{'Bench Press':{focus:'hypertrophy',reps:[8,10],sets:3,rir:'1–2',rest:165}, 'Lateral Raise':{sets:4}}},
-  Fri:{name:'Pull', ex:['Deadlift','Chest Supported T-Bar Row','Machine Lat Pullover','Pull-up','Bayesian Cable Curl','Preacher Curl','Reverse Pec Deck','Dumbbell Shrugs','Dumbbell Wrist Curls & Extensions'],
-    cfg:{'Preacher Curl':{sets:2}}},
-  Sat:{name:'Legs', ex:['Squat','Walking Lunge','Seated Leg Curl','Leg Extension','Standing Calf Raise','Nautilus Glute Drive','Cable Crunch','Neck Curls & Extensions'],
-    cfg:{'Squat':{focus:'hypertrophy',reps:[6,10],sets:3,rir:'1–2',rest:180}, 'Seated Leg Curl':{sets:4}, 'Nautilus Glute Drive':{sets:2}}},
+  Thu:{name:'Push', ex:['Incline Dumbbell Press','Cable Lateral Raise','Weighted Dips','Machine Pec Deck','Overhead Cable Triceps Extension'], cfg:{}},
+  Fri:{name:'Pull', ex:['Pull-up','Chest Supported T-Bar Row','Reverse Pec Deck','Machine Lat Pullover','Bayesian Cable Curl','Dumbbell Shrugs','Dumbbell Wrist Curls & Extensions'], cfg:{}},
+  Sat:{name:'Legs', ex:['Deadlift','Walking Lunge','Leg Extension','Seated Leg Curl','Nautilus Glute Drive','Standing Calf Raise','Cable Crunch','Neck Curls & Extensions'],
+    cfg:{'Leg Extension':{sets:2}, 'Seated Leg Curl':{sets:2}}},
   Sun:{name:'Rest', ex:[], cfg:{}}
 };
-/* Per-exercise defaults from the research review (rest in seconds).
-   Rest rule: heavy compound 3–4 min, moderate compound 2–3 min, machine/cable compound 2 min, isolation 90 s, small isolation 60–90 s
-   (Singer 2024: >60 s helps, little extra past ~90 s for isolation; Schoenfeld 2016: 3 min > 1 min in trained men;
-   Senna 2011: bench needs ~3 min to keep reps). Hypertrophy works across ~6–30 reps near failure; heavy loads mainly build 1RM strength. */
+/* Per-exercise defaults (rest in seconds; tempo = lower–pause–lift–squeeze in seconds).
+   Rest: heavy compound 3–4 min, moderate compound 2–3 min, machine/cable compound 2 min, isolation 90 s, small isolation 60–90 s
+   (Singer 2024; Schoenfeld 2016; Senna 2011). Hypertrophy works across ~6–30 reps near failure; heavy loads mainly build 1RM strength.
+   Tempo: any 2–8 s rep grows muscle about equally (Androulakis Korakakis 2023; Enes 2025); 2–3 s lowering is the default,
+   an extra second where the muscle is stretched, a 1 s squeeze where it's hardest at the top. */
 const EX_INFO = {
-  'Bench Press':{focus:'hypertrophy',reps:[8,10],sets:3,rir:'1–2',rest:180,cue:'Shoulder blades pinned, feet planted, bar to lower chest. Keep 1–2 reps in reserve on heavy sets.'},
-  'Squat':{focus:'hypertrophy',reps:[6,10],sets:3,rir:'1–2',rest:180,cue:'Brace before each rep, knees track over toes, hit at least parallel.'},
-  'Deadlift':{focus:'strength',reps:[3,5],sets:3,rir:'2–3',rest:240,cue:'Most fatiguing lift in the plan: never to failure. Bar over mid-foot, push the floor away.'},
-  'Overhead Press':{focus:'hypertrophy',reps:[8,10],sets:2,rir:'1–2',rest:150,cue:'Squeeze glutes so the lower back does not arch; bar path straight up past the face.'},
-  'Incline Bench Press':{focus:'hypertrophy',reps:[8,10],sets:3,rir:'1–2',rest:165,cue:'30–45° bench, bar to upper chest.'},
-  'Incline Dumbbell Press':{focus:'hypertrophy',reps:[8,12],sets:3,rir:'1–2',rest:150,cue:'30° bench, let the dumbbells sink to a deep chest stretch, press up and slightly in.'},
-  'Weighted Dips':{focus:'hypertrophy',reps:[6,10],sets:2,rir:'1–2',rest:150,cue:'Lean forward for chest. Bodyweight until 12 clean reps, then add load.'},
-  'Pull-up':{focus:'hypertrophy',reps:[6,10],sets:3,rir:'1–2',rest:150,cue:'Full hang to chin over bar. Add weight past 12 reps; use a band if under 6.'},
-  'Chest Supported T-Bar Row':{focus:'hypertrophy',reps:[8,12],sets:3,rir:'1',rest:120,cue:'Chest stays on the pad; drive elbows back, pause 1 s.'},
-  'Romanian Deadlift':{focus:'hypertrophy',reps:[6,10],sets:3,rir:'2',rest:165,cue:'Hips back, soft knees, stop at mid-shin or when the back starts to round.'},
-  'Walking Lunge':{focus:'hypertrophy',reps:[8,12],sets:2,rir:'2',rest:120,cue:'Reps per leg. Long stride for glutes, short for quads.'},
-  'Nautilus Glute Drive':{focus:'hypertrophy',reps:[8,12],sets:3,rir:'1',rest:120,cue:'Pause 1 s at the top, chin tucked.'},
-  'Machine Lat Pullover':{focus:'hypertrophy',reps:[10,15],sets:3,rir:'0–1',rest:90,cue:'Big stretch overhead, sweep the arms down to the hips.'},
-  'Seated Leg Curl':{focus:'hypertrophy',reps:[8,12],sets:3,rir:'0–1',rest:105,cue:'Lean the torso forward to stretch the hamstrings more. Best curl for growth (Maeo 2021).'},
-  'Leg Extension':{focus:'hypertrophy',reps:[10,15],sets:3,rir:'0–1',rest:90,cue:'Safe to take to failure. 2–3 s lowering.'},
-  'Machine Pec Deck':{focus:'hypertrophy',reps:[10,15],sets:3,rir:'0–1',rest:90,cue:'Full stretch at the back, squeeze 1 s in front.'},
-  'Lateral Raise':{focus:'hypertrophy',reps:[12,20],sets:3,rir:'0–1',rest:75,cue:'Light weight, no swinging, lead with the elbows. High reps win here.'},
-  'Cable Lateral Raise':{focus:'hypertrophy',reps:[12,20],sets:3,rir:'0–1',rest:75,cue:'Cable behind the body; constant tension through the bottom of the rep.'},
-  'Reverse Pec Deck':{focus:'hypertrophy',reps:[12,20],sets:2,rir:'0–1',rest:75,cue:'Rear delts: light, controlled, arms slightly bent.'},
-  'Overhead Cable Triceps Extension':{focus:'hypertrophy',reps:[10,15],sets:3,rir:'0–1',rest:90,cue:'Deep stretch behind the head; best triceps grower in the plan (Maeo 2023).'},
-  'Preacher Curl':{focus:'hypertrophy',reps:[8,12],sets:3,rir:'0–1',rest:90,cue:'Control the bottom; do not bounce out of the stretch.'},
-  'Bayesian Cable Curl':{focus:'hypertrophy',reps:[10,15],sets:2,rir:'0–1',rest:90,cue:'Step forward so the arm starts behind the body.'},
-  'Dumbbell Shrugs':{focus:'hypertrophy',reps:[10,15],sets:3,rir:'1',rest:90,cue:'1 s hold at the top, no rolling.'},
-  'Standing Calf Raise':{focus:'hypertrophy',reps:[8,15],sets:4,rir:'0–1',rest:75,cue:'2 s pause in the bottom stretch: calves respond to stretch more than load.'},
-  'Cable Crunch':{focus:'hypertrophy',reps:[10,15],sets:3,rir:'1',rest:75,cue:'Curl the spine down; hips stay still.'},
-  'Dumbbell Wrist Curls & Extensions':{focus:'hypertrophy',reps:[15,20],sets:2,rir:'1',rest:60,cue:'Superset curls and extensions: no rest within the pair.'},
-  'Neck Curls & Extensions':{focus:'hypertrophy',reps:[15,25],sets:2,rir:'2',rest:60,cue:'Start with a plate you could do 40 reps with; add weight very slowly.'}
+  'Bench Press':{focus:'strength',reps:[4,6],sets:3,rir:'2',rest:210,tempo:'2-0-1-0',cue:'Shoulder blades pinned, feet planted, bar to lower chest. Touch lightly, no bounce, press fast.'},
+  'Squat':{focus:'strength',reps:[4,6],sets:3,rir:'2',rest:240,tempo:'2-0-1-0',cue:'Brace before each rep, knees track over toes, hit at least parallel, drive up fast.'},
+  'Deadlift':{focus:'strength',reps:[3,5],sets:3,rir:'2–3',rest:240,tempo:'1-0-1-0',cue:'Most fatiguing lift in the plan: never to failure. Bar over mid-foot, push the floor away, lower briskly and reset each rep.'},
+  'Overhead Press':{focus:'strength',reps:[5,8],sets:2,rir:'1–2',rest:180,tempo:'2-0-1-0',cue:'Squeeze glutes so the lower back does not arch; bar path straight up past the face.'},
+  'Incline Bench Press':{focus:'hypertrophy',reps:[8,10],sets:3,rir:'1–2',rest:165,tempo:'3-0-1-0',cue:'30–45° bench, bar to upper chest.'},
+  'Incline Dumbbell Press':{focus:'hypertrophy',reps:[8,12],sets:3,rir:'1–2',rest:150,tempo:'3-0-1-0',cue:'30° bench, let the dumbbells sink to a deep chest stretch, press up and slightly in.'},
+  'Weighted Dips':{focus:'hypertrophy',reps:[6,10],sets:2,rir:'1–2',rest:150,tempo:'2-1-1-0',cue:'Lean forward for chest, brief pause at the bottom. Bodyweight until 12 clean reps, then add load.'},
+  'Pull-up':{focus:'hypertrophy',reps:[6,10],sets:3,rir:'1–2',rest:150,tempo:'3-0-1-0',cue:'Full hang to chin over bar; lower for 3 s. Add weight past 12 reps; use a band if under 6.'},
+  'Chest Supported T-Bar Row':{focus:'hypertrophy',reps:[8,12],sets:3,rir:'1',rest:120,tempo:'2-0-1-1',cue:'Chest stays on the pad; drive elbows back and hold the squeeze 1 s.'},
+  'Romanian Deadlift':{focus:'hypertrophy',reps:[6,10],sets:3,rir:'2',rest:165,tempo:'3-0-1-0',cue:'Hips back, soft knees, 3 s down to mid-shin or until the back starts to round.'},
+  'Walking Lunge':{focus:'hypertrophy',reps:[8,12],sets:2,rir:'2',rest:120,tempo:'2-0-1-0',cue:'Reps per leg. Long stride for glutes, short for quads.'},
+  'Nautilus Glute Drive':{focus:'hypertrophy',reps:[8,12],sets:2,rir:'1',rest:120,tempo:'2-0-1-1',cue:'Pause 1 s at the top, chin tucked.'},
+  'Machine Lat Pullover':{focus:'hypertrophy',reps:[10,15],sets:2,rir:'0–1',rest:90,tempo:'3-0-1-0',cue:'Big stretch overhead (3 s back), sweep the arms down to the hips.'},
+  'Seated Leg Curl':{focus:'hypertrophy',reps:[8,12],sets:3,rir:'0–1',rest:105,tempo:'3-0-1-0',cue:'Lean the torso forward to stretch the hamstrings more. Best curl for growth (Maeo 2021).'},
+  'Leg Extension':{focus:'hypertrophy',reps:[10,15],sets:3,rir:'0–1',rest:90,tempo:'2-0-1-1',cue:'Safe to take to failure. Squeeze 1 s at the top, 2 s down.'},
+  'Machine Pec Deck':{focus:'hypertrophy',reps:[10,15],sets:2,rir:'0–1',rest:90,tempo:'3-0-1-1',cue:'Full stretch at the back, squeeze 1 s in front.'},
+  'Lateral Raise':{focus:'hypertrophy',reps:[12,20],sets:3,rir:'0–1',rest:75,tempo:'2-0-1-0',cue:'Light weight, no swinging, lead with the elbows. High reps win here.'},
+  'Cable Lateral Raise':{focus:'hypertrophy',reps:[12,20],sets:4,rir:'0–1',rest:75,tempo:'2-0-1-0',cue:'Cable behind the body; constant tension through the bottom of the rep.'},
+  'Reverse Pec Deck':{focus:'hypertrophy',reps:[12,20],sets:3,rir:'0–1',rest:75,tempo:'2-0-1-1',cue:'Rear delts: light, controlled, arms slightly bent; hold 1 s at the back.'},
+  'Overhead Cable Triceps Extension':{focus:'hypertrophy',reps:[10,15],sets:3,rir:'0–1',rest:90,tempo:'3-0-1-0',cue:'Deep stretch behind the head; best triceps grower in the plan (Maeo 2023).'},
+  'Preacher Curl':{focus:'hypertrophy',reps:[8,12],sets:2,rir:'0–1',rest:90,tempo:'3-0-1-0',cue:'Control the bottom for 3 s; do not bounce out of the stretch.'},
+  'Bayesian Cable Curl':{focus:'hypertrophy',reps:[10,15],sets:3,rir:'0–1',rest:90,tempo:'3-0-1-0',cue:'Step forward so the arm starts behind the body.'},
+  'Dumbbell Shrugs':{focus:'hypertrophy',reps:[10,15],sets:2,rir:'1',rest:90,tempo:'2-0-1-1',cue:'1 s hold at the top, no rolling.'},
+  'Standing Calf Raise':{focus:'hypertrophy',reps:[8,15],sets:3,rir:'0–1',rest:75,tempo:'2-2-1-0',cue:'2 s pause in the bottom stretch so the Achilles tendon can\'t bounce the weight up.'},
+  'Cable Crunch':{focus:'hypertrophy',reps:[10,15],sets:2,rir:'1',rest:75,tempo:'2-0-1-1',cue:'Curl the spine down; hips stay still.'},
+  'Dumbbell Wrist Curls & Extensions':{focus:'hypertrophy',reps:[15,20],sets:2,rir:'1',rest:60,tempo:'2-0-1-0',cue:'Superset curls and extensions: no rest within the pair.'},
+  'Neck Curls & Extensions':{focus:'hypertrophy',reps:[15,25],sets:2,rir:'2',rest:60,tempo:'2-0-2-0',cue:'Slow both ways. Start with a plate you could do 40 reps with; add weight very slowly.'}
 };
+/* the Nov 2026 (v4) per-day targets, used once to tell which saved rest times were your own edits */
+const V4_DAY_REST = {Mon:{'Bench Press':210,'Overhead Press':180}, Tue:{'Squat':240}, Thu:{'Bench Press':165}, Sat:{'Squat':180}};
 const STRENGTH_LIFTS = /^(bench press|squat|deadlift|overhead press)$/i;
 const LIB = {
   Chest:['Bench Press','Incline Bench Press','Incline Dumbbell Press','Dumbbell Bench Press','Machine Chest Press','Machine Pec Deck','Cable Crossover','Weighted Dips','Push-up'],
@@ -687,7 +663,7 @@ let PLAN = BASE_PLAN;                               // the file + your in-app ed
 const PROFILE0 = () => ({wake:'05:45', sleepHours:7.5, workoutTime:'07:00', workoutMinutes:75, startWeightKg:65, age:null, ...((BASE_PLAN && BASE_PLAN.profile) || {})});
 function defaults(){
   return {
-    v:4, logs:[], body:[], target:null,
+    v:5, logs:[], body:[], target:null,
     water:{}, workoutTimes:{},
     profile: PROFILE0(), wakeTimes:{}, badminton:{}, mealsDone:{}, mealChoice:{}, kcalAdjust:0, lastAdjust:null, proteinOpened:null, grocery:{},
     diet:{Mon:'',Tue:'',Wed:'',Thu:'',Fri:'',Sat:'Coconut water',Sun:''},
@@ -696,28 +672,22 @@ function defaults(){
     food:{},         // food log: {date: [{id, time, name, qty, kcal, p, c, f, meal?}]}
     foods:[],        // saved foods (favourites) for quick-add
     dietEdits:{},    // in-app changes layered over diet-plan.js
-    sleep:{},        // {date: {bed:'23:15' (went to bed the night before), energy:1–5, sore:1–5}}; wake time lives in wakeTimes
-    checks:{},       // daily checklist ticks: {date: {itemId: ts}}
-    habits:[],       // your own checklist items: [{id, name, since}]
-    checklistOff:{}, // built-in checklist items you turned off: {id: true}
-    checklistSince: todayStr(),
     liftGoals:[],    // [{id, ex, w, r, created, start (e1RM then), hit?: date}]
-    celebrated:{},   // streak milestones already shown
     settings:{bar:20, minPlate:2.5, sitting:500, goalL:4, waterAuto:true, rest:90, autoRest:true, burnRest:true, key:'', model:'gemini-2.5-flash', theme:'system',
       notify:true, wakeLock:true, reminders:{meals:true, weigh:true, bed:true, lead:0}}
   };
 }
-/* v3 → v4: per-day targets, plus the split changes approved in the Nov 2026 review (only where your split still matches the old one) */
-function migrateV4(out){
-  const notes = [];
-  DAYS.forEach(d => { out.split[d].cfg = {...(PRESET[d].cfg||{}), ...(out.split[d].cfg||{})}; });
-  const has = (d, n) => out.split[d].ex.includes(n);
-  const rep = (d, a, b) => { const l = out.split[d].ex, i = l.indexOf(a); if (i >= 0 && !l.includes(b)) { l[i] = b; return true; } return false; };
-  if (has('Sat','Romanian Deadlift')) { out.split.Sat.ex = out.split.Sat.ex.filter(x => x !== 'Romanian Deadlift'); notes.push('Saturday: Romanian Deadlift removed'); }
-  if (rep('Thu','Incline Bench Press','Incline Dumbbell Press')) notes.push('Thursday: Incline Bench → Incline Dumbbell Press');
-  if (rep('Thu','Overhead Press','Cable Lateral Raise')) notes.push('Thursday: Overhead Press → Cable Lateral Raise');
-  if (!has('Mon','Lateral Raise') && has('Mon','Bench Press')) { const l = out.split.Mon.ex, i = l.indexOf('Reverse Pec Deck'); l.splice(i >= 0 ? i+1 : l.length, 0, 'Lateral Raise'); notes.push('Monday: Lateral Raise added'); }
-  return notes;
+/* → v5: switch to Plan v2. Sets, reps, RIR, focus and tempo come from the new plan; rest times and notes you
+   set yourself are kept (per exercise, and per day where that exercise is still on that day). */
+function migrateV5(out){
+  const keepDay = {}, keepAll = {};
+  DAYS.forEach(d => { const c = (out.split[d] || {}).cfg || {};
+    Object.entries(c).forEach(([ex, v]) => { if (v.rest != null && v.rest !== (V4_DAY_REST[d] || {})[ex]) (keepDay[d] = keepDay[d] || {})[ex] = {rest: v.rest}; }); });
+  Object.entries(out.exCfg || {}).forEach(([ex, v]) => { const k = {}; if (v.rest != null) k.rest = v.rest; if (v.cue) k.cue = v.cue; if (Object.keys(k).length) keepAll[ex] = k; });
+  out.split = clone(PRESET);
+  DAYS.forEach(d => Object.entries(keepDay[d] || {}).forEach(([ex, v]) => { if (out.split[d].ex.includes(ex)) out.split[d].cfg[ex] = {...(out.split[d].cfg[ex] || {}), ...v}; }));
+  out.exCfg = keepAll;
+  return ['New weekly plan: 84 sets a week, Pull-ups first on Friday, Deadlift on Saturday'];
 }
 let MIGRATION = null;   // {notes, before} when this load upgraded old data; shown once with Undo
 /* merge saved data over defaults, so older backups gain the new fields */
@@ -726,13 +696,13 @@ function hydrate(p){
   const fresh = !p || !Object.keys(p).length;
   const out = {...d, ...p, settings:{...d.settings, ...(p.settings||{}), reminders:{...d.settings.reminders, ...((p.settings||{}).reminders||{})}}, profile:{...d.profile, ...(p.profile||{})}};
   if (out.target == null && BASE_PLAN) out.target = BASE_PLAN.profile.targetWeightKg;
-  if (!fresh && (p.v || 0) < 4){
-    const before = JSON.stringify(out.split);
-    const notes = migrateV4(out);
+  if (!fresh && (p.v || 0) < 5){
+    const before = JSON.stringify({split: out.split, exCfg: out.exCfg || {}});
+    const notes = migrateV5(out);
     if (notes.length) MIGRATION = {notes, before};
   }
   DAYS.forEach(x => { out.split[x].cfg = out.split[x].cfg || {}; });
-  out.v = 4; return out;
+  out.v = 5; return out;
 }
 let S = defaults();
 try {
@@ -814,7 +784,7 @@ function stepFor(name){ const p = S.settings.minPlate || 2.5; return isTwoPlate(
 /* ---------- exercise targets: sets × reps @ RIR, rest, focus ----------
    Lookup order: built-in guess → EX_INFO (research defaults) → your edits for all days → this split day's targets. */
 function genericTarget(name){
-  const n = name.toLowerCase(), base = {focus:'hypertrophy', sets:3, cue:''};
+  const n = name.toLowerCase(), base = {focus:'hypertrophy', sets:3, cue:'', tempo:'2-0-1-0'};
   if (/curl|raise|extension|fly|crossover|crunch|shrug|kickback|pushdown|calf|wrist|neck|face pull|pullover|pec deck|ab wheel|leg raise/.test(n)) return {...base, reps:[10,15], rir:'0–1', rest:90};
   if (isTwoPlate(name)) return {...base, reps:[6,10], rir:'1–2', rest:S.settings.rest > 150 ? S.settings.rest : 180};
   if (/press|row|pull-?up|chin|dip|squat|lunge|deadlift|leg press|hack|thrust|pulldown|step-?up/.test(n)) return {...base, reps:[8,12], rir:'1–2', rest:120};
@@ -825,6 +795,7 @@ function targetFor(name, slot){
   const t = {...genericTarget(name), ...(EX_INFO[name] || {}), ...((S.exCfg || {})[name] || {}), ...(day || {})};
   t.reps = [Math.max(1, +t.reps[0] || 1), Math.max(+t.reps[0] || 1, +t.reps[1] || +t.reps[0] || 1)];
   t.sets = Math.max(1, Math.min(10, +t.sets || 3)); t.rest = Math.max(10, Math.min(900, Math.round(+t.rest || 90)));
+  if (!TEMPO_RX.test(t.tempo || '')) t.tempo = '2-0-1-0';
   return t;
 }
 /* the split day an exercise belongs to on a date (null when it is an extra) */
@@ -837,7 +808,14 @@ function setTarget(name, slot, patch, scope){
   save();
 }
 const fmtRest = s => s < 60 ? `${s} s` : s % 60 ? `${Math.floor(s/60)}:${pad(s%60)} min` : `${s/60} min`;
-const fmtTarget = t => `${t.sets} × ${t.reps[0] === t.reps[1] ? t.reps[0] : t.reps[0]+'–'+t.reps[1]} @ RIR ${t.rir} · rest ${fmtRest(t.rest)}`;
+const fmtTarget = t => `${t.sets} × ${t.reps[0] === t.reps[1] ? t.reps[0] : t.reps[0]+'–'+t.reps[1]} @ RIR ${t.rir} · rest ${fmtRest(t.rest)}${t.tempo ? ' · tempo ' + t.tempo : ''}`;
+/* tempo = seconds: lower – pause at the stretch – lift – squeeze at the top (e.g. 3-0-1-1) */
+const TEMPO_RX = /^\d{1,2}-\d{1,2}-\d{1,2}-\d{1,2}$/;
+function fmtTempo(tp){
+  if (!TEMPO_RX.test(tp || '')) return '';
+  const [d, pb, u, pt] = tp.split('-').map(Number);
+  return [`lower ${d} s`, pb ? `pause ${pb} s` : '', `lift ${u ? u + ' s' : 'fast'}`, pt ? `squeeze ${pt} s` : ''].filter(Boolean).join(' · ');
+}
 const focusLabel = f => f === 'strength' ? 'Strength · heavy, low reps' : 'Hypertrophy · moderate–high reps';
 /* Skipping a training day shifts the schedule forward one day.
    The shift is absorbed ("burns") at the next Rest slot, which puts you back on plan. */
@@ -904,7 +882,8 @@ function toast(msg, undo){
 $('toastUndo').onclick = () => { if (undoFn) undoFn(); undoFn = null; $('toast').hidden = true; };
 
 function openSheet(html, bind){
-  $('sheet').innerHTML = '<div class="grab"></div>' + html;
+  $('sheet').innerHTML = '<div class="grab"></div><div class="sheethead"><button class="sheetx" type="button" aria-label="Close">✕</button></div>' + html;
+  $('sheet').querySelector('.sheetx').onclick = closeSheet;
   $('sheetWrap').hidden = false;
   bind && bind($('sheet'));
 }
@@ -989,13 +968,163 @@ function openRemove(name){
     });
 }
 
+/* ---------- MUSCLE MAP ----------
+   Original stylised figure (front + back), drawn as the left half and mirrored. Each exercise lists its primary
+   muscles (bright), helpers (lighter) and a note on why, down to the head where it matters. */
+const MM_NAMES = {
+  neck_front:'Neck flexors', neck_ext:'Neck extensors', traps_up:'Upper traps', traps_mid:'Mid traps', traps_low:'Lower traps', rhomboids:'Rhomboids',
+  delt_front:'Front delts', delt_side:'Side delts', delt_rear:'Rear delts', infraspinatus:'Rotator cuff', teres:'Teres major', lats:'Lats', erectors:'Lower back (erectors)',
+  chest_up:'Upper chest (clavicular head)', chest_low:'Mid/lower chest (sternal head)', bi_long:'Biceps long head', bi_short:'Biceps short head', brachialis:'Brachialis',
+  tri_long:'Triceps long head', tri_lat:'Triceps lateral head', tri_med:'Triceps medial head', forearm_flex:'Forearm flexors', forearm_ext:'Forearm extensors, brachioradialis',
+  abs:'Abs', obliques:'Obliques', glute_max:'Glute max', glute_med:'Glute med', adductors:'Adductors',
+  vl:'Outer quad (vastus lateralis)', rf:'Centre quad (rectus femoris)', vm:'Inner quad (vastus medialis)',
+  bf:'Outer hamstring (biceps femoris)', semi:'Inner hamstrings (semitendinosus, semimembranosus)',
+  gastro_lat:'Calf, outer gastrocnemius head', gastro_med:'Calf, inner gastrocnemius head', soleus:'Soleus', tibialis:'Tibialis'
+};
+const TRI = ['tri_long','tri_lat','tri_med'], BI = ['bi_long','bi_short'], CALF = ['gastro_med','gastro_lat'];
+const EX_MUSCLES = {
+  'Bench Press':[['chest_low','chest_up'],['delt_front',...TRI],'Works the whole chest, mostly the sternal (mid/lower) head. Front delts and triceps help push.'],
+  'Dumbbell Bench Press':[['chest_low','chest_up'],['delt_front',...TRI],'Like the bench press with a deeper stretch at the bottom.'],
+  'Machine Chest Press':[['chest_low','chest_up'],['delt_front','tri_lat','tri_med'],'Fixed path, so you can push close to failure safely.'],
+  'Incline Bench Press':[['chest_up'],['chest_low','delt_front',...TRI],'A 30–45° bench shifts the work toward the upper (clavicular) chest.'],
+  'Incline Dumbbell Press':[['chest_up'],['chest_low','delt_front',...TRI],'Upper (clavicular) chest. Dumbbells let the elbows travel deeper, so the chest is stretched more at the bottom.'],
+  'Machine Pec Deck':[['chest_low','chest_up'],['delt_front'],'Pure chest: no triceps involved, so the chest is the only thing that limits the set.'],
+  'Cable Crossover':[['chest_low'],['chest_up','delt_front'],'High-to-low cables bias the lower chest; low-to-high the upper chest.'],
+  'Weighted Dips':[['chest_low','tri_lat','tri_med'],['tri_long','delt_front','chest_up'],'Leaning forward shifts work to the lower chest; staying upright shifts it to the triceps.'],
+  'Push-up':[['chest_low'],['chest_up','delt_front','tri_lat','tri_med','abs'],'Chest and triceps; your abs hold the plank.'],
+  'Chest Supported T-Bar Row':[['traps_mid','rhomboids','lats'],['delt_rear','teres',...BI,'brachialis','forearm_ext'],'The chest pad takes your lower back out. Elbows wide works the upper back and rear delts; elbows tucked works the lats.'],
+  'Barbell Row':[['lats','traps_mid','rhomboids'],['delt_rear','teres','erectors',...BI,'brachialis'],'Upper back and lats; your lower back holds the hinge.'],
+  'Dumbbell Row':[['lats'],['traps_mid','rhomboids','delt_rear','teres',...BI,'brachialis'],'Pull the elbow toward the hip to bias the lats.'],
+  'Seated Cable Row':[['traps_mid','rhomboids','lats'],['delt_rear',...BI,'brachialis'],'Mid back and lats with constant cable tension.'],
+  'Machine Row':[['traps_mid','rhomboids','lats'],['delt_rear',...BI,'brachialis'],'Mid back and lats.'],
+  'Lat Pulldown':[['lats','teres'],['traps_low','rhomboids',...BI,'brachialis','delt_rear'],'Same pattern as the pull-up, with adjustable load.'],
+  'Pull-up':[['lats','teres'],['traps_low','rhomboids',...BI,'brachialis','forearm_flex'],'Lats do most of the work. Biceps, brachialis and grip are the main helpers, which is why pull-ups fail when they come after rows and curls.'],
+  'Machine Lat Pullover':[['lats','teres'],['tri_long','chest_low'],'Shoulder extension with straight arms: lats work without biceps or grip limiting the set.'],
+  'Straight-Arm Cable Pulldown':[['lats','teres'],['tri_long'],'Lats without the biceps; a good finisher.'],
+  'Deadlift':[['glute_max','bf','semi','erectors'],['adductors','vl','vm','traps_up','traps_mid','lats','forearm_flex','forearm_ext'],'Hip extension (glutes, hamstrings, adductors) with the lower back held rigid. Grip, traps and lats hold the bar close.'],
+  'Overhead Press':[['delt_front'],['delt_side',...TRI,'chest_up','traps_up'],'Front delts drive it; side delts, triceps and upper chest help.'],
+  'Seated Dumbbell Press':[['delt_front'],['delt_side',...TRI,'chest_up'],'Front delts, with side delts and triceps helping.'],
+  'Machine Shoulder Press':[['delt_front'],['delt_side',...TRI],'Front delts, with side delts and triceps helping.'],
+  'Lateral Raise':[['delt_side'],['traps_up','delt_front'],'Side delts lift the arm out to the side. Lead with the elbows and stop at shoulder height so the upper traps don\'t take over.'],
+  'Cable Lateral Raise':[['delt_side'],['traps_up','delt_front'],'Side delts. The cable keeps tension at the bottom, where a dumbbell is lightest.'],
+  'Reverse Pec Deck':[['delt_rear'],['traps_mid','rhomboids','infraspinatus'],'Rear delts pull the arms back; mid traps and rhomboids help at the end.'],
+  'Rear Delt Fly':[['delt_rear'],['traps_mid','rhomboids','infraspinatus'],'Rear delts; keep it light and strict.'],
+  'Face Pull':[['delt_rear','infraspinatus'],['traps_mid','rhomboids','traps_low'],'Rear delts and rotator cuff; good for shoulder health.'],
+  'Preacher Curl':[['bi_short','brachialis'],['bi_long','forearm_ext','forearm_flex'],'With the arm in front of the body the long head is slack, so the short head and brachialis likely do more (biomechanical reasoning). A 2025 trial found preacher curls grew the elbow end of the arm more than incline curls.'],
+  'Bayesian Cable Curl':[['bi_long'],['bi_short','brachialis','forearm_ext'],'With the arm behind the body, the long head (which crosses the shoulder) is stretched. Incline curls in the same position grew the shoulder end of the arm more (Kassiano 2025).'],
+  'Incline Dumbbell Curl':[['bi_long'],['bi_short','brachialis','forearm_ext'],'Arm behind the body stretches the long head; it grew the shoulder end of the arm more than preacher curls (Kassiano 2025).'],
+  'Barbell Curl':[BI,['brachialis','forearm_ext','forearm_flex'],'Both biceps heads about equally.'],
+  'Dumbbell Curl':[BI,['brachialis','forearm_ext','forearm_flex'],'Both biceps heads; turn the palm up as you lift.'],
+  'Hammer Curl':[['brachialis','forearm_ext'],BI,'Neutral grip shifts work to the brachialis and brachioradialis.'],
+  'Overhead Cable Triceps Extension':[['tri_long'],['tri_lat','tri_med'],'Overhead, the long head (which crosses the shoulder) is fully stretched. It grew the triceps ~40% more than pushdowns (Maeo 2023).'],
+  'Tricep Pushdown':[['tri_lat','tri_med'],['tri_long'],'Arm at your side: mostly the lateral and medial heads.'],
+  'Skull Crusher':[['tri_long'],['tri_lat','tri_med'],'Arm angled back stretches the long head.'],
+  'Close-Grip Bench Press':[['tri_lat','tri_med','chest_low'],['tri_long','delt_front','chest_up'],'Triceps-heavy pressing.'],
+  'Squat':[['vl','vm','glute_max','adductors'],['rf','erectors'],'Grows the outer and inner quads, glutes and adductors. It barely grows the centre quad (rectus femoris; 2021 trial), which is why leg extensions are in the plan.'],
+  'Hack Squat':[['vl','vm'],['rf','glute_max','adductors'],'Quads with less back load than a squat.'],
+  'Leg Press':[['vl','vm'],['rf','glute_max','adductors'],'Quads and glutes with no spinal load.'],
+  'Goblet Squat':[['vl','vm','glute_max'],['rf','adductors','abs'],'Quads and glutes; your abs hold the weight upright.'],
+  'Leg Extension':[['rf','vl','vm'],[],'Isolates all four quad heads. It\'s the only exercise that grew the rectus femoris in the 2021 squat vs leg extension trial.'],
+  'Walking Lunge':[['vl','vm','glute_max'],['adductors','rf','glute_med'],'Quads and glutes, one leg at a time. A longer stride shifts work to the glutes.'],
+  'Bulgarian Split Squat':[['vl','vm','glute_max'],['adductors','rf','glute_med'],'Quads and glutes, one leg at a time.'],
+  'Romanian Deadlift':[['semi','bf','glute_max'],['erectors','adductors','forearm_flex'],'A hip hinge that loads the hamstrings in a long stretch. The short head of the biceps femoris only works by bending the knee, which leg curls cover.'],
+  'Seated Leg Curl':[['semi','bf'],CALF,'Knee flexion works every hamstring, including the biceps femoris short head. Seated (hip bent) stretches them more and grew them more than lying curls (Maeo 2021).'],
+  'Lying Leg Curl':[['semi','bf'],CALF,'Knee flexion works every hamstring; seated curls stretch them more.'],
+  'Nautilus Glute Drive':[['glute_max'],['bf','semi','glute_med','adductors'],'Glute max, hardest at the top: squeeze for 1 s.'],
+  'Hip Thrust':[['glute_max'],['bf','semi','glute_med','adductors'],'Glute max, hardest at the top.'],
+  'Cable Kickback':[['glute_max'],['glute_med','bf','semi'],'Glute max, one side at a time.'],
+  'Standing Calf Raise':[CALF,['soleus'],'With a straight knee the gastrocnemius (both heads, the inner one larger) does most of the work. Bend the knee and the soleus takes over.'],
+  'Seated Calf Raise':[['soleus'],CALF,'Bent knee slackens the gastrocnemius, so the soleus does the work.'],
+  'Cable Crunch':[['abs'],['obliques'],'Rectus abdominis: curl the ribs toward the hips.'],
+  'Hanging Leg Raise':[['abs'],['obliques','rf','forearm_flex'],'Abs once the pelvis curls up; hip flexors do the first part.'],
+  'Ab Wheel':[['abs'],['obliques','lats','delt_front'],'Abs resisting your lower back arching.'],
+  'Dumbbell Wrist Curls & Extensions':[['forearm_flex','forearm_ext'],[],'Curls work the flexors (palm side); extensions work the extensors (back of the forearm).'],
+  'Neck Curls & Extensions':[['neck_front','neck_ext'],['traps_up'],'Curls train the front of the neck (SCM); extensions train the back.'],
+  'Dumbbell Shrugs':[['traps_up'],['traps_mid','forearm_flex'],'Upper traps; hold the top for 1 s.'],
+  'Barbell Shrug':[['traps_up'],['traps_mid','forearm_flex'],'Upper traps.']
+};
+const MM_GROUP = {Chest:['chest_low','chest_up'], Back:['lats','traps_mid','rhomboids'], Shoulders:['delt_front','delt_side','delt_rear'], Biceps:BI, Triceps:TRI,
+  Quads:['vl','rf','vm'], Hamstrings:['bf','semi'], Glutes:['glute_max','glute_med'], Calves:[...CALF,'soleus'], Core:['abs','obliques'], 'Arms & Neck':['forearm_flex','forearm_ext']};
+function musclesFor(name){
+  if (EX_MUSCLES[name]) { const [p, s, note] = EX_MUSCLES[name]; return {p, s, note}; }
+  const g = (S.customGroups || {})[name] || Object.keys(LIB).find(k => LIB[k].includes(name));
+  return g && MM_GROUP[g] ? {p: MM_GROUP[g], s: [], note: `${g} (from its muscle group; pick a group when creating custom exercises).`} : null;
+}
+const MM_SIL = 'M100,8C88,8 81,17 81,30C81,40 86,48 91,51L91,58C82,62 70,63 60,66C48,69 41,79 40,92C38,108 38,124 39,138C38,148 36,156 34,166C31,184 30,200 31,214C30,224 28,234 30,242C33,250 41,250 43,242C44,232 44,222 44,214C47,198 51,180 54,164C56,154 57,146 58,138C60,124 62,112 64,104C65,118 66,132 68,146C70,166 71,182 70,196C67,206 64,216 63,228C61,252 63,278 68,302C70,312 70,322 70,332C68,352 70,376 75,396C76,404 72,412 70,418C70,424 78,426 92,424C94,418 92,408 90,398C92,376 95,352 92,332C91,322 92,314 93,304C97,282 99,258 98,234L100,232Z';
+const MM_FRONT = {
+  neck_front: 'M90,51C92,57 95,62 98,68L95,69C92,63 89,57 88,53Z',
+  traps_up: 'M91,59C84,62 74,64 64,66L71,71C79,69 87,67 93,65Z',
+  delt_side: 'M61,67C49,70 42,78 41,92C41,100 43,106 46,111L52,105L51,85C52,77 56,71 63,68Z',
+  delt_front: 'M69,70C60,69 53,74 52,84L53,105C57,97 62,87 70,78Z',
+  chest_up: 'M98,72L72,74C68,78 66,83 66,88L98,90Z',
+  chest_low: 'M98,91L66,89C64,100 66,110 72,116C82,124 92,124 98,120Z',
+  bi_long: 'M45,104C42,118 42,134 45,150L51,154C50,138 50,120 51,102Z',
+  bi_short: 'M52,101C51,120 51,138 52,154L57,150C61,136 62,118 61,106C58,103 55,101 52,101Z',
+  brachialis: 'M40,126C39,140 40,152 43,162L47,158C44,150 43,140 43,128Z',
+  forearm_ext: 'M37,162C34,178 32,196 33,214L39,214C39,196 41,178 44,163Z',
+  forearm_flex: 'M45,163C42,180 40,198 40,214L44,214C47,198 51,180 55,163C52,161 48,161 45,163Z',
+  obliques: 'M85,125C76,125 71,131 69,146C70,166 71,182 71,193C77,196 83,198 88,200C86,176 85,150 85,125Z',
+  abs: 'M99,124L87,124C86,150 87,176 89,200L99,205Z',
+  adductors: 'M98,236C98,252 96,266 94,280C91,270 89,256 88,242C91,238 95,236 98,236Z',
+  vl: 'M64,226C60,252 62,280 68,302C71,306 75,306 78,304C75,284 74,260 77,240C73,236 68,230 64,226Z',
+  rf: 'M78,240C75,262 76,284 79,302L86,302C89,284 89,260 86,236C83,236 80,238 78,240Z',
+  vm: 'M87,262C92,272 95,286 92,304L86,304C88,290 88,276 87,262Z',
+  tibialis: 'M75,338C73,356 74,376 77,392L81,392C81,376 81,356 81,338Z',
+  gastro_med: 'M88,336C92,350 92,366 90,380L86,376C87,364 87,350 85,338Z'
+};
+const MM_BACK = {
+  neck_ext: 'M91,52L91,60C94,61 97,62 99,62L99,50C96,52 93,52 91,52Z',
+  traps_up: 'M99,57C93,60 82,63 64,66C70,70 80,72 99,74Z',
+  traps_mid: 'M99,74C88,74 78,74 71,76C76,84 82,90 88,96L88,80C92,78 96,78 99,78Z',
+  rhomboids: 'M99,78C96,78 92,78 88,80L88,96C92,102 96,108 99,112Z',
+  traps_low: 'M99,112C94,108 90,104 88,100C86,112 90,128 99,142Z',
+  delt_side: 'M58,67C48,70 42,78 41,92C41,100 43,106 46,111L52,106C49,98 47,92 47,86C48,76 54,70 62,67Z',
+  delt_rear: 'M67,68C56,70 49,76 47,86C47,94 49,100 52,106C56,96 62,86 72,78Z',
+  infraspinatus: 'M73,78C67,86 66,96 70,104L86,100L86,84C80,80 76,78 73,78Z',
+  teres: 'M70,105C68,110 68,114 70,118L84,108L86,101Z',
+  lats: 'M70,119C68,134 70,152 74,170C80,182 90,190 99,196L99,144C92,132 88,116 86,103L84,109Z',
+  erectors: 'M99,146L99,214L92,214C90,196 90,176 92,156C94,152 96,148 99,146Z',
+  tri_lat: 'M44,104C41,118 41,134 43,148L50,150C49,134 49,118 51,102Z',
+  tri_long: 'M52,101C50,118 50,134 50,150L57,146C61,132 62,118 61,106C58,103 55,101 52,101Z',
+  tri_med: 'M43,150C46,158 52,162 56,156L57,147L50,151Z',
+  forearm_ext: 'M55,163C51,182 47,200 44,214L32,214C31,196 33,178 36,163C42,161 50,161 55,163Z',
+  glute_med: 'M70,198C78,196 88,200 96,206C86,210 76,214 66,218C66,210 67,204 70,198Z',
+  glute_max: 'M98,208C86,210 74,216 66,222C64,236 66,250 74,258C84,262 94,258 99,252Z',
+  adductors: 'M99,253C99,262 98,272 97,280C96,272 95,264 94,256Z',
+  bf: 'M66,258C64,278 66,296 72,312L82,312C80,294 80,276 82,260C76,262 70,260 66,258Z',
+  semi: 'M82,260C82,278 82,296 84,312L92,312C96,294 98,276 98,256C92,260 86,262 82,260Z',
+  gastro_lat: 'M71,334C68,348 70,362 76,372L83,368L82,336Z',
+  gastro_med: 'M83,336L84,370C88,376 92,370 93,360C95,350 93,340 91,334Z',
+  soleus: 'M74,372C75,384 78,392 80,396L88,396C90,388 91,380 92,368C88,376 82,376 76,372Z'
+};
+function mmSvg(view, hi, opts = {}){
+  const regions = view === 'front' ? MM_FRONT : MM_BACK, P = new Set(hi.p || []), Sx = new Set(hi.s || []);
+  const cls = id => P.has(id) ? 'mm-p' : Sx.has(id) ? 'mm-s' : 'mm-o';
+  const half = Object.entries(regions).map(([id, d]) => `<path class="${cls(id)}" d="${d}"${opts.label ? ` data-id="${id}"` : ''}/>`).join('');
+  return `<svg class="mmap" viewBox="0 0 200 440" role="img" aria-label="${view} view">
+    <path class="mm-body" d="${MM_SIL}"/><path class="mm-body" d="${MM_SIL}" transform="matrix(-1 0 0 1 200 0)"/>
+    <g>${half}</g><g transform="matrix(-1 0 0 1 200 0)">${half}</g>
+    ${view === 'front' ? '<path class="mm-line" d="M88,142H112M88,160H112M88,178H112"/>' : '<path class="mm-line" d="M100,64V214"/>'}
+  </svg>`;
+}
+/* the muscle panel shown in the logger and the target editor */
+function muscleBlock(name){
+  const m = musclesFor(name); if (!m) return '';
+  const nm = ids => [...new Set(ids)].map(i => MM_NAMES[i]).filter(Boolean);
+  return `<div class="mmwrap"><div class="mmfigs"><div class="mmfig">${mmSvg('front', m)}<span>Front</span></div><div class="mmfig">${mmSvg('back', m)}<span>Back</span></div></div>
+    <div class="mmleg">
+      <div class="mmrow"><i class="mmdot p"></i><span><b>Main:</b> ${nm(m.p).map(esc).join(', ')}</span></div>
+      ${m.s.length ? `<div class="mmrow"><i class="mmdot s"></i><span class="muted"><b>Helpers:</b> ${nm(m.s).map(esc).join(', ')}</span></div>` : ''}
+      <div class="small muted mmnote">${esc(m.note)}</div></div></div>`;
+}
+
 /* ---------- target editor (sets, reps, RIR, rest, focus, note) ---------- */
 const RIR_OPTS = ['0','0–1','1','1–2','2','2–3','3'];
 const REST_OPTS = [60,75,90,120,150,180,210,240,300];
 function openTargetEditor(name, slot, after){
   const t = targetFor(name, slot), base = EX_INFO[name];
   const dayLabel = slot ? `${DAY_FULL[slot]} (${S.split[slot].name})` : '';
-  let st = {focus:t.focus, sets:t.sets, lo:t.reps[0], hi:t.reps[1], rir:t.rir, rest:t.rest, cue:t.cue || ''}, scope = slot ? 'day' : 'all';
+  let st = {focus:t.focus, sets:t.sets, lo:t.reps[0], hi:t.reps[1], rir:t.rir, rest:t.rest, cue:t.cue || '', tempo:t.tempo}, scope = slot ? 'day' : 'all';
   const draw = root => {
     root.querySelector('#teBody').innerHTML = `
       <div class="seg"><button class="btn ${st.focus==='strength'?'primary':''}" data-tf="strength">Strength</button><button class="btn ${st.focus!=='strength'?'primary':''}" data-tf="hypertrophy">Hypertrophy</button></div>
@@ -1010,6 +1139,9 @@ function openTargetEditor(name, slot, after){
       <div class="between"><span class="label">Rest between sets</span><span class="num" style="font-size:1.3rem;font-weight:700">${fmtRest(st.rest)}</span></div>
       <div class="chips">${REST_OPTS.map(r => `<button class="chip ${r===st.rest?'on':''}" data-trest="${r}">${fmtRest(r)}</button>`).join('')}</div>
       <div class="row" style="flex-wrap:nowrap"><button class="icon" data-tadj="-15">−15</button><input type="number" id="teRest" min="10" max="900" step="5" value="${st.rest}" inputmode="numeric" aria-label="Rest in seconds"><span class="small muted">sec</span><button class="icon" data-tadj="15">+15</button></div>
+      <div class="label">Tempo <span class="muted" style="text-transform:none;letter-spacing:0">(seconds: lower – pause – lift – squeeze)</span></div>
+      <div class="chips">${['2-0-1-0','3-0-1-0','2-0-1-1','3-0-1-1','2-1-1-0','2-2-1-0','1-0-1-0'].map(x => `<button class="chip ${x===st.tempo?'on':''}" data-ttp="${x}">${x}</button>`).join('')}</div>
+      <div class="row" style="flex-wrap:nowrap"><input type="text" id="teTempo" value="${esc(st.tempo)}" inputmode="numeric" placeholder="e.g. 3-0-1-0" style="width:120px" aria-label="Tempo"><span class="small muted">${esc(fmtTempo(st.tempo))}</span></div>
       <label class="field"><span class="label">Note / cue</span><textarea id="teCue" style="min-height:60px">${esc(st.cue)}</textarea></label>
       ${base ? `<div class="small muted">Research default: ${esc(fmtTarget({...genericTarget(name), ...base}))} · ${esc(focusLabel(base.focus))}</div>` : ''}
       ${slot ? `<div class="seg"><button class="btn chip ${scope==='day'?'on':''}" data-tscope="day">Only ${esc(dayLabel)}</button><button class="btn chip ${scope==='all'?'on':''}" data-tscope="all">Default, all days</button></div>` : ''}`;
@@ -1019,6 +1151,8 @@ function openTargetEditor(name, slot, after){
     root.querySelector('#teRest').oninput = e => { const v = parseInt(e.target.value, 10); if (v >= 10) st.rest = Math.min(900, v); };
     root.querySelector('#teRest').onchange = rd;
     root.querySelector('#teCue').oninput = e => { st.cue = e.target.value; };
+    root.querySelectorAll('[data-ttp]').forEach(b => b.onclick = () => { st.tempo = b.dataset.ttp; rd(); });
+    root.querySelector('#teTempo').onchange = e => { const v = e.target.value.trim().replace(/[^0-9]+/g, '-'); if (TEMPO_RX.test(v)) { st.tempo = v; rd(); } else toast('Tempo is 4 numbers, e.g. 3-0-1-0'); };
     root.querySelectorAll('[data-tf]').forEach(b => b.onclick = () => { st.focus = b.dataset.tf; rd(); });
     root.querySelectorAll('[data-trir]').forEach(b => b.onclick = () => { st.rir = b.dataset.trir; rd(); });
     root.querySelectorAll('[data-trest]').forEach(b => b.onclick = () => { st.rest = +b.dataset.trest; rd(); });
@@ -1026,12 +1160,13 @@ function openTargetEditor(name, slot, after){
     root.querySelectorAll('[data-tscope]').forEach(b => b.onclick = () => { scope = b.dataset.tscope; rd(); });
   };
   openSheet(`<h2>${esc(name)}</h2><div class="small muted">${slot ? 'Targets on ' + esc(dayLabel) : 'Default targets for every day'}</div>
+    ${muscleBlock(name)}
     <div id="teBody" class="stack"></div>
     <div class="seg"><button class="btn" id="teReset">Reset to default</button><button class="btn primary" id="teSave">Save</button></div>`, root => {
     draw(root);
     root.querySelector('#teSave').onclick = () => {
       if (st.hi < st.lo) [st.lo, st.hi] = [st.hi, st.lo];
-      const patch = {focus:st.focus, sets:st.sets, reps:[st.lo, st.hi], rir:st.rir, rest:st.rest, cue:st.cue.trim()};
+      const patch = {focus:st.focus, sets:st.sets, reps:[st.lo, st.hi], rir:st.rir, rest:st.rest, cue:st.cue.trim(), tempo:st.tempo};
       setTarget(name, slot, patch, scope);
       if (scope === 'all' && slot && S.split[slot].cfg) { delete S.split[slot].cfg[name]; save(); }   // "all days" wins on this day too
       closeSheet(); renderAll(); after && after(); toast(`${name}: ${fmtTarget(targetFor(name, slot))}`);
@@ -1108,96 +1243,7 @@ function renderToday(){
   if ($('undoDay')) $('undoDay').onclick = () => { delete S.overrides[date]; save(); renderAll(); toast('Restored the weekly sheet for this day'); };
   if ($('restBwGo')) $('restBwGo').onclick = () => { const v = parseFloat($('restBw').value); if (logBodyWeight(v, '', date)) { renderAll(); } };
 
-  renderReady(); renderWater(); renderFuelToday(); renderChecklist();
-}
-/* ---------- TODAY: morning check-in (sleep + readiness) ---------- */
-const ENERGY = ['Drained','Low','OK','Good','Great'], SORE = ['None','Light','Some','Sore','Very sore'];
-function renderReady(){
-  const el = $('readyCard'), date = ui.date, t = todayStr();
-  if (date > t) { el.hidden = true; return; }
-  el.hidden = false;
-  if (el.contains(document.activeElement) && document.activeElement.tagName === 'INPUT') return;
-  const s = sleepOf(date), h = sleepHours(date), r = readiness(date), goal = sleepGoal();
-  const filled = s.bed && s.energy && s.sore;
-  const open = ui.readyOpen === date || (!filled && date === t && ui.readyOpen !== 'closed:' + date);
-  const pill = r ? `<span class="pill rd-${r.level}">${esc(r.label)}</span>` : '';
-  if (!open){
-    el.innerHTML = `<div class="between"><div class="label">Morning check-in</div><button class="badge" id="rdEdit">${filled || s.bed ? 'Edit' : 'Fill in'}</button></div>
-      ${s.bed || s.energy || s.sore ? `<div class="row small"><b class="num">${h != null ? fmtHours(h) + ' sleep' : 'Sleep not logged'}</b>${s.energy ? `<span class="muted">· energy ${s.energy}/5</span>` : ''}${s.sore ? `<span class="muted">· soreness ${s.sore}/5</span>` : ''}${pill}</div>
-      ${r ? `<div class="small">${esc(r.text)}</div>` : ''}` : `<div class="small muted">Not filled in for this day.</div>`}`;
-    $('rdEdit').onclick = () => { ui.readyOpen = date; renderReady(); };
-    return;
-  }
-  el.innerHTML = `<div class="between"><h2>Morning check-in</h2>${filled ? '<button class="badge" id="rdDone">Done</button>' : '<button class="badge ghostbadge" id="rdLater">Later</button>'}</div>
-    <div class="inputs3">
-      <label class="field"><span class="label">Bedtime last night</span><input type="time" id="rdBed" value="${esc(s.bed || '')}"></label>
-      <label class="field"><span class="label">Woke up</span><input type="time" id="rdWake" value="${esc(wakeOf(date))}"></label>
-    </div>
-    <div class="small ${h != null && h < goal - 0.5 ? 'danger' : 'muted'}">${h != null ? `${fmtHours(h)} in bed · goal ${goal} h${S.wakeTimes[date] ? '' : ' (using your usual wake time; change it above)'}` : `Enter when you went to bed. Goal: ${goal} h.`}</div>
-    <div class="label">Energy</div>
-    <div class="scale">${ENERGY.map((l, i) => `<button class="chip ${s.energy === i+1 ? 'on' : ''}" data-en="${i+1}"><b>${i+1}</b><small>${l}</small></button>`).join('')}</div>
-    <div class="label">Muscle soreness</div>
-    <div class="scale">${SORE.map((l, i) => `<button class="chip ${s.sore === i+1 ? 'on' : ''}" data-so="${i+1}"><b>${i+1}</b><small>${l}</small></button>`).join('')}</div>
-    ${r ? `<div class="note rd-note rd-${r.level}"><b>${esc(r.label)}</b>${r.flags.length ? ` · ${esc(r.flags.join(', '))}` : ''}<br>${esc(r.text)}</div>` : ''}`;
-  $('rdBed').onchange = e => { setSleep(date, {bed: e.target.value || null}); e.target.blur(); renderReady(); renderChecklist(); };
-  $('rdWake').onchange = e => { if (e.target.value) S.wakeTimes[date] = e.target.value; else delete S.wakeTimes[date]; save(); e.target.blur(); renderToday(); };
-  el.querySelectorAll('[data-en]').forEach(b => b.onclick = () => { setSleep(date, {energy: +b.dataset.en === s.energy ? null : +b.dataset.en}); renderReady(); });
-  el.querySelectorAll('[data-so]').forEach(b => b.onclick = () => { setSleep(date, {sore: +b.dataset.so === s.sore ? null : +b.dataset.so}); renderReady(); });
-  if ($('rdDone')) $('rdDone').onclick = () => { ui.readyOpen = null; renderReady(); };
-  if ($('rdLater')) $('rdLater').onclick = () => { ui.readyOpen = 'closed:' + date; renderReady(); };
-}
-/* ---------- TODAY: daily checklist + streaks ---------- */
-let ckQueued = false;
-function queueChecklist(){ if (ckQueued) return; ckQueued = true; requestAnimationFrame(() => { ckQueued = false; if (ui.tab === 'today') renderChecklist(); }); }
-function renderChecklist(){
-  const el = $('checkCard'), date = ui.date, t = todayStr(), list = checklistFor(date), st = streaks();
-  const d = list.filter(x => x.done).length;
-  if (date === t) celebrate(st);
-  const sp = (n, u, label, s) => `<span class="spill ${s.todayDone ? 'lit' : ''}" title="Best: ${s.best} ${u}"><b class="num">${n}</b> ${label}</span>`;
-  el.innerHTML = `<div class="between"><h2>Daily checklist</h2><span class="row"><span class="num ckscore ${d === list.length && list.length ? 'full' : ''}">${d}/${list.length}</span><button class="badge" id="ckEdit">Edit</button></span></div>
-    <div class="streaks">${sp(st.kcal.cur, 'days', `day${st.kcal.cur === 1 ? '' : 's'} on calories`, st.kcal)}${sp(st.train.cur, 'sessions', `session${st.train.cur === 1 ? '' : 's'} in a row`, st.train)}${sp(st.perfect.cur, 'days', `perfect day${st.perfect.cur === 1 ? '' : 's'}`, st.perfect)}</div>
-    <div class="cklist">${list.map(x => `<button class="ckitem ${x.done ? 'done' : ''}" data-ck="${esc(x.id)}"><span class="ckbox">${x.done ? '✓' : ''}</span><span class="cktxt"><span class="cklabel">${esc(x.label)}</span>${x.detail ? `<span class="ckdet">${esc(x.detail)}</span>` : ''}</span></button>`).join('')}</div>
-    ${date > t ? '<div class="small muted">A future day: items tick as you log.</div>' : '<div class="small muted">Most items tick themselves from what you log. Tap one to go there.</div>'}`;
-  $('ckEdit').onclick = openChecklistSheet;
-  el.querySelectorAll('[data-ck]').forEach(b => b.onclick = () => checkAction(date, b.dataset.ck));
-}
-function checkAction(date, id){
-  const it = checklistFor(date).find(x => x.id === id); if (!it) return;
-  if (!it.auto || id === 'creatine'){
-    if (id === 'creatine' && ((S.mealsDone||{})[date] || {}).smoothie) { toast('Ticked by the smoothie (it has the 5 g)'); return; }
-    if (toggleCheck(date, id)) buzz(15); renderChecklist(); return;
-  }
-  if (id === 'train'){ const left = routineFor(date).find(x => !logsOn(date).some(l => l.ex === x)) || routineFor(date)[0]; if (left) setExercise(left); showTab('log'); return; }
-  if (id === 'kcal' || id === 'protein'){ showTab('fuel'); return; }
-  if (id === 'water'){ const c = addWater(1, date); renderWater(); renderChecklist(); buzz(15); toast(`${fmtKg(c*S.settings.sitting/1000)} L water`); return; }
-  if (id === 'sleep'){ ui.readyOpen = date; renderReady(); $('readyCard').scrollIntoView({behavior:'smooth', block:'start'}); setTimeout(() => $('rdBed') && $('rdBed').focus(), 350); return; }
-  if (id === 'weigh'){
-    const last = [...S.body].sort((a,b) => a.date.localeCompare(b.date)).at(-1);
-    openSheet(`<h2>Weigh in</h2><div class="small muted">Morning, after the toilet, before food: same conditions every day.</div>
-      <input type="number" id="wiVal" inputmode="decimal" step="0.1" placeholder="${last ? 'Last: ' + fmtKg(last.w) + ' kg' : 'Weight in kg'}">
-      <div class="seg"><button class="btn" data-close>Cancel</button><button class="btn primary" id="wiGo">Log weight</button></div>`, root => {
-      root.querySelector('[data-close]').onclick = closeSheet;
-      setTimeout(() => root.querySelector('#wiVal').focus(), 60);
-      root.querySelector('#wiGo').onclick = () => { if (logBodyWeight(parseFloat(root.querySelector('#wiVal').value), 'Fasted morning', date)) { closeSheet(); renderAll(); } };
-    });
-  }
-}
-function openChecklistSheet(){
-  const draw = root => {
-    const off = S.checklistOff || {};
-    root.querySelector('#clBody').innerHTML = `<div class="label">Ticks itself</div>
-      ${CHECK_BUILTIN.map(b => `<label class="row small clrow"><input type="checkbox" data-cb="${b.id}" ${off[b.id] ? '' : 'checked'}> ${esc(b.label)}</label>`).join('')}
-      <div class="label" style="margin-top:8px">Your habits (tick by hand)</div>
-      ${(S.habits||[]).map((h, i) => `<div class="row" style="flex-wrap:nowrap"><input type="text" data-hn="${i}" value="${esc(h.name)}" style="flex:1" aria-label="Habit name"><button class="icon" data-hdel="${i}" aria-label="Delete ${esc(h.name)}">✕</button></div>`).join('') || '<div class="small muted">None yet. Ideas: stretch 10 min, no junk food, 10k steps, bed by 11.</div>'}
-      <div class="row" style="flex-wrap:nowrap"><input type="text" id="clNew" placeholder="New habit" style="flex:1" autocomplete="off"><button class="btn" id="clAdd">Add</button></div>`;
-    root.querySelectorAll('[data-cb]').forEach(c => c.onchange = () => { S.checklistOff = S.checklistOff || {}; if (c.checked) delete S.checklistOff[c.dataset.cb]; else S.checklistOff[c.dataset.cb] = true; save(); });
-    root.querySelectorAll('[data-hn]').forEach(i => i.onchange = () => { const v = i.value.trim(); if (v) { S.habits[+i.dataset.hn].name = v; save(); } });
-    root.querySelectorAll('[data-hdel]').forEach(b => b.onclick = () => { const i = +b.dataset.hdel, [h] = S.habits.splice(i, 1); save(); draw(root); toast(`Deleted ${h.name}`, () => { S.habits.splice(i, 0, h); save(); draw(root); }); });
-    const add = () => { const v = root.querySelector('#clNew').value.trim(); if (!v) return; S.habits = [...(S.habits||[]), {id: 'h-' + uid(), name: v, since: todayStr()}]; save(); draw(root); root.querySelector('#clNew').focus(); };
-    root.querySelector('#clAdd').onclick = add; root.querySelector('#clNew').onkeydown = e => { if (e.key === 'Enter') add(); };
-  };
-  openSheet(`<h2>Daily checklist</h2><div class="small muted">Turned-off items don't count toward your score or perfect days.</div><div id="clBody" class="stack" style="gap:8px"></div>
-    <button class="btn primary" data-close>Done</button>`, root => { draw(root); root.querySelector('[data-close]').onclick = () => { closeSheet(); renderAll(); }; });
+  renderWater(); renderFuelToday();
 }
 function renderBurnBanner(date, P){
   const el = $('burnBanner'), t = todayStr(), name = esc(dayName(date, P));
@@ -1234,7 +1280,6 @@ function renderWater(){
   $('drops').style.gridTemplateColumns = `repeat(${Math.min(n, 10)},1fr)`;
   $('drops').innerHTML = Array.from({length:n}, (_,i) => `<button class="drop ${i<c?'on':''}" data-i="${i+1}" aria-label="${i+1} sittings">${fmtKg((i+1)*sit/1000)}L</button>`).join('');
   $('drops').querySelectorAll('.drop').forEach(b => b.onclick = () => { const i = +b.dataset.i; S.water[ui.date] = (i === c ? i-1 : i); save(); renderWater(); });
-  queueChecklist();
 }
 function addWater(n, date = ui.date){
   S.water[date] = Math.max(0, waterCount(date) + n); save();
@@ -1395,7 +1440,6 @@ function renderFuelToday(){
   el.querySelectorAll('[data-mopen]').forEach(b => b.onclick = () => { ui.openMeal = ui.openMeal === b.dataset.mopen ? null : b.dataset.mopen; renderFuelToday(); });
   el.querySelectorAll('[data-mdone]').forEach(b => b.onclick = () => { if (tickMeal(date, b.dataset.mdone)) buzz(15); renderFuelToday(); });
   if ($('fLogOther')) $('fLogOther').onclick = () => openFoodSheet(date);
-  queueChecklist();
   el.querySelectorAll('[data-mopt]').forEach(b => b.onclick = () => { const [k, id] = b.dataset.mopt.split('|'); S.mealChoice[k] = id; save();
     if ((S.mealsDone[date]||{})[k]) { tickMeal(date, k, false); tickMeal(date, k, true); }   // ticked already: log the new pick instead
     renderFuelToday(); });
@@ -1787,142 +1831,7 @@ function bmrLine(tg){
   return `<div class="note">Standard estimate (Mifflin–St Jeor, age ${age}, ${h} cm, ${fmtKg(tg.kg)} kg): BMR ~${Math.round(bmr/10)*10} kcal, maintenance ~${lo}–${hi} kcal with 5 training days. Your ${k} kcal target is ${d1 >= 0 ? '+' : ''}${d1} to ${d2 >= 0 ? '+' : ''}${d2} kcal, ${verdict}</div>`;
 }
 
-/* ---------- SLEEP + READINESS ----------
-   Bedtime is stored on the morning it ends (S.sleep[date].bed = when you went to bed the night before);
-   wake time is the same one the meal planner uses. */
-const sleepOf = date => (S.sleep || {})[date] || {};
-function sleepHours(date){
-  const bed = toMin(sleepOf(date).bed); if (bed == null) return null;
-  const wake = toMin(wakeOf(date));
-  const mins = ((wake - bed) % 1440 + 1440) % 1440;
-  return mins >= 120 ? Math.round(mins/6)/10 : null;   // under 2 h is almost certainly a typo
-}
 const sleepGoal = () => +S.profile.sleepHours || 7.5;
-const fmtHours = h => h == null ? '–' : `${Math.floor(h)} h${Math.round((h % 1)*60) ? ' ' + Math.round((h % 1)*60) + ' min' : ''}`;
-function setSleep(date, patch){
-  S.sleep = S.sleep || {};
-  const v = {...sleepOf(date), ...patch};
-  Object.keys(v).forEach(k => { if (v[k] == null || v[k] === '') delete v[k]; });
-  if (Object.keys(v).length) S.sleep[date] = v; else delete S.sleep[date];
-  save();
-}
-/* readiness: sleep, energy and soreness → how hard to push today. Short sleep mostly costs reps on later sets of big lifts. */
-function readiness(date){
-  const h = sleepHours(date), s = sleepOf(date), goal = sleepGoal();
-  if (h == null && !s.energy && !s.sore) return null;
-  const flags = [], good = [];
-  if (h != null){ if (h < 6) flags.push(`${fmtHours(h)} sleep`); else if (h >= goal - 0.25) good.push('slept enough'); }
-  if (s.energy){ if (s.energy <= 2) flags.push('low energy'); else if (s.energy >= 4) good.push('good energy'); }
-  if (s.sore){ if (s.sore >= 4) flags.push('very sore'); else if (s.sore <= 2) good.push('fresh'); }
-  if (S.badminton[addDays(date, -1)]) flags.push('badminton last night');
-  const training = isTraining(date);
-  if (flags.length >= 2 || (h != null && h < 5)) return {level:'easy', label:'Take it easy', flags,
-    text: training ? 'Keep 2–3 reps in reserve, skip weight increases today and drop the last set of isolation work if you feel flat. A lighter session still counts. Sleep early tonight.' : 'Rest day: eat everything and get to bed early tonight.'};
-  if (flags.length === 1) return {level:'normal', label:'Normal day', flags,
-    text: training ? `Train as planned, but don't chase a new weight on the first lift if it feels heavy (${flags[0]}).` : 'Rest, eat, hydrate.'};
-  return {level:'good', label: good.length >= 2 ? 'Ready to push' : 'Normal day', flags, good,
-    text: training ? (good.length >= 2 ? 'Good day for the weight increases the Log screen suggests.' : 'Train as planned.') : 'Rest, eat, hydrate.'};
-}
-
-/* ---------- DAILY CHECKLIST ----------
-   Built-in items tick themselves from what you log; your own habits are ticked by hand. */
-const CHECK_BUILTIN = [
-  {id:'train', label:'Train'}, {id:'kcal', label:'Hit calories'}, {id:'protein', label:'Hit protein'}, {id:'water', label:'Drink water'},
-  {id:'weigh', label:'Weigh in'}, {id:'creatine', label:'Creatine 5 g'}, {id:'sleep', label:'Sleep enough'}
-];
-/* a training day counts as done once 75% of its planned working sets are logged */
-function trainStatus(date){
-  const list = routineFor(date); if (!list.length || S.excused[date]) return null;
-  const slot = slotOf(date), planned = list.reduce((a, ex) => a + targetFor(ex, slot).sets, 0), n = logsOn(date).length;
-  return {planned, n, done: n >= Math.ceil(planned * 0.75)};
-}
-const hasDayData = date => logsOn(date).length || foodList(date).length || Object.keys((S.mealsDone||{})[date] || {}).length || waterCount(date) || S.body.some(b => b.date === date) || (S.sleep||{})[date];
-function checklistFor(date){
-  const out = [], ticks = (S.checks || {})[date] || {}, off = S.checklistOff || {}, t = todayStr();
-  const add = (id, label, counted, done, detail, auto = true) => { if (!off[id]) out.push({id, label, counted, done: !!done, detail, auto}); };
-  // train: rest days and excused skips don't count
-  const tr = trainStatus(date);
-  if (tr) add('train', 'Train', true, tr.done, `${tr.n}/${tr.planned} sets`);
-  if (PLAN){
-    const tg = targetsFor(date), tot = eatenTotals(date);
-    add('kcal', 'Hit calories', true, tot.k >= tg.kcal * 0.95, `${tot.k}/${tg.kcal}`);
-    add('protein', 'Hit protein', true, tot.p >= tg.pLo, `${tot.p}/${tg.pLo} g`);
-  }
-  const wg = waterGoalSittings(date), wc = waterCount(date);
-  add('water', 'Drink water', true, wc >= wg, `${fmtKg(wc*S.settings.sitting/1000)}/${fmtKg(Math.round(wg*S.settings.sitting/100)/10)} L`);
-  add('weigh', 'Weigh in', true, S.body.some(b => b.date === date), S.body.find(b => b.date === date) ? fmtKg(S.body.find(b => b.date === date).w) + ' kg' : 'morning');
-  add('creatine', 'Creatine 5 g', true, ticks.creatine || ((S.mealsDone||{})[date] || {}).smoothie, ((S.mealsDone||{})[date] || {}).smoothie ? 'in smoothie' : 'tap when taken', !((S.mealsDone||{})[date] || {}).smoothie);
-  const h = sleepHours(date);
-  add('sleep', 'Sleep enough', true, h != null && h >= sleepGoal() - 0.5, h == null ? 'log bedtime' : `${fmtHours(h)}`);
-  (S.habits || []).forEach(x => { if (!x.since || x.since <= date) out.push({id: x.id, label: x.name, counted: true, done: !!ticks[x.id], detail: '', auto: false, custom: true}); });
-  return out.filter(x => x.counted);
-}
-function dayScore(date){
-  const l = checklistFor(date); if (!l.length) return null;
-  const d = l.filter(x => x.done).length;
-  return {done: d, total: l.length, pct: d / l.length};
-}
-function toggleCheck(date, id){
-  S.checks = S.checks || {}; const c = S.checks[date] = S.checks[date] || {};
-  if (c[id]) delete c[id]; else c[id] = Date.now();
-  if (!Object.keys(c).length) delete S.checks[date];
-  save(); return !!(c && c[id]);
-}
-
-/* ---------- STREAKS + CONSISTENCY ----------
-   Streaks count back from yesterday; today extends the streak once it's done, and doesn't break it while it's still in progress.
-   Days before you started tracking (no data at all, before checklistSince) don't count. */
-const trackStart = () => { const f = addDays(todayStr(), -179); let first = S.checklistSince || todayStr();
-  ['logs','body'].forEach(k => S[k].forEach(x => { if (x.date < first) first = x.date; }));
-  [S.food, S.mealsDone, S.water].forEach(o => Object.keys(o || {}).forEach(d => { if (d < first) first = d; }));
-  return first < f ? f : first; };
-function counted(date){ return date >= (S.checklistSince || todayStr()) || hasDayData(date); }
-function kcalHit(date){ if (!PLAN) return null; return eatenTotals(date).k >= targetsFor(date).kcal * 0.95; }
-function streakOf(test, {unit = 'days'} = {}){
-  const t = todayStr(), start = trackStart();
-  let cur = 0, best = 0, run = 0, curDone = false;
-  // walk forward for best, then read the current run
-  for (let d = start; d <= t; d = addDays(d, 1)){
-    const r = test(d);
-    if (r === null) continue;                     // not applicable (rest day, nothing planned)
-    if (r) { run++; best = Math.max(best, run); }
-    else if (d === t) { /* today still in progress */ }
-    else run = 0;
-  }
-  cur = run; curDone = test(t) === true;
-  return {cur, best, todayDone: curDone, unit};
-}
-function streaks(){
-  const t = todayStr();
-  const train = d => { const s = trainStatus(d); if (!s) return null; if (s.done) return true; return d === t ? null : false; };
-  const perfect = d => { if (!counted(d)) return null; const s = dayScore(d); return s ? s.done === s.total : null; };
-  const kcal = d => counted(d) ? kcalHit(d) : null;
-  return {kcal: streakOf(kcal), train: streakOf(train, {unit:'sessions'}), perfect: streakOf(perfect)};
-}
-function consistency(days){
-  const t = todayStr(), res = {days:0, score:0, items:{}};
-  for (let i = 1; i <= days; i++){
-    const d = addDays(t, -i); if (!counted(d)) continue;
-    const l = checklistFor(d); if (!l.length) continue;
-    res.days++; res.score += l.filter(x => x.done).length / l.length;
-    l.forEach(x => { const it = res.items[x.id] = res.items[x.id] || {label: x.label, hit:0, n:0}; it.n++; if (x.done) it.hit++; });
-  }
-  res.pct = res.days ? Math.round(res.score / res.days * 100) : null;
-  const sl = []; for (let i = 0; i < 7; i++){ const h = sleepHours(addDays(t, -i)); if (h != null) sl.push(h); }
-  res.sleepAvg = sl.length ? Math.round(sl.reduce((a,b) => a+b, 0) / sl.length * 10) / 10 : null;
-  return res;
-}
-const MILESTONES = [3, 7, 14, 21, 30, 50, 75, 100, 150, 200, 365];
-function celebrate(st){
-  const t = todayStr(); S.celebrated = S.celebrated || {};
-  for (const [k, name] of [['kcal','Calorie'],['train','Training'],['perfect','Perfect-day']]){
-    const s = st[k], key = `${k}-${s.cur}`;
-    if (s.todayDone && MILESTONES.includes(s.cur) && !S.celebrated[key]){
-      S.celebrated[key] = t; save();
-      toast(`${name} streak: ${s.cur} ${s.unit} in a row. Keep it going.`); buzz([60, 40, 60]); return;
-    }
-  }
-}
 
 /* ---------- LIFT GOALS ----------
    Goal = a weight × reps you want to hit. Progress uses estimated 1RM (Epley); "can do now" converts that back to your goal's reps. */
@@ -2025,19 +1934,20 @@ function renderTargetCard(){
   const t = targetOn(ex), slot = slotForEx(ex), sug = suggestNext(ex);
   const done = logsOn(ui.date).filter(l => l.ex === ex).length;
   const wu = t.focus === 'strength' || STRENGTH_LIFTS.test(ex) ? warmupsFor(ex, sug ? sug.w : ui.w) : [];
-  const rd = ui.date === todayStr() ? readiness(ui.date) : null;
   const goal = (S.liftGoals || []).find(g => g.ex === ex && !g.hit), gs = goal ? goalStatus(goal) : null;
   el.innerHTML = `<div class="between"><div><div class="label">${slot ? 'Target · ' + esc(S.split[slot].name) + ' day' : 'Target · extra exercise'}</div>
       <div class="tline">${t.sets} × ${t.reps[0] === t.reps[1] ? t.reps[0] : t.reps[0] + '–' + t.reps[1]} <small>@ RIR ${esc(t.rir)}</small></div></div>
       <button class="badge" id="tgEdit">Edit</button></div>
     <div class="row small"><span class="pill ${t.focus === 'strength' ? 'heavy' : 'hyp'}">${t.focus === 'strength' ? 'Strength' : 'Hypertrophy'}</span><span>Rest ${fmtRest(t.rest)}</span>
       <span class="muted">· ${done >= t.sets ? `all ${t.sets} sets done ✓` : `set ${done + 1} of ${t.sets}`}</span></div>
+    <div class="small"><span class="muted">Tempo</span> <b class="num">${esc(t.tempo)}</b> <span class="muted">· ${esc(fmtTempo(t.tempo))}</span></div>
     ${t.cue ? `<div class="small muted">${esc(t.cue)}</div>` : ''}
     ${sug ? `<div class="note ${sug.kind === 'up' ? 'up-note' : ''}">${esc(sug.msg)}${sug.w !== ui.w && sug.w > 0 ? ` <button class="chip" id="tgUse">Use ${fmtKg(sug.w)} kg</button>` : ''}</div>` : '<div class="small muted">First session: pick a weight you could lift for ' + (t.reps[1] + 2) + ' reps, then adjust.</div>'}
-    ${rd && rd.level === 'easy' ? `<div class="note rd-note rd-easy"><b>Take it easy today</b> · ${esc(rd.flags.join(', '))}. ${sug && sug.kind === 'up' ? `Stay at ${fmtKg(sug.w - stepFor(ex))} kg instead of going up, and keep` : 'Keep'} 2–3 reps in reserve.</div>` : ''}
     ${goal ? `<div class="small">Goal ${fmtKg(goal.w)} kg × ${goal.r}: ${gs.now >= gs.goalE ? 'your estimate says you are ready.' : `about ${fmtKg(Math.max(0, Math.round((goal.w - gs.canNow)*2)/2))} kg to go at ${goal.r} reps (now ~${fmtKg(gs.canNow)} kg × ${goal.r}).`}</div>` : ''}
-    ${wu.length ? `<div><div class="label">Warm-up first (not logged)</div><div class="chips">${wu.map(x => `<span class="chip ghostchip">${fmtKg(x.w)} × ${x.r}</span>`).join('')}</div><div class="small muted">60–90 s between warm-up sets.</div></div>` : ''}`;
+    ${wu.length ? `<div><div class="label">Warm-up first (not logged)</div><div class="chips">${wu.map(x => `<span class="chip ghostchip">${fmtKg(x.w)} × ${x.r}</span>`).join('')}</div><div class="small muted">60–90 s between warm-up sets.</div></div>` : ''}
+    ${musclesFor(ex) ? `<div class="mmtoggle"><button class="linkbtn" id="mmTog">${S.settings.showMuscles === false ? 'Show muscles ▸' : 'Muscles worked ▾'}</button></div>${S.settings.showMuscles === false ? '' : muscleBlock(ex)}` : ''}`;
   $('tgEdit').onclick = () => openTargetEditor(ex, slot);
+  if ($('mmTog')) $('mmTog').onclick = () => { S.settings.showMuscles = S.settings.showMuscles === false; save(); renderTargetCard(); };
   if ($('tgUse')) $('tgUse').onclick = () => { ui.w = sug.w; renderLoggerControls(); };
 }
 function renderLog(){
@@ -2118,7 +2028,8 @@ function logSet(ex, w, r, date = ui.date){
   const rec = {id:uid(), date, t:Date.now(), ex, w:+w, r:+r};
   S.logs.push(rec); save(); checkGoals(rec); return rec;
 }
-$('exInput').addEventListener('change', e => { if (e.target.value.trim()) setExercise(e.target.value); });
+// skip when nothing changed: re-drawing on blur would swallow the tap that caused the blur
+$('exInput').addEventListener('change', e => { const v = e.target.value.trim(); if (v && canonical(v) !== ui.ex) setExercise(v); });
 $('exInput').addEventListener('input', e => { const v = e.target.value.trim().toLowerCase(); const hit = allExerciseNames().find(n => n.toLowerCase() === v); if (hit && hit !== ui.ex) setExercise(hit); });
 $('wMinus').onclick = () => { ui.w = Math.max(0, round(ui.w - stepFor(ui.ex), 0.25)); renderLoggerControls(); };
 $('wPlus').onclick = () => { ui.w = round(ui.w + stepFor(ui.ex), 0.25); renderLoggerControls(); };
@@ -2165,7 +2076,7 @@ function nextUpLabel(ex){
   const t = targetOn(ex), n = logsOn(ui.date).filter(l => l.ex === ex).length;
   if (n < t.sets) return `${ex}: set ${n + 1} of ${t.sets} · ${t.reps[0]}–${t.reps[1]} reps`;
   const left = routineFor(ui.date).filter(x => !logsOn(ui.date).some(l => l.ex === x));
-  return left.length ? `Next exercise: ${left[0]}` : 'Workout done. Log the smoothie.';
+  return left.length ? `Next exercise: ${left[0]}` : 'Workout done. Have your post-workout meal.';
 }
 function startRestFor(ex){ startTimer(restFor(ex), nextUpLabel(ex)); }
 
@@ -2328,7 +2239,7 @@ function renderBody(){
       <div class="stat"><div class="label">Net change</div><div class="v ${st.net>0?'up':st.net<0?'down':''}">${sign(st.net)}<small class="muted"> kg</small></div><div class="small muted">since ${fmtDate(st.first.date)}</div></div>
       <div class="stat"><div class="label">Weekly rate</div><div class="v ${r>0?'up':r<0?'down':''}">${r==null?'–':sign(Math.round(r*100)/100)}<small class="muted">${r==null?'':' kg/wk'}</small></div><div class="small muted">${r==null?'Needs 2+ entries':'last 3 weeks'}</div></div>`;
   }
-  renderCheckIn(st); renderConsistency();
+  renderCheckIn(st);
   // goal
   const tgt = S.target;
   let g = `<div class="between"><h2>Bulk goal</h2></div>
@@ -2406,7 +2317,7 @@ function remindersFor(date){
   if (R.meals) mealItems(sc).forEach(i => { if (done[i.key]) return;
     const o = optionFor(i.key), label = PLAN.meals[i.key].label;
     out.push({key: 'meal-' + i.key, at: at(i.t - lead), title: lead ? `${label} in ${lead} min: ${o.name}` : `${label}: ${o.name}`, body: o.what}); });
-  if (R.weigh && !S.body.some(b => b.date === date)) out.push({key: 'weigh', at: at(sc.wake + 10), title: 'Weigh in', body: 'Before breakfast, after the toilet. Log it in the checklist.'});
+  if (R.weigh && !S.body.some(b => b.date === date)) out.push({key: 'weigh', at: at(sc.wake + 10), title: 'Weigh in', body: 'Before breakfast, after the toilet. Log it on the Body tab.'});
   if (R.bed) out.push({key: 'bed', at: at(sc.sleep - 15), title: 'Lights out in 15 min', body: `Bed by ${fmtMin(sc.sleep)} for ${sleepGoal()} h before your ${fmtMin(sc.wake)} wake-up. Phone away.`});
   return out.sort((a, b) => a.at - b.at);
 }
@@ -2448,35 +2359,6 @@ function webReminderTick(){
 }
 setInterval(webReminderTick, 30000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) { webReminderTick(); scheduleReminders(); } });
-
-/* ---------- BODY: consistency (streaks, score, per-habit rates, 12-week heatmap) ---------- */
-function renderConsistency(){
-  const el = $('consistCard'), st = streaks(), c7 = consistency(7), c30 = consistency(30), t = todayStr();
-  const big = (s, label) => `<div class="stat"><div class="label">${label}</div><div class="v">${s.cur}<small class="muted"> ${s.unit}</small></div><div class="small muted">best ${s.best}${s.todayDone ? ' · today ✓' : ''}</div></div>`;
-  const items = Object.entries(c30.items).map(([id, x]) => ({id, ...x, r: x.n ? x.hit / x.n : 0})).sort((a, b) => a.r - b.r);
-  const weakest = items.find(x => x.r < 0.8);
-  // heatmap: 12 weeks, Monday-first columns, newest on the right
-  const start = addDays(mondayOf(t), -77), cols = [];
-  for (let w = 0; w < 12; w++){
-    const cells = [];
-    for (let d = 0; d < 7; d++){
-      const date = addDays(start, w*7 + d);
-      let cls = 'h-none', tip = fmtDate(date, {day:'numeric', month:'short'});
-      if (date > t) cls = 'h-future';
-      else if (counted(date)){ const sc = dayScore(date); if (sc){ const p = sc.pct; cls = p >= 1 ? 'h4' : p >= 0.75 ? 'h3' : p >= 0.5 ? 'h2' : p > 0 ? 'h1' : 'h0'; tip += ` · ${sc.done}/${sc.total}`; } }
-      cells.push(`<button class="hcell ${cls} ${date === t ? 'htoday' : ''}" data-hd="${date}" title="${esc(tip)}" aria-label="${esc(tip)}" ${date > t ? 'disabled' : ''}></button>`);
-    }
-    cols.push(`<div class="hcol">${cells.join('')}</div>`);
-  }
-  el.innerHTML = `<div class="between"><h2>Consistency</h2><span class="small muted">${c7.pct != null ? `7 days ${c7.pct}% · 30 days ${c30.pct}%` : 'builds as you log'}</span></div>
-    <div class="stats">${big(st.kcal, 'Calorie streak')}${big(st.train, 'Training streak')}${big(st.perfect, 'Perfect days')}<div class="stat"><div class="label">Sleep, 7-day avg</div><div class="v">${c7.sleepAvg != null ? c7.sleepAvg : '–'}<small class="muted"> h</small></div><div class="small muted">goal ${sleepGoal()} h</div></div></div>
-    <div class="heat"><div class="hdays"><span>M</span><span></span><span>W</span><span></span><span>F</span><span></span><span>S</span></div><div class="hgrid">${cols.join('')}</div></div>
-    <div class="row small muted hlegend"><span>Checklist: none</span><i class="hcell h0"></i><i class="hcell h1"></i><i class="hcell h2"></i><i class="hcell h3"></i><i class="hcell h4"></i><span>all</span><span>· tap a day to open it</span></div>
-    ${items.length ? `<div class="label">Last 30 days, weakest first</div>
-    <div class="rates">${items.map(x => `<div class="rate"><span>${esc(x.label)}</span><div class="track ${x.r < 0.5 ? 'bad' : ''}"><i style="width:${Math.round(x.r*100)}%"></i></div><span class="num small">${x.hit}/${x.n}</span></div>`).join('')}</div>
-    ${weakest ? `<div class="note">Biggest lever right now: <b>${esc(weakest.label.toLowerCase())}</b> (${weakest.hit} of ${weakest.n} days). ${({kcal:'For a hard gainer this is what moves the scale. Use liquid calories: the smoothie and bedtime milk are the easiest 1,300 kcal of the day.', protein:'Add a curd bowl or 2 boiled eggs to the snack.', water:'Fill a 1 L bottle after each meal; three refills covers most of it.', sleep:'Muscle is built while you sleep. Set the bedtime reminder in Plan → Alerts & reminders.', train:'Missed sessions shift your week; even a 30-minute version of the session keeps the streak.', weigh:'Weighing daily makes the weekly check-in accurate. Do it before breakfast.', creatine:'Take it with the smoothie or any meal, every day, including rest days.'})[weakest.id] || 'Tick it as soon as it\'s done so it doesn\'t slip.'}</div>` : '<div class="small muted">Every habit above 80% over 30 days. That\'s the 1% better every day.</div>'}` : ''}`;
-  el.querySelectorAll('[data-hd]').forEach(b => b.onclick = () => { ui.date = b.dataset.hd; ui.week = mondayOf(ui.date); showTab('today'); });
-}
 
 /* ---------- HISTORY: lift goals ---------- */
 function renderGoals(){
@@ -2620,7 +2502,7 @@ function renderAlertCard(){
     <label class="field"><span class="label">Default rest for exercises without a target (seconds)</span><input type="number" id="alRest" min="10" max="900" step="5" value="${S.settings.rest || 90}" inputmode="numeric"></label>
     <div class="small muted">${NATIVE ? 'Android app: alerts are scheduled with the system, so they ring even if the screen is off.' : 'In Chrome the alert reaches you while the app is open or recently in the background. For alerts with the phone fully locked, install the Android app (see the README on GitHub).'} Each exercise's own rest is set in its targets or on the Log screen.</div>
     <div class="label" style="margin-top:6px">Reminders</div>
-    <label class="row small"><input type="checkbox" data-rem="meals" ${R.meals ? 'checked' : ''}> Every meal and the smoothie, at its planned time (skipped once ticked)</label>
+    <label class="row small"><input type="checkbox" data-rem="meals" ${R.meals ? 'checked' : ''}> Every meal, including post-workout, at its planned time (skipped once ticked)</label>
     <label class="row small"><input type="checkbox" data-rem="weigh" ${R.weigh ? 'checked' : ''}> Morning weigh-in, 10 min after waking</label>
     <label class="row small"><input type="checkbox" data-rem="bed" ${R.bed ? 'checked' : ''}> Bedtime, 15 min before lights out</label>
     <div class="row small"><span class="muted">Meal reminders</span>${[[0,'On time'],[10,'10 min early'],[15,'15 min early']].map(([v,l]) => `<button class="chip ${(+R.lead||0) === v ? 'on' : ''}" data-lead="${v}">${l}</button>`).join('')}</div>
@@ -2671,7 +2553,6 @@ $('expCsv').onclick = () => {
   [...S.logs].sort((a,b)=>a.t-b.t).forEach(l => csv += ['set',l.date,q(l.ex),l.w,l.r,Math.round(e1rm(l.w,l.r)*10)/10,''].join(',') + '\n');
   S.body.forEach(b => csv += ['bodyweight',b.date,'',b.w,'','',q(b.note||'')].join(',') + '\n');
   Object.entries(S.water).forEach(([d,c]) => csv += ['water',d,'',(c*S.settings.sitting/1000),c,'',q('litres, sittings')].join(',') + '\n');
-  Object.keys(S.sleep||{}).sort().forEach(d => { const x = S.sleep[d], h = sleepHours(d); csv += ['sleep',d,'',h ?? '','','',q(`bed ${x.bed || '?'} · wake ${wakeOf(d)} · energy ${x.energy || '-'} · soreness ${x.sore || '-'}`)].join(',') + '\n'; });
   Object.keys(S.food||{}).sort().forEach(d => foodList(d).forEach(x => csv += ['food',d,q(x.name),'','','',q(`${x.time} · ${x.qty} · ${x.kcal} kcal · P ${x.p} · C ${x.c} · F ${x.f}`)].join(',') + '\n'));
   download(`ironpulse-${stamp()}.csv`, csv, 'text/csv');
 };
@@ -2853,7 +2734,7 @@ function appContext(){
     fuel: PLAN ? (() => { const sc = scheduleFor(d), tg = targetsFor(d), t = eatenTotals(d, sc); return { targets: tg, eaten: {kcal: t.k, protein: t.p}, wake: wakeOf(d), workout: sc.training ? workoutOf(d) : null, badminton: S.badminton[d] || null,
       meals: sc.items.filter(i => PLAN.meals[i.key]).map(i => ({key: i.key, time: fmtMin(i.t), food: optionFor(i.key).what, kcal: optionFor(i.key).kcal, protein: optionFor(i.key).p, done: !!(S.mealsDone[d]||{})[i.key]})) }; })() : null };
 }
-const SYS = `You are PulseAI, the coach inside the IronPulse gym logging app. The user does an Upper/Lower/Rest/Push/Pull/Legs/Rest split, trains in the morning and is lean-bulking (non-veg Indian home food, a 1,150 kcal smoothie after the gym, creatine 5 g, yeast protein). appState.fuel has today's calorie/protein targets, the meal schedule and what's been eaten.
+const SYS = `You are PulseAI, the coach inside the IronPulse gym logging app. The user does an Upper/Lower/Rest/Push/Pull/Legs/Rest split, trains in the morning and is lean-bulking (non-veg Indian home food, a quick post-workout shake or smoothie after the gym, creatine 5 g, yeast protein; Plan v2: 84 sets a week, each exercise has sets × reps @ RIR, rest and tempo). appState.fuel has today's calorie/protein targets, the meal schedule and what's been eaten.
 You can change the app by returning actions. Reply ONLY with JSON: {"reply": string, "actions": [ ... ]}.
 Action shapes (dates are YYYY-MM-DD; "day" may be a weekday name or "today"):
 {"type":"log_set","exercise":str,"weight":num,"reps":int,"sets":int?,"date":str?}
@@ -2914,8 +2795,51 @@ function showTab(tab){
   renderAll(); window.scrollTo({top:0});
 }
 document.querySelectorAll('.tab').forEach(b => b.onclick = () => showTab(b.dataset.tab));
+
+/* ---------- Android back button ----------
+   Back steps out like a normal Android app: close an open sheet or the coach → leave a past/future day →
+   return to Today → "press back again" → leave. The app (Capacitor) gets the button through the App plugin;
+   the browser/home-screen version gets it through one guard history entry that is re-armed after each use. */
+function handleBack(){
+  if (!$('sheetWrap').hidden) { closeSheet(); return true; }
+  if (!$('coachWrap').hidden) { $('coachWrap').hidden = true; return true; }
+  if (ui.tab !== 'today') { showTab('today'); return true; }
+  if (ui.date !== todayStr()) { ui.date = todayStr(); ui.week = mondayOf(ui.date); renderAll(); window.scrollTo({top:0}); return true; }
+  return false;
+}
+/* the on-screen back button does the same as the phone's; it shows wherever back has somewhere to go */
+function updateBackBtn(){
+  const off = ui.tab === 'today' && ui.date === todayStr();
+  $('backBtn').hidden = off; $('brandMark').hidden = !off;
+  $('backLbl').textContent = ui.tab === 'today' ? 'Back to today' : 'Today';
+}
+$('backBtn').onclick = () => { handleBack(); updateBackBtn(); };
+let backArmedAt = 0;
+function backAtRoot(leave){
+  if (Date.now() - backArmedAt < 2200) { backArmedAt = 0; leave(); return; }
+  backArmedAt = Date.now(); toast('Press back again to close IronPulse');
+}
+const CapApp = NATIVE && window.Capacitor.registerPlugin ? window.Capacitor.registerPlugin('App') : null;
+if (CapApp && CapApp.addListener) {
+  CapApp.addListener('backButton', () => {
+    if (handleBack()) return;
+    backAtRoot(() => { (CapApp.minimizeApp ? CapApp.minimizeApp() : CapApp.exitApp()).catch(() => CapApp.exitApp()); });
+  });
+} else if (!NATIVE) {
+  // Chrome ignores history entries added before the first tap, so arm the guard on the first interaction
+  let guard = false;
+  const arm = () => { if (!guard) { history.pushState({ironpulse: 'guard'}, ''); guard = true; } };
+  ['pointerdown', 'keydown'].forEach(ev => window.addEventListener(ev, arm, {capture: true, passive: true}));
+  window.addEventListener('popstate', () => {
+    guard = false;
+    if (handleBack()) { arm(); return; }
+    // at the root: leave the guard unarmed, so the next back press closes the app (a tap in between re-arms it)
+    toast('Press back again to close IronPulse');
+  });
+}
 function renderAll(){
   PI_CACHE = null;
+  updateBackBtn();
   $('topDate').textContent = fmtDate(todayStr(), {weekday:'short', day:'numeric', month:'short'});
   if (ui.tab === 'today') renderToday();
   if (ui.tab === 'log') { renderLog(); renderRestChips(); }
@@ -2938,7 +2862,7 @@ if (NATIVE) nativeSetup().then(() => { scheduleReminders(); if (ui.tab === 'plan
 setTimeout(webReminderTick, 1500);
 if (MIGRATION) setTimeout(() => {
   const m = MIGRATION; MIGRATION = null;
-  toast(`Plan updated: ${m.notes.join('; ')}`, () => { S.split = JSON.parse(m.before); DAYS.forEach(d => { S.split[d].cfg = S.split[d].cfg || {}; }); save(); renderAll(); });
+  toast(`Plan updated: ${m.notes.join('; ')}. Your own rest times were kept.`, () => { const b = JSON.parse(m.before); S.split = b.split; S.exCfg = b.exCfg; DAYS.forEach(d => { S.split[d].cfg = S.split[d].cfg || {}; }); save(); renderAll(); toast('Old plan restored. Plan → Reset to preset brings the new one back.'); });
 }, 600);
 if (!ui.ex){ const r = routineFor(ui.date); if (r.length) { ui.ex = r[0]; } }
 if (ui.ex) { $('exInput').value = ui.ex; const lw = lastWeight(ui.ex); ui.w = lw != null ? lw : (isTwoPlate(ui.ex) ? S.settings.bar : 10); }

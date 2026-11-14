@@ -1,6 +1,6 @@
 # IronPulse
 
-A phone app for my lean bulk to 75–80 kg: gym set logger with research-based targets and rest times, a rest timer that notifies the phone, a bulk diet plan with meals that re-time themselves around my workout, a food log, a daily checklist with streaks, sleep and readiness, lift goals, reminders, body-weight check-ins, water and a coach.
+A phone app for my lean bulk to 75–80 kg: gym set logger with research-based targets, tempo and rest times, a muscle diagram for every exercise, a rest timer that notifies the phone, a bulk diet plan with meals that re-time themselves around my workout, a food log, lift goals, reminders, body-weight check-ins, water and a coach.
 
 Two ways to run it:
 
@@ -11,23 +11,37 @@ Data stays on the phone (export a backup from Plan → Backup).
 
 ## Daily use
 
-1. **Today**: the **morning check-in** (bedtime last night, wake time, energy and soreness 1–5) gives a readiness call: *Ready to push*, *Normal day* or *Take it easy* (keep 2–3 reps in reserve, no weight increases). The **daily checklist** ticks itself as you log: train (75% of planned sets), calories (95% of target), protein, water, weigh-in, creatine (via the smoothie) and sleep, plus any habits you add with Edit. Streak pills show calorie days, training sessions in a row and perfect days. Enter the time you woke up and your gym time; every meal moves with them. Each exercise shows its target (sets × reps @ RIR, rest). Tap an exercise name to change its targets. Tick meals as you eat them: they go straight into the food log.
-2. **Log**: pick an exercise. The target card shows the focus (strength or hypertrophy), set count, cue, what weight to use today (double progression: once every set reaches the top of the rep range, add the smallest step) and warm-up sets for the four strength lifts. The rest box shows this exercise's rest: change it with −15 / +15, a chip, or type any number of seconds. The timer starts after each set and alerts you when rest is over.
+1. **Today**: your session with each exercise's target (sets × reps @ RIR, rest, tempo). Tap an exercise to see the muscles it trains and change its targets. Enter the time you woke up and your gym time; every meal moves with them. Tick meals as you eat them: they go straight into the food log.
+2. **Log**: pick an exercise. The target card shows the focus (strength or hypertrophy), set count, **tempo**, cue, what weight to use today (double progression: once every set reaches the top of the rep range, add the smallest step), warm-up sets for the four heavy lifts and a **front-and-back muscle diagram** (main muscles bright, helpers lighter, down to the head, e.g. Preacher Curl → biceps short head and brachialis). Hide it with "Muscles worked". The rest box shows this exercise's rest: change it with −15 / +15, a chip, or type any number of seconds. The timer starts after each set and alerts you when rest is over.
 3. **Fuel**: the **food log** (anything you eat, with kcal, protein, carbs, fat; quick-add from your plan meals, saved foods and ~55 Indian staples), daily targets, meal options, timing, smoothie, supplements, groceries. Every section has an **Edit** button.
-4. **Body**: weigh in every morning. The weekly check-in tells you to add 200 kcal, remove 150 or change nothing. **Consistency** shows current and best streaks, your 7- and 30-day checklist score, 7-day average sleep, a 12-week heatmap (tap a day to open it) and each habit's 30-day hit rate, weakest first, with a tip for the weakest.
+4. **Body**: weigh in every morning. The weekly check-in tells you to add 200 kcal, remove 150 or change nothing.
 5. **History**: **lift goals** (e.g. Bench Press 80 kg × 5). Each shows what you can do now at the goal's reps (estimated from your best recent set), a projected date from your last 10 weeks of progress, and is marked hit the moment you log it. The goal also appears as a dashed line on the progress chart and in the Log screen.
-6. **Plan**: the **workout editor** (pick a day, reorder, add or remove exercises, turn a rest day into a training day, set targets per exercise), the exercise library, **alerts & reminders** (meals and smoothie at their planned times, morning weigh-in, bedtime; on time or 10/15 min early; meals you've ticked are skipped), diet notes, backup.
+6. **Plan**: the **workout editor** (pick a day, reorder, add or remove exercises, turn a rest day into a training day, set targets per exercise), the exercise library, **alerts & reminders** (meals, including post-workout, at their planned times, morning weigh-in, bedtime; on time or 10/15 min early; meals you've ticked are skipped), diet notes, backup.
 7. **Coach**: type things like `gym at 7:30`, `woke up at 6`, `badminton at 6 pm`, `ate smoothie`, `bench 80 x 8`, `rest 2 min`.
 
-## Training targets
+## Training targets (Plan v2, Nov 2026)
 
-Defaults come from the review in Nov 2026 (rest-interval and loading research: Singer 2024, Schoenfeld 2016 and 2021, Senna 2011):
+Built so the next exercise isn't wrecked by the last one. Full write-up: https://claude.ai/artifact/TF9284dee5CqRyv5vuKVqi
 
-- Heavy, low-rep work only on Bench (Mon), Squat (Tue), Deadlift (Fri) and Overhead Press (Mon). Everything else is hypertrophy work at moderate to high reps.
-- Rest: heavy compounds 3–4 min, moderate compounds 2–3 min, machine/cable compounds 2 min, isolation 90 s, small isolation 60–90 s.
-- Split changes: Saturday Romanian Deadlift removed (it came 24 h after deadlifts), Thursday Incline Bench → Incline Dumbbell Press and Overhead Press → Cable Lateral Raise, Monday + Lateral Raise.
+| Day | Session (in order) |
+| --- | --- |
+| Mon | Upper: Bench Press 3×4–6, Pull-up 3×6–10, Overhead Press 2×5–8, Chest-Supported T-Bar Row 2, Lateral Raise 3, Preacher Curl 2, Overhead Cable Triceps Extension 2 |
+| Tue | Lower: Squat 3×4–6, Romanian Deadlift 3, Leg Extension 3, Seated Leg Curl 3, Standing Calf Raise 3, Cable Crunch 2 |
+| Thu | Push: Incline Dumbbell Press 3, Cable Lateral Raise 4, Weighted Dips 2, Machine Pec Deck 2, Overhead Cable Triceps Extension 3 |
+| Fri | Pull: Pull-up 3, Chest-Supported T-Bar Row 3, Reverse Pec Deck 3, Machine Lat Pullover 2, Bayesian Cable Curl 3, Dumbbell Shrugs 2, Wrist Curls & Extensions 2 |
+| Sat | Legs: Deadlift 3×3–5, Walking Lunge 2, Leg Extension 2, Seated Leg Curl 2, Nautilus Glute Drive 2, Standing Calf Raise 3, Cable Crunch 2, Neck Curls & Extensions 2 |
 
-All of it is editable in the app. "Reset to default" on an exercise brings back the research value.
+- **Volume:** 84 working sets a week (14–18 a session, about 45–60 min), 8–13 weekly sets per main muscle, at most ~8 direct sets per muscle per session. Gains flatten past ~11 sets per muscle per session (Remmert 2025).
+- **Order:** heaviest lift for each muscle first, then alternate muscles. Pull-ups lead Friday and Deadlift moved to Saturday, so pull-ups no longer follow deadlifts, rows and pullovers.
+- **Heavy, low-rep work** only on Bench (Mon), Squat (Tue), Deadlift (Sat) and Overhead Press (Mon). Everything else is hypertrophy work at moderate to high reps.
+- **Tempo** (seconds: lower – pause – lift – squeeze): 2–8 s per rep grows muscle about equally (Androulakis Korakakis 2023; Enes 2025). The default is a 2–3 s lowering and a ~1 s lift, with an extra second where the muscle is stretched (3-0-1-0) or a 1 s squeeze where it's hardest at the top (2-0-1-1).
+- **Rest:** heavy compounds 3–4 min, moderate compounds 2–3 min, machine/cable compounds 2 min, isolation 90 s, small isolation 60–90 s (Singer 2024, Schoenfeld 2016, Senna 2011).
+
+All of it is editable in the app. "Reset to default" on an exercise brings back the research value; Plan → Reset to preset brings back the whole plan.
+
+## Meals
+
+Pre-workout and post-workout options are all no-cook and take 2 minutes or less. The defaults are **Muesli + milk** (pre) and **Shaker + bananas** (post: milk, a protein scoop and 5 g creatine shaken in a bottle, with 2 bananas and peanuts). The full smoothie is still an option for days with time.
 
 ## Android app
 
@@ -79,6 +93,6 @@ Keep the commas and quotes as they are. If the app shows "diet plan did not load
 
 `android-res/debug.keystore` is a debug-type signing key, committed so every build is signed the same way and updates install over each other. It only matters for apps you sideload yourself; don't reuse it for anything published.
 
-Daily checklist, streaks, reminders, sleep check-in and lift goals were modelled on the Beacon: 1% Better Every Day app.
+Reminders and lift goals were modelled on the Beacon: 1% Better Every Day app.
 
 Plan sources: Jeff Nippard (pre/post-workout and bulking guides), ICMR-NIN 2020 RDAs, Morton 2018 (BJSM), Whittaker & Wu 2021, ACSM 2007, Singer et al. 2024 (rest intervals), Schoenfeld et al. 2016 and 2021, Senna et al. 2011, Pelland et al. 2024. Review: https://claude.ai/artifact/XGgh9jcEJEWv2asv9HzL53

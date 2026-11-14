@@ -15,7 +15,7 @@
    Numbers are approximate (labels + Indian food tables). Sources at the end.
    ===================================================================== */
 window.IRONPULSE_PLAN = {
-  version: '2026-11-13',
+  version: '2026-11-15',
 
   /* ---------- defaults for a new install (the app's Fuel > Settings can change them) ---------- */
   profile: {
@@ -55,10 +55,11 @@ window.IRONPULSE_PLAN = {
      Timing is worked out by the app from your wake, workout and sleep times. */
   meals: {
     preFull: {
-      label: 'Pre-workout', why: 'Carbs + some protein, 60–90 min before (Nippard). No cooking: eggs boiled in a batch, bread and fruit straight from the shelf.',
+      label: 'Pre-workout', why: 'Carbs + some protein, 60–90 min before (Nippard). Low fat and fibre so it digests in time. Every option is no-cook, 2 min or less.',
       options: [
-        { id: 'pre-a', name: 'Banana, bread, boiled eggs', what: '1 large banana + 2 bread slices with 1 tbsp jam or honey + 2 boiled whole eggs (boil 6–8 at once, they keep 5 days in the fridge)', kcal: 465, p: 19, c: 69, f: 12 },
-        { id: 'pre-b', name: 'Bread, honey, milk (no eggs)', what: '1 banana + 2 bread slices with 1 tbsp honey + 200 ml milk', kcal: 500, p: 13, c: 80, f: 14 },
+        { id: 'pre-m', name: 'Muesli + milk', what: '50 g high-protein muesli + 200 ml toned milk + 1 banana', kcal: 436, p: 20, c: 70, f: 10 },
+        { id: 'pre-pb', name: 'Peanut butter bread + banana', what: '2 bread slices + 1 tbsp peanut butter + 1 large banana', kcal: 355, p: 11, c: 60, f: 10 },
+        { id: 'pre-cu', name: 'Curd, banana, honey', what: '200 g curd + 1 sliced banana + 1 tbsp honey', kcal: 304, p: 8, c: 57, f: 6 },
         { id: 'pre-e', name: 'Last night\'s roti', what: '2 leftover roti with a little jaggery or ghee + 1 banana', kcal: 400, p: 8, c: 70, f: 10 }
       ]
     },
@@ -70,7 +71,7 @@ window.IRONPULSE_PLAN = {
       ]
     },
     preNone: {
-      label: 'On the way', why: 'Training right after waking: eat a banana, the smoothie straight after does the work.',
+      label: 'On the way', why: 'Training right after waking: eat a banana, the post-workout shake straight after does the work.',
       options: [ { id: 'pre-d', name: 'Banana', what: '1 banana on the way to the gym', kcal: 120, p: 1, c: 29, f: 0 } ]
     },
     breakfast: {
@@ -82,8 +83,13 @@ window.IRONPULSE_PLAN = {
       ]
     },
     smoothie: {
-      label: 'Smoothie', why: 'Post-workout: protein + carbs inside the 4–5 h window. Add 5 g creatine.',
-      options: [ { id: 'sm', name: 'Morning smoothie', what: 'See the recipe in Fuel. Drink within 45 min of finishing.', kcal: 1150, p: 59, c: 112, f: 54 } ]
+      label: 'Post-workout', why: 'Within ~1 h of training: 40 g+ protein and plenty of carbs. 5 g creatine every day, rest days too.',
+      options: [
+        { id: 'pw-sh', name: 'Shaker + bananas', what: '400 ml full-cream milk + 1 protein scoop + 5 g creatine, shaken in a bottle (no blender). Eat 2 bananas + 30 g roasted peanuts with it.', kcal: 896, p: 48, c: 89, f: 41 },
+        { id: 'pw-4', name: '4-ingredient smoothie', what: '400 ml full-cream milk + 1 scoop + 1 banana + 2 tbsp peanut butter + 5 g creatine, blended 30 s', kcal: 796, p: 47, c: 59, f: 42 },
+        { id: 'pw-mu', name: 'Muesli bowl', what: '80 g high-protein muesli + 300 ml full-cream milk + 1 banana (+ 5 g creatine stirred into the milk)', kcal: 707, p: 31, c: 93, f: 25 },
+        { id: 'sm', name: 'Full smoothie', what: 'The full recipe in Fuel (9 ingredients, blender). For days with time.', kcal: 1150, p: 59, c: 112, f: 54 }
+      ]
     },
     lunch: {
       label: 'Lunch', why: 'Protein portion + roti or rice.',
@@ -161,7 +167,8 @@ window.IRONPULSE_PLAN = {
     tips: [
       'Powder oats, flax and pumpkin seeds once a week; 2 tbsp of the mix per glass.',
       'Frozen banana = thick, cold milkshake.',
-      'Too much at once? 400 ml after the gym, the rest by 11:00.'
+      'Too much at once? 400 ml after the gym, the rest by 11:00.',
+      'No time? Pick "Shaker + bananas" for the post-workout meal on Today: 1 minute, no blender.'
     ]
   },
 
@@ -214,7 +221,8 @@ window.IRONPULSE_PLAN = {
     ['Full-cream milk', '3.5 L'], ['Bananas', '14'], ['Eggs', '30'], ['Chicken', '1.5–2 kg'],
     ['Fish (bangda, tarli, surmai)', '500 g'], ['Curd', '1 kg'], ['Rolled oats', '350 g'],
     ['Peanut butter', '250 g'], ['Dates', '25'], ['Flaxseed + pumpkin seeds', '50 g each'],
-    ['Almonds + walnuts', '100 g + 30 g'], ['Seasonal fruit', '7 servings']
+    ['Almonds + walnuts', '100 g + 30 g'], ['Seasonal fruit', '7 servings'],
+    ['Bread', '1 loaf'], ['High-protein muesli', '500 g'], ['Roasted peanuts', '200 g']
   ],
 
   /* ---------- day-specific notes (shown on Today) ---------- */
