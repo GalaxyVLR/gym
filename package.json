@@ -1,6 +1,6 @@
 {
   "name": "ironpulse",
-  "version": "4.1.0",
+  "version": "5.0.0",
   "private": true,
   "description": "IronPulse gym logger and bulk diet planner. The web app is index.html; these packages only build the Android app (see .github/workflows/android.yml).",
   "dependencies": {
