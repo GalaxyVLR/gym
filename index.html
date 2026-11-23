@@ -114,6 +114,14 @@ label.field{display:flex;flex-direction:column;gap:6px}
 .ritem .st{font-size:.8rem;color:var(--muted)}
 .ritem.done .st{color:var(--good)}
 .ritem .act{display:flex;gap:6px}
+.ritem .idx,.erow .idx{width:24px}
+/* supersets: the two exercises sit inside one bracket */
+.ssgroup{border-top:1px solid var(--line);border-left:3px solid var(--accent);padding:8px 0 2px 10px;margin:2px 0}
+.ssgroup:first-child{border-top:0}
+.sshead + .ritem,.sshead + .erow{border-top:0}
+.ssgroup .ritem{padding:8px 0}
+.sshead{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent-text);font-weight:700}
+.erow .act .icon.on{background:var(--accent);color:var(--accent-ink);border-color:transparent}
 .logpill{background:var(--accent);color:var(--accent-ink);border:0;border-radius:10px;padding:0 12px;height:36px;font-weight:700}
 
 /* water */
@@ -567,20 +575,38 @@ label.row > input[type=checkbox]{flex:none;margin-top:2px}
 /* ---------- constants ---------- */
 const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const DAY_FULL = {Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thu:'Thursday',Fri:'Friday',Sat:'Saturday',Sun:'Sunday'};
-/* Weekly split, Plan v2 (Nov 2026). `cfg` holds targets that differ on that day; everything else comes from EX_INFO.
+/* Weekly split, Plan v3 (Nov 2026). `cfg` holds targets that differ on that day; everything else comes from EX_INFO.
    Built so the next exercise isn't wrecked by the last one: heaviest lift for each muscle first, muscles alternate,
    ≤ ~8 direct sets per muscle per session (gains flatten past ~11; Remmert 2025), 14–18 working sets a session, 84 a week.
-   Pull-ups lead Friday and Deadlift moved to Saturday, so pull-ups no longer follow deadlift + rows + pullover. */
+   Pull-ups lead Friday and Deadlift moved to Saturday, so pull-ups no longer follow deadlift + rows + pullover.
+   v3 uses only the 25 exercises of the original list (Incline Bench Press and Lateral Raise are back on Thursday) and adds
+   supersets (`ss`): pairs of exercises that don't share a working muscle, done back to back. Paired sets cut session
+   time a lot with the same volume (Robbins 2010; Weakley 2017); the rest between the two is sized so each muscle still
+   gets its normal rest (see pairGap). Squat, Deadlift, RDL, Walking Lunge, Weighted Dips and the first two Friday lifts stay straight sets. */
 const PRESET = {
   Mon:{name:'Upper', ex:['Bench Press','Pull-up','Overhead Press','Chest Supported T-Bar Row','Lateral Raise','Preacher Curl','Overhead Cable Triceps Extension'],
-    cfg:{'Chest Supported T-Bar Row':{sets:2}, 'Overhead Cable Triceps Extension':{sets:2}}},
-  Tue:{name:'Lower', ex:['Squat','Romanian Deadlift','Leg Extension','Seated Leg Curl','Standing Calf Raise','Cable Crunch'], cfg:{}},
-  Wed:{name:'Rest', ex:[], cfg:{}},
-  Thu:{name:'Push', ex:['Incline Dumbbell Press','Cable Lateral Raise','Weighted Dips','Machine Pec Deck','Overhead Cable Triceps Extension'], cfg:{}},
-  Fri:{name:'Pull', ex:['Pull-up','Chest Supported T-Bar Row','Reverse Pec Deck','Machine Lat Pullover','Bayesian Cable Curl','Dumbbell Shrugs','Dumbbell Wrist Curls & Extensions'], cfg:{}},
-  Sat:{name:'Legs', ex:['Deadlift','Walking Lunge','Leg Extension','Seated Leg Curl','Nautilus Glute Drive','Standing Calf Raise','Cable Crunch','Neck Curls & Extensions'],
-    cfg:{'Leg Extension':{sets:2}, 'Seated Leg Curl':{sets:2}}},
-  Sun:{name:'Rest', ex:[], cfg:{}}
+    cfg:{'Chest Supported T-Bar Row':{sets:2}, 'Overhead Cable Triceps Extension':{sets:2}},
+    ss:[['Bench Press','Pull-up'], ['Overhead Press','Chest Supported T-Bar Row'], ['Preacher Curl','Overhead Cable Triceps Extension']]},
+  Tue:{name:'Lower', ex:['Squat','Romanian Deadlift','Leg Extension','Seated Leg Curl','Standing Calf Raise','Cable Crunch'], cfg:{},
+    ss:[['Leg Extension','Seated Leg Curl'], ['Standing Calf Raise','Cable Crunch']]},
+  Wed:{name:'Rest', ex:[], cfg:{}, ss:[]},
+  Thu:{name:'Push', ex:['Incline Bench Press','Lateral Raise','Weighted Dips','Machine Pec Deck','Overhead Cable Triceps Extension'],
+    cfg:{'Lateral Raise':{sets:4}},
+    ss:[['Incline Bench Press','Lateral Raise'], ['Machine Pec Deck','Overhead Cable Triceps Extension']]},
+  Fri:{name:'Pull', ex:['Pull-up','Chest Supported T-Bar Row','Reverse Pec Deck','Bayesian Cable Curl','Machine Lat Pullover','Dumbbell Shrugs','Dumbbell Wrist Curls & Extensions'], cfg:{},
+    ss:[['Reverse Pec Deck','Bayesian Cable Curl'], ['Machine Lat Pullover','Dumbbell Shrugs']]},
+  Sat:{name:'Legs', ex:['Deadlift','Walking Lunge','Leg Extension','Seated Leg Curl','Nautilus Glute Drive','Neck Curls & Extensions','Standing Calf Raise','Cable Crunch'],
+    cfg:{'Leg Extension':{sets:2}, 'Seated Leg Curl':{sets:2}},
+    ss:[['Leg Extension','Seated Leg Curl'], ['Nautilus Glute Drive','Neck Curls & Extensions'], ['Standing Calf Raise','Cable Crunch']]},
+  Sun:{name:'Rest', ex:[], cfg:{}, ss:[]}
+};
+/* Plan v2 exercise lists, used once to tell which days you never edited (those move to v3; edited days keep your list) */
+const V5_EX = {
+  Mon:['Bench Press','Pull-up','Overhead Press','Chest Supported T-Bar Row','Lateral Raise','Preacher Curl','Overhead Cable Triceps Extension'],
+  Tue:['Squat','Romanian Deadlift','Leg Extension','Seated Leg Curl','Standing Calf Raise','Cable Crunch'], Wed:[],
+  Thu:['Incline Dumbbell Press','Cable Lateral Raise','Weighted Dips','Machine Pec Deck','Overhead Cable Triceps Extension'],
+  Fri:['Pull-up','Chest Supported T-Bar Row','Reverse Pec Deck','Machine Lat Pullover','Bayesian Cable Curl','Dumbbell Shrugs','Dumbbell Wrist Curls & Extensions'],
+  Sat:['Deadlift','Walking Lunge','Leg Extension','Seated Leg Curl','Nautilus Glute Drive','Standing Calf Raise','Cable Crunch','Neck Curls & Extensions'], Sun:[]
 };
 /* Per-exercise defaults (rest in seconds; tempo = lower–pause–lift–squeeze in seconds).
    Rest: heavy compound 3–4 min, moderate compound 2–3 min, machine/cable compound 2 min, isolation 90 s, small isolation 60–90 s
@@ -663,7 +689,7 @@ let PLAN = BASE_PLAN;                               // the file + your in-app ed
 const PROFILE0 = () => ({wake:'05:45', sleepHours:7.5, workoutTime:'07:00', workoutMinutes:75, startWeightKg:65, age:null, ...((BASE_PLAN && BASE_PLAN.profile) || {})});
 function defaults(){
   return {
-    v:5, logs:[], body:[], target:null,
+    v:6, logs:[], body:[], target:null, ssDay:{},   // ssDay: supersets for a single date whose sheet you edited (swaps)
     water:{}, workoutTimes:{},
     profile: PROFILE0(), wakeTimes:{}, badminton:{}, mealsDone:{}, mealChoice:{}, kcalAdjust:0, lastAdjust:null, proteinOpened:null, grocery:{},
     diet:{Mon:'',Tue:'',Wed:'',Thu:'',Fri:'',Sat:'Coconut water',Sun:''},
@@ -687,7 +713,30 @@ function migrateV5(out){
   out.split = clone(PRESET);
   DAYS.forEach(d => Object.entries(keepDay[d] || {}).forEach(([ex, v]) => { if (out.split[d].ex.includes(ex)) out.split[d].cfg[ex] = {...(out.split[d].cfg[ex] || {}), ...v}; }));
   out.exCfg = keepAll;
-  return ['New weekly plan: 84 sets a week, Pull-ups first on Friday, Deadlift on Saturday'];
+  return ['New weekly plan: 84 sets a week, Pull-ups first on Friday, Deadlift on Saturday, supersets to save time'];
+}
+/* v5 → v6: Plan v3. Days you never edited get the v3 list (original 25 exercises, superset order) and its supersets;
+   edited days keep your list and get the v3 pairs whose two exercises are both on that day. Your targets are kept. */
+function migrateV6(out){
+  const moved = [], kept = [];
+  DAYS.forEach(d => {
+    const day = out.split[d] = out.split[d] || {name:'Rest', ex:[], cfg:{}}, P = PRESET[d];
+    day.cfg = day.cfg || {};
+    if (JSON.stringify(day.ex) === JSON.stringify(V5_EX[d])){
+      if (JSON.stringify(day.ex) !== JSON.stringify(P.ex)) moved.push(d);
+      day.ex = [...P.ex];
+      Object.keys(day.cfg).forEach(ex => { if (!day.ex.includes(ex)) delete day.cfg[ex]; });
+      Object.entries(P.cfg).forEach(([ex, v]) => { day.cfg[ex] = {...clone(v), ...(day.cfg[ex] || {})}; });
+      day.ss = clone(P.ss);
+    } else {
+      day.ss = P.ss.filter(p => p.every(x => day.ex.includes(x))).map(p => [...p]);
+      if (day.ex.length) kept.push(d);
+    }
+  });
+  const notes = ['Supersets added to every training day'];
+  if (moved.includes('Thu')) notes.push('Thursday is back to Incline Bench Press and Lateral Raise');
+  if (kept.length) notes.push(`${kept.join(', ')} kept as you edited ${kept.length > 1 ? 'them' : 'it'}`);
+  return notes;
 }
 let MIGRATION = null;   // {notes, before} when this load upgraded old data; shown once with Undo
 /* merge saved data over defaults, so older backups gain the new fields */
@@ -696,13 +745,14 @@ function hydrate(p){
   const fresh = !p || !Object.keys(p).length;
   const out = {...d, ...p, settings:{...d.settings, ...(p.settings||{}), reminders:{...d.settings.reminders, ...((p.settings||{}).reminders||{})}}, profile:{...d.profile, ...(p.profile||{})}};
   if (out.target == null && BASE_PLAN) out.target = BASE_PLAN.profile.targetWeightKg;
-  if (!fresh && (p.v || 0) < 5){
+  if (!fresh && (p.v || 0) < 6){
     const before = JSON.stringify({split: out.split, exCfg: out.exCfg || {}});
-    const notes = migrateV5(out);
+    const notes = (p.v || 0) < 5 ? migrateV5(out) : migrateV6(out);
     if (notes.length) MIGRATION = {notes, before};
   }
-  DAYS.forEach(x => { out.split[x].cfg = out.split[x].cfg || {}; });
-  out.v = 5; return out;
+  DAYS.forEach(x => { out.split[x].cfg = out.split[x].cfg || {}; out.split[x].ss = out.split[x].ss || []; });
+  out.ssDay = out.ssDay || {};
+  out.v = 6; return out;
 }
 let S = defaults();
 try {
@@ -849,6 +899,45 @@ const isShifted = (date, P) => slotOf(date, P) !== weekdayOf(date);
 function routineFor(date){
   return S.overrides[date] || S.split[slotOf(date)].ex;
 }
+/* ---------- supersets ----------
+   A pair counts only while its two exercises sit next to each other in the list. Blocks are numbered 1, 2, 3a/3b…
+   Between the two exercises of a pair you rest pairGap; it is sized so each muscle still gets its own full rest
+   (gap + the other exercise's set + gap ≥ its rest, ~40 s a set), so the time saved costs no performance. */
+const SET_SEC = 40;
+const samePair = (p, a, b) => (p[0] === a && p[1] === b) || (p[0] === b && p[1] === a);
+function blocksFor(list, pairs){
+  const out = []; pairs = pairs || [];
+  for (let i = 0; i < list.length; i++){
+    if (i + 1 < list.length && pairs.some(p => samePair(p, list[i], list[i+1]))) { out.push([list[i], list[i+1]]); i++; }
+    else out.push([list[i]]);
+  }
+  return out;
+}
+/* {ex: {block: 1-based number, tag: '3a', partner|null}} */
+function blockMap(list, pairs){
+  const m = {};
+  blocksFor(list, pairs).forEach((b, i) => b.forEach((ex, j) => { m[ex] = {block: i + 1, tag: b.length > 1 ? `${i + 1}${'ab'[j]}` : `${i + 1}`, partner: b.length > 1 ? b[1 - j] : null}; }));
+  return m;
+}
+const pairsOn = date => (S.ssDay || {})[date] || S.split[slotOf(date)].ss || [];
+const blocksOn = date => blocksFor(routineFor(date), pairsOn(date));
+const blockMapOn = date => blockMap(routineFor(date), pairsOn(date));
+const partnerOn = (ex, date = ui.date) => ((blockMapOn(date)[ex]) || {}).partner || null;
+function pairGap(restA, restB){ return Math.max(30, Math.min(150, Math.round((Math.max(restA, restB) - SET_SEC) / 2 / 5) * 5)); }
+const pairGapOn = (a, b, date = ui.date) => pairGap(targetOn(a, date).rest, targetOn(b, date).rest);
+/* minutes for a list of blocks: a pair's round takes two sets + two gaps; extra sets of the longer one use its own rest */
+function blocksSeconds(blocks, tgt){
+  let sec = 0;
+  blocks.forEach(b => {
+    if (b.length === 1){ const t = tgt(b[0]); sec += t.sets * (t.rest + SET_SEC); return; }
+    const [a, c] = b.map(tgt), g = pairGap(a.rest, c.rest), both = Math.min(a.sets, c.sets);
+    const long = a.sets > c.sets ? a : c;
+    sec += both * 2 * (SET_SEC + g) + (long.sets - both) * (long.rest + SET_SEC);
+  });
+  return sec;
+}
+/* keep the pairs tidy after a list changes: drop pairs whose exercises are gone or no longer adjacent */
+function prunePairs(list, pairs){ return (pairs || []).filter(p => blocksFor(list, [p]).some(b => b.length > 1)); }
 function logsOn(date){ return S.logs.filter(l => l.date === date); }
 function lastSession(ex, beforeDate){
   const prior = S.logs.filter(l => l.ex === ex && (!beforeDate || l.date < beforeDate));
@@ -895,6 +984,7 @@ function editRoutine(date, scope, fn){
   const wd = slotOf(date);
   if (scope === 'always'){
     S.split[wd].ex = fn([...S.split[wd].ex]);
+    S.split[wd].ss = prunePairs(S.split[wd].ex, S.split[wd].ss);
     if (S.overrides[date]) S.overrides[date] = fn([...S.overrides[date]]);
   } else {
     S.overrides[date] = fn([...routineFor(date)]);
@@ -903,6 +993,12 @@ function editRoutine(date, scope, fn){
 }
 function swapExercise(date, from, to, scope){
   to = canonical(to); if (!to) return false;
+  const old = routineFor(date).find(x => x.toLowerCase() === from.toLowerCase()) || from;
+  const ren = pairs => (pairs || []).map(p => p.map(x => x === old ? to : x));   // the substitute takes the old one's superset slot
+  const wd = slotOf(date);
+  S.ssDay = S.ssDay || {};
+  if (scope === 'always'){ S.split[wd].ss = ren(S.split[wd].ss); if (S.ssDay[date]) S.ssDay[date] = ren(S.ssDay[date]); }
+  else S.ssDay[date] = ren(pairsOn(date));
   editRoutine(date, scope, list => { const i = list.findIndex(x => x.toLowerCase() === from.toLowerCase()); if (i >= 0) list[i] = to; else list.push(to); return list; });
   return true;
 }
@@ -1216,19 +1312,23 @@ function renderToday(){
       <div class="row" style="flex-wrap:nowrap"><input type="number" id="restBw" inputmode="decimal" step="0.1" placeholder="${lastBw ? 'Last: '+fmtKg(lastBw.w)+' kg' : 'Morning weight (kg)'}" style="flex:1"><button class="btn primary" id="restBwGo">Log weight</button></div>
       <button class="btn ghost small" id="addOnRest">+ Train anyway: add an exercise</button>`;
   } else {
-    html = `<div class="between"><h2>${esc(split.name)} sheet</h2><span class="small muted">${list.length} exercises${S.overrides[date] ? ' · edited for this day' : ''}</span></div><div>` +
-      list.map((ex,i) => {
+    const blocks = blocksOn(date), nPairs = blocks.filter(b => b.length > 1).length;
+    const tgtOf = ex => targetOn(ex, date), estMin = Math.round((600 + blocksSeconds(blocks, tgtOf)) / 60 / 5) * 5;
+    const item = (ex, tag) => {
         const sets = done.filter(l => l.ex === ex);
         const top = sets.reduce((m,l) => (!m || l.w > m.w || (l.w === m.w && l.r > m.r)) ? l : m, null);
-        const prev = lastSession(ex, date), tg = targetOn(ex, date);
+        const prev = lastSession(ex, date), tg = tgtOf(ex);
         const st = sets.length ? `${sets.length} set${sets.length>1?'s':''} · top ${fmtKg(top.w)} kg × ${top.r}` :
           prev ? `Last: ${prev.sets.map(s => `${fmtKg(s.w)}×${s.r}`).slice(0,4).join(', ')}` : 'No history yet';
-        return `<div class="ritem ${sets.length?'done':''}"><span class="idx">${sets.length ? '✓' : i+1}</span>
+        return `<div class="ritem ${sets.length?'done':''}"><span class="idx">${sets.length >= tg.sets ? '✓' : tag}</span>
           <button class="info" data-tedit="${esc(ex)}" aria-label="Targets for ${esc(ex)}"><div class="nm">${esc(ex)}${tg.focus === 'strength' ? ' <span class="pill heavy">Heavy</span>' : ''}</div><div class="tg">${esc(fmtTarget(tg))}</div><div class="st">${esc(st)}</div></button>
           <div class="act"><button class="icon" data-swap="${esc(ex)}" aria-label="Swap ${esc(ex)}">⇄</button>
           <button class="icon" data-rem="${esc(ex)}" aria-label="Remove ${esc(ex)}">✕</button>
           <button class="logpill" data-log="${esc(ex)}">Log</button></div></div>`;
-      }).join('') + `</div>
+    };
+    html = `<div class="between"><h2>${esc(split.name)} sheet</h2><span class="small muted">${list.length} exercises${nPairs ? ` · ${nPairs} superset${nPairs > 1 ? 's' : ''}` : ''} · ~${estMin} min${S.overrides[date] ? ' · edited for this day' : ''}</span></div><div>` +
+      blocks.map((b, i) => b.length === 1 ? item(b[0], `${i+1}`) :
+        `<div class="ssgroup"><div class="sshead">Superset ${i+1} · alternate sets · ${fmtRest(pairGap(tgtOf(b[0]).rest, tgtOf(b[1]).rest))} between</div>${item(b[0], `${i+1}a`)}${item(b[1], `${i+1}b`)}</div>`).join('') + `</div>
       <div class="row"><button class="btn" id="addEx">+ Add exercise</button>${S.overrides[date] ? '<button class="btn ghost" id="undoDay">Restore this day</button>' : ''}${isToday && !done.length && !S.skipped[date] && S.settings.burnRest !== false ? '<button class="btn ghost" id="skipDay">Skipping today</button>' : ''}</div>`;
   }
   $('routineCard').innerHTML = html;
@@ -1240,7 +1340,7 @@ function renderToday(){
   if ($('addEx')) $('addEx').onclick = openAdd;
   if ($('addOnRest')) $('addOnRest').onclick = openAdd;
   if ($('skipDay')) $('skipDay').onclick = () => { toast(runAction({type:'skip_day', date})); renderAll(); };
-  if ($('undoDay')) $('undoDay').onclick = () => { delete S.overrides[date]; save(); renderAll(); toast('Restored the weekly sheet for this day'); };
+  if ($('undoDay')) $('undoDay').onclick = () => { delete S.overrides[date]; if (S.ssDay) delete S.ssDay[date]; save(); renderAll(); toast('Restored the weekly sheet for this day'); };
   if ($('restBwGo')) $('restBwGo').onclick = () => { const v = parseFloat($('restBw').value); if (logBodyWeight(v, '', date)) { renderAll(); } };
 
   renderWater(); renderFuelToday();
@@ -1941,6 +2041,7 @@ function renderTargetCard(){
     <div class="row small"><span class="pill ${t.focus === 'strength' ? 'heavy' : 'hyp'}">${t.focus === 'strength' ? 'Strength' : 'Hypertrophy'}</span><span>Rest ${fmtRest(t.rest)}</span>
       <span class="muted">· ${done >= t.sets ? `all ${t.sets} sets done ✓` : `set ${done + 1} of ${t.sets}`}</span></div>
     <div class="small"><span class="muted">Tempo</span> <b class="num">${esc(t.tempo)}</b> <span class="muted">· ${esc(fmtTempo(t.tempo))}</span></div>
+    ${partnerOn(ex) ? `<div class="small"><span class="pill hyp">Superset</span> with <b>${esc(partnerOn(ex))}</b>: alternate sets, ${fmtRest(pairGapOn(ex, partnerOn(ex)))} between. After you log a set the logger switches to the other exercise.</div>` : ''}
     ${t.cue ? `<div class="small muted">${esc(t.cue)}</div>` : ''}
     ${sug ? `<div class="note ${sug.kind === 'up' ? 'up-note' : ''}">${esc(sug.msg)}${sug.w !== ui.w && sug.w > 0 ? ` <button class="chip" id="tgUse">Use ${fmtKg(sug.w)} kg</button>` : ''}</div>` : '<div class="small muted">First session: pick a weight you could lift for ' + (t.reps[1] + 2) + ' reps, then adjust.</div>'}
     ${goal ? `<div class="small">Goal ${fmtKg(goal.w)} kg × ${goal.r}: ${gs.now >= gs.goalE ? 'your estimate says you are ready.' : `about ${fmtKg(Math.max(0, Math.round((goal.w - gs.canNow)*2)/2))} kg to go at ${goal.r} reps (now ~${fmtKg(gs.canNow)} kg × ${goal.r}).`}</div>` : ''}
@@ -1955,8 +2056,8 @@ function renderLog(){
   $('logEyebrow').textContent = date === todayStr() ? 'Logging to today' : `Logging to ${fmtDate(date)}`;
   const names = allExerciseNames();
   $('exList').innerHTML = names.map(n => `<option value="${esc(n)}"></option>`).join('');
-  const routine = routineFor(date), done = logsOn(date);
-  $('upNext').innerHTML = routine.map(ex => `<button class="chip ${ex===ui.ex?'on':''}" data-ex="${esc(ex)}">${done.some(l=>l.ex===ex)?'✓ ':''}${esc(ex)}</button>`).join('');
+  const routine = routineFor(date), done = logsOn(date), bm = blockMapOn(date);
+  $('upNext').innerHTML = routine.map(ex => `<button class="chip ${ex===ui.ex?'on':''}" data-ex="${esc(ex)}">${done.some(l=>l.ex===ex)?'✓ ':''}${bm[ex] && bm[ex].partner ? `<b>${bm[ex].tag}</b> ` : ''}${esc(ex)}</button>`).join('');
   $('upNext').querySelectorAll('[data-ex]').forEach(b => b.onclick = () => setExercise(b.dataset.ex));
   $('upNext').hidden = !routine.length;
   renderLoggerControls(); renderSession(); renderRestChips();
@@ -2043,9 +2144,11 @@ $('logBtn').onclick = () => {
   logSet(ui.ex, ui.w, ui.r);
   const est = e1rm(ui.w, ui.r);
   const n = logsOn(ui.date).filter(l => l.ex === ui.ex).length;
+  const rp = restPlan(ui.ex), switching = rp.next && rp.next !== ui.ex;
   renderAll(); buzz(25);
-  toast(prevBest && est > prevBest + 0.01 ? `New best: est. 1RM ${fmtKg(Math.round(est))} kg` : `Set ${n} logged: ${fmtKg(ui.w)} kg × ${ui.r}`);
-  if (S.settings.autoRest) startRestFor(ui.ex);
+  toast((prevBest && est > prevBest + 0.01 ? `New best: est. 1RM ${fmtKg(Math.round(est))} kg` : `Set ${n} logged: ${fmtKg(ui.w)} kg × ${ui.r}`) + (switching ? ` · next: ${rp.next}` : ''));
+  if (switching) setExercise(rp.next);   // superset: the logger moves to the other exercise
+  if (S.settings.autoRest) startTimer(rp.sec, rp.label);
 };
 $('autoRest').onchange = e => { S.settings.autoRest = e.target.checked; save(); };
 /* rest box: shows and edits the rest for the selected exercise (saved to its targets) */
@@ -2060,7 +2163,8 @@ function renderRestChips(){
   const ex = ui.ex, r = restFor(ex), slot = ex ? slotForEx(ex) : null;
   $('restTitle').textContent = ex ? `Rest · ${ex}` : 'Rest timer';
   $('restBox').innerHTML = `<div class="between"><div><div class="restbig num">${fmtRest(r)}</div>
-      <div class="small muted">${ex ? (slot ? `Saved for ${esc(ex)} on ${esc(S.split[slot].name)} day` : `Saved for ${esc(ex)}`) : 'Default for exercises without a target'}</div></div>
+      <div class="small muted">${ex ? (slot ? `Saved for ${esc(ex)} on ${esc(S.split[slot].name)} day` : `Saved for ${esc(ex)}`) : 'Default for exercises without a target'}</div>
+      ${ex && partnerOn(ex) ? `<div class="small muted">Superset with ${esc(partnerOn(ex))}: the timer runs ${fmtRest(pairGapOn(ex, partnerOn(ex)))} between the two (worked out from both rests) and this full rest only once the other one is done.</div>` : ''}</div>
       <div class="row" style="flex-wrap:nowrap"><button class="icon" id="rsMinus" aria-label="15 seconds less">−15</button><button class="icon" id="rsPlus" aria-label="15 seconds more">+15</button></div></div>
     <div class="chips scroll">${REST_OPTS.map(x => `<button class="chip ${x===r?'on':''}" data-s="${x}">${fmtRest(x)}</button>`).join('')}</div>
     <div class="row" style="flex-wrap:nowrap"><input type="number" id="rsCustom" min="10" max="900" step="5" placeholder="Custom seconds" inputmode="numeric" style="flex:1"><button class="btn" id="rsSet">Set</button><button class="btn primary" id="restNow">Start now</button></div>`;
@@ -2071,14 +2175,21 @@ function renderRestChips(){
   $('restNow').onclick = () => startRestFor(ex);
   renderAlertHint();
 }
-function nextUpLabel(ex){
-  if (!ex) return 'Next set';
-  const t = targetOn(ex), n = logsOn(ui.date).filter(l => l.ex === ex).length;
-  if (n < t.sets) return `${ex}: set ${n + 1} of ${t.sets} · ${t.reps[0]}–${t.reps[1]} reps`;
-  const left = routineFor(ui.date).filter(x => !logsOn(ui.date).some(l => l.ex === x));
-  return left.length ? `Next exercise: ${left[0]}` : 'Workout done. Have your post-workout meal.';
+/* what comes after a set of `ex`: in a superset the other exercise after the short pair rest (while it has sets left),
+   otherwise the next set of `ex` after its own rest, otherwise the next block */
+function restPlan(ex){
+  if (!ex) return {sec: S.settings.rest || 90, label: 'Next set', next: null};
+  const date = ui.date, done = logsOn(date), n = x => done.filter(l => l.ex === x).length;
+  const setLine = (x, t) => `${x}: set ${n(x) + 1} of ${t.sets} · ${t.reps[0]}–${t.reps[1]} reps`;
+  const t = targetOn(ex), p = partnerOn(ex);
+  if (p) { const tp = targetOn(p); if (n(p) < tp.sets) return {sec: pairGapOn(ex, p), next: p, label: `Superset → ${setLine(p, tp)}`}; }
+  if (n(ex) < t.sets) return {sec: t.rest, next: ex, label: setLine(ex, t)};
+  const left = blocksOn(date).find(b => b.some(x => !n(x)));
+  return {sec: t.rest, next: null, label: !left ? 'Workout done. Have your post-workout meal.' :
+    left.length > 1 ? `Next: superset ${left[0]} + ${left[1]}` : `Next exercise: ${left[0]}`};
 }
-function startRestFor(ex){ startTimer(restFor(ex), nextUpLabel(ex)); }
+const nextUpLabel = ex => restPlan(ex).label;
+function startRestFor(ex){ const rp = restPlan(ex); startTimer(rp.sec, rp.label); }
 
 /* ---------- rest timer + alerts ----------
    In the browser a page's timers freeze when the screen locks, so alerts come from three places:
@@ -2439,9 +2550,11 @@ $('progEx').onchange = e => { progSel = e.target.value; renderHistory(); };
 /* ---------- PLAN: workout editor ---------- */
 function sessionEstimate(d){
   const list = S.split[d].ex; if (!list.length) return null;
-  let sets = 0, sec = 600;   // 10 min warm-up
-  list.forEach(ex => { const t = targetFor(ex, d); sets += t.sets; sec += t.sets * (t.rest + 40); });
-  return {sets, min: Math.round(sec/60/5)*5};
+  const tgt = ex => targetFor(ex, d), blocks = blocksFor(list, S.split[d].ss);
+  const sets = list.reduce((s, ex) => s + tgt(ex).sets, 0);
+  const sec = 600 + blocksSeconds(blocks, tgt);                       // 10 min warm-up
+  const straight = 600 + blocksSeconds(list.map(x => [x]), tgt);      // same day without supersets
+  return {sets, min: Math.round(sec/60/5)*5, saved: Math.round((straight - sec)/60/5)*5, pairs: blocks.filter(b => b.length > 1).length};
 }
 function renderSplitEditor(){
   const d = ui.planDay = ui.planDay || weekdayOf(todayStr()), day = S.split[d];
@@ -2450,18 +2563,26 @@ function renderSplitEditor(){
   const est = sessionEstimate(d);
   $('splitList').innerHTML = `<div class="row" style="flex-wrap:nowrap"><label class="field" style="flex:1"><span class="label">${DAY_FULL[d]} name</span><input type="text" id="pdName" value="${esc(day.name)}"></label>
       ${day.ex.length ? `<button class="btn small" id="pdRest" style="align-self:flex-end">Make rest day</button>` : ''}</div>
-    ${est ? `<div class="small ${est.min > (S.profile.workoutMinutes || 75) + 5 ? 'danger' : 'muted'}">${est.sets} working sets · about ${est.min} min with these rests${est.min > (S.profile.workoutMinutes || 75) + 5 ? ` (longer than your ${S.profile.workoutMinutes || 75} min session; meals are timed for that)` : ''}</div>` : '<div class="small muted">Rest day. Add an exercise below to train on this day.</div>'}
-    <div>${day.ex.map((ex, i) => { const t = targetFor(ex, d); return `<div class="erow">
-      <span class="idx">${i+1}</span>
+    ${est ? `<div class="small ${est.min > (S.profile.workoutMinutes || 75) + 5 ? 'danger' : 'muted'}">${est.sets} working sets · about ${est.min} min with these rests${est.saved > 0 ? ` (${est.pairs} superset${est.pairs > 1 ? 's' : ''} save ~${est.saved} min)` : ''}${est.min > (S.profile.workoutMinutes || 75) + 5 ? ` · longer than your ${S.profile.workoutMinutes || 75} min session; meals are timed for that` : ''}</div>
+      <div class="small muted">⛓ pairs an exercise with the next one as a superset (tap again to unpair). Pair exercises that don't share a working muscle.</div>` : '<div class="small muted">Rest day. Add an exercise below to train on this day.</div>'}
+    <div>${(() => { const bm = blockMap(day.ex, day.ss), row = (ex, i) => { const t = targetFor(ex, d), linked = i < day.ex.length - 1 && bm[ex].partner === day.ex[i+1]; return `<div class="erow">
+      <span class="idx">${bm[ex].tag}</span>
       <button class="info" data-pe="${esc(ex)}"><div class="nm">${esc(ex)}${t.focus === 'strength' ? ' <span class="pill heavy">Heavy</span>' : ''}</div><div class="tg">${esc(fmtTarget(t))}</div></button>
-      <div class="act"><button class="icon" data-pmv="${i}|-1" aria-label="Move up" ${i===0?'disabled':''}>↑</button><button class="icon" data-pmv="${i}|1" aria-label="Move down" ${i===day.ex.length-1?'disabled':''}>↓</button><button class="icon" data-pdel="${i}" aria-label="Remove ${esc(ex)}">✕</button></div></div>`; }).join('')}</div>
+      <div class="act">${i < day.ex.length - 1 && !(bm[ex].partner && !linked) ? `<button class="icon ${linked ? 'on' : ''}" data-plink="${i}" aria-label="${linked ? 'Unpair' : 'Superset'} ${esc(ex)} ${linked ? 'from' : 'with'} ${esc(day.ex[i+1])}" aria-pressed="${linked}">⛓</button>` : ''}<button class="icon" data-pmv="${i}|-1" aria-label="Move up" ${i===0?'disabled':''}>↑</button><button class="icon" data-pmv="${i}|1" aria-label="Move down" ${i===day.ex.length-1?'disabled':''}>↓</button><button class="icon" data-pdel="${i}" aria-label="Remove ${esc(ex)}">✕</button></div></div>`; };
+      let i = 0; return blocksFor(day.ex, day.ss).map(b => { const h = b.length === 1 ? row(b[0], i) :
+        `<div class="ssgroup"><div class="sshead">Superset · ${fmtRest(pairGap(targetFor(b[0], d).rest, targetFor(b[1], d).rest))} between</div>${row(b[0], i)}${row(b[1], i + 1)}</div>`; i += b.length; return h; }).join(''); })()}</div>
     <div class="row" style="flex-wrap:nowrap"><input type="text" id="pdAdd" list="exList" placeholder="Add an exercise" autocomplete="off" style="flex:1"><button class="btn" id="pdAddGo">Add</button></div>`;
   const snap = () => { const a = JSON.stringify(S.split); return () => { S.split = JSON.parse(a); save(); renderAll(); }; };
   $('pdName').onchange = e => { day.name = e.target.value.trim() || 'Day'; save(); renderAll(); toast(`${DAY_FULL[d]} renamed`); };
   if ($('pdRest')) $('pdRest').onclick = () => { const u = snap(); day.ex = []; if (!/rest/i.test(day.name)) day.name = 'Rest'; save(); renderAll(); toast(`${DAY_FULL[d]} is now a rest day`, u); };
   $('splitList').querySelectorAll('[data-pe]').forEach(b => b.onclick = () => openTargetEditor(b.dataset.pe, d));
-  $('splitList').querySelectorAll('[data-pmv]').forEach(b => b.onclick = () => { const [i, k] = b.dataset.pmv.split('|').map(Number), j = i + k; if (j < 0 || j >= day.ex.length) return; [day.ex[i], day.ex[j]] = [day.ex[j], day.ex[i]]; save(); renderSplitEditor(); });
-  $('splitList').querySelectorAll('[data-pdel]').forEach(b => b.onclick = () => { const u = snap(), i = +b.dataset.pdel, nm = day.ex[i]; day.ex.splice(i, 1); save(); renderAll(); toast(`Removed ${nm} from ${DAY_FULL[d]}`, u); });
+  $('splitList').querySelectorAll('[data-pmv]').forEach(b => b.onclick = () => { const [i, k] = b.dataset.pmv.split('|').map(Number), j = i + k; if (j < 0 || j >= day.ex.length) return; [day.ex[i], day.ex[j]] = [day.ex[j], day.ex[i]]; day.ss = prunePairs(day.ex, day.ss); save(); renderSplitEditor(); });
+  $('splitList').querySelectorAll('[data-pdel]').forEach(b => b.onclick = () => { const u = snap(), i = +b.dataset.pdel, nm = day.ex[i]; day.ex.splice(i, 1); day.ss = prunePairs(day.ex, day.ss); save(); renderAll(); toast(`Removed ${nm} from ${DAY_FULL[d]}`, u); });
+  $('splitList').querySelectorAll('[data-plink]').forEach(b => b.onclick = () => {
+    const u = snap(), i = +b.dataset.plink, a = day.ex[i], c = day.ex[i+1], was = (day.ss || []).some(p => samePair(p, a, c));
+    day.ss = (day.ss || []).filter(p => !p.includes(a) && !p.includes(c));
+    if (!was) day.ss.push([a, c]);
+    save(); renderAll(); toast(was ? `${a} and ${c} are straight sets again` : `Superset: ${a} + ${c}, ${fmtRest(pairGap(targetFor(a, d).rest, targetFor(c, d).rest))} between`, u); });
   const add = () => { const n = canonical($('pdAdd').value); if (!n) { toast('Type an exercise name'); return; }
     if (day.ex.includes(n)) { toast(`${n} is already on ${DAY_FULL[d]}`); return; }
     const wasRest = !day.ex.length; day.ex.push(n); if (wasRest && /rest/i.test(day.name)) day.name = 'Training';
@@ -2726,7 +2847,7 @@ function localCommand(raw){
 }
 function appContext(){
   const d = ui.date, wd = weekdayOf(d);
-  return { today: todayStr(), selectedDate: d, weekday: wd, split: Object.fromEntries(DAYS.map(x => [x, {name:S.split[x].name, exercises:S.split[x].ex.map(e => `${e} (${fmtTarget(targetFor(e, x))})`)}])),
+  return { today: todayStr(), selectedDate: d, weekday: wd, split: Object.fromEntries(DAYS.map(x => [x, {name:S.split[x].name, exercises:S.split[x].ex.map(e => `${e} (${fmtTarget(targetFor(e, x))})`), supersets: blocksFor(S.split[x].ex, S.split[x].ss).filter(b => b.length > 1).map(b => `${b[0]} + ${b[1]} (${pairGap(targetFor(b[0], x).rest, targetFor(b[1], x).rest)} s between)`)}])),
     routineForSelectedDate: routineFor(d), setsOnSelectedDate: logsOn(d).map(l => ({ex:l.ex,w:l.w,r:l.r})),
     recentSets: [...S.logs].sort((a,b)=>b.t-a.t).slice(0,60).map(l => ({date:l.date, ex:l.ex, w:l.w, r:l.r})),
     bodyWeight: S.body.slice(-14), target: S.target, waterSittingsToday: waterCount(d), sittingMl: S.settings.sitting, waterGoalL: waterGoalL(d),
@@ -2734,7 +2855,7 @@ function appContext(){
     fuel: PLAN ? (() => { const sc = scheduleFor(d), tg = targetsFor(d), t = eatenTotals(d, sc); return { targets: tg, eaten: {kcal: t.k, protein: t.p}, wake: wakeOf(d), workout: sc.training ? workoutOf(d) : null, badminton: S.badminton[d] || null,
       meals: sc.items.filter(i => PLAN.meals[i.key]).map(i => ({key: i.key, time: fmtMin(i.t), food: optionFor(i.key).what, kcal: optionFor(i.key).kcal, protein: optionFor(i.key).p, done: !!(S.mealsDone[d]||{})[i.key]})) }; })() : null };
 }
-const SYS = `You are PulseAI, the coach inside the IronPulse gym logging app. The user does an Upper/Lower/Rest/Push/Pull/Legs/Rest split, trains in the morning and is lean-bulking (non-veg Indian home food, a quick post-workout shake or smoothie after the gym, creatine 5 g, yeast protein; Plan v2: 84 sets a week, each exercise has sets × reps @ RIR, rest and tempo). appState.fuel has today's calorie/protein targets, the meal schedule and what's been eaten.
+const SYS = `You are PulseAI, the coach inside the IronPulse gym logging app. The user does an Upper/Lower/Rest/Push/Pull/Legs/Rest split, trains in the morning and is lean-bulking (non-veg Indian home food, a quick post-workout shake or smoothie after the gym, creatine 5 g, yeast protein; Plan v3: 84 sets a week, each exercise has sets × reps @ RIR, rest and tempo; some exercises are paired as supersets: alternate sets of the two with a short rest between, sized so each muscle still gets its full rest). appState.fuel has today's calorie/protein targets, the meal schedule and what's been eaten.
 You can change the app by returning actions. Reply ONLY with JSON: {"reply": string, "actions": [ ... ]}.
 Action shapes (dates are YYYY-MM-DD; "day" may be a weekday name or "today"):
 {"type":"log_set","exercise":str,"weight":num,"reps":int,"sets":int?,"date":str?}
@@ -2862,7 +2983,7 @@ if (NATIVE) nativeSetup().then(() => { scheduleReminders(); if (ui.tab === 'plan
 setTimeout(webReminderTick, 1500);
 if (MIGRATION) setTimeout(() => {
   const m = MIGRATION; MIGRATION = null;
-  toast(`Plan updated: ${m.notes.join('; ')}. Your own rest times were kept.`, () => { const b = JSON.parse(m.before); S.split = b.split; S.exCfg = b.exCfg; DAYS.forEach(d => { S.split[d].cfg = S.split[d].cfg || {}; }); save(); renderAll(); toast('Old plan restored. Plan → Reset to preset brings the new one back.'); });
+  toast(`Plan updated: ${m.notes.join('; ')}. Your own rest times were kept.`, () => { const b = JSON.parse(m.before); S.split = b.split; S.exCfg = b.exCfg; DAYS.forEach(d => { S.split[d].cfg = S.split[d].cfg || {}; S.split[d].ss = S.split[d].ss || []; }); save(); renderAll(); toast('Old plan restored. Plan → Reset to preset brings the new one back.'); });
 }, 600);
 if (!ui.ex){ const r = routineFor(ui.date); if (r.length) { ui.ex = r[0]; } }
 if (ui.ex) { $('exInput').value = ui.ex; const lw = lastWeight(ui.ex); ui.w = lw != null ? lw : (isTwoPlate(ui.ex) ? S.settings.bar : 10); }

@@ -16,22 +16,38 @@ Data stays on the phone (export a backup from Plan → Backup).
 3. **Fuel**: the **food log** (anything you eat, with kcal, protein, carbs, fat; quick-add from your plan meals, saved foods and ~55 Indian staples), daily targets, meal options, timing, smoothie, supplements, groceries. Every section has an **Edit** button.
 4. **Body**: weigh in every morning. The weekly check-in tells you to add 200 kcal, remove 150 or change nothing.
 5. **History**: **lift goals** (e.g. Bench Press 80 kg × 5). Each shows what you can do now at the goal's reps (estimated from your best recent set), a projected date from your last 10 weeks of progress, and is marked hit the moment you log it. The goal also appears as a dashed line on the progress chart and in the Log screen.
-6. **Plan**: the **workout editor** (pick a day, reorder, add or remove exercises, turn a rest day into a training day, set targets per exercise), the exercise library, **alerts & reminders** (meals, including post-workout, at their planned times, morning weigh-in, bedtime; on time or 10/15 min early; meals you've ticked are skipped), diet notes, backup.
+6. **Plan**: the **workout editor** (pick a day, reorder, add or remove exercises, pair exercises as supersets, turn a rest day into a training day, set targets per exercise), the exercise library, **alerts & reminders** (meals, including post-workout, at their planned times, morning weigh-in, bedtime; on time or 10/15 min early; meals you've ticked are skipped), diet notes, backup.
 7. **Coach**: type things like `gym at 7:30`, `woke up at 6`, `badminton at 6 pm`, `ate smoothie`, `bench 80 x 8`, `rest 2 min`.
 
-## Training targets (Plan v2, Nov 2026)
+## Training targets (Plan v3, Nov 2026)
 
-Built so the next exercise isn't wrecked by the last one. Full write-up: https://claude.ai/artifact/TF9284dee5CqRyv5vuKVqi
+Built so the next exercise isn't wrecked by the last one. Plan v3 keeps the v2 structure, goes back to the 25 exercises of the original list and pairs exercises into supersets to save time. Full v2 write-up: https://claude.ai/artifact/TF9284dee5CqRyv5vuKVqi
 
-| Day | Session (in order) |
-| --- | --- |
-| Mon | Upper: Bench Press 3×4–6, Pull-up 3×6–10, Overhead Press 2×5–8, Chest-Supported T-Bar Row 2, Lateral Raise 3, Preacher Curl 2, Overhead Cable Triceps Extension 2 |
-| Tue | Lower: Squat 3×4–6, Romanian Deadlift 3, Leg Extension 3, Seated Leg Curl 3, Standing Calf Raise 3, Cable Crunch 2 |
-| Thu | Push: Incline Dumbbell Press 3, Cable Lateral Raise 4, Weighted Dips 2, Machine Pec Deck 2, Overhead Cable Triceps Extension 3 |
-| Fri | Pull: Pull-up 3, Chest-Supported T-Bar Row 3, Reverse Pec Deck 3, Machine Lat Pullover 2, Bayesian Cable Curl 3, Dumbbell Shrugs 2, Wrist Curls & Extensions 2 |
-| Sat | Legs: Deadlift 3×3–5, Walking Lunge 2, Leg Extension 2, Seated Leg Curl 2, Nautilus Glute Drive 2, Standing Calf Raise 3, Cable Crunch 2, Neck Curls & Extensions 2 |
+`[A + B]` is a superset: alternate one set of A and one set of B.
 
-- **Volume:** 84 working sets a week (14–18 a session, about 45–60 min), 8–13 weekly sets per main muscle, at most ~8 direct sets per muscle per session. Gains flatten past ~11 sets per muscle per session (Remmert 2025).
+| Day | Session (in order) | Time |
+| --- | --- | --- |
+| Mon | Upper: [Bench Press 3×4–6 + Pull-up 3×6–10], [Overhead Press 2×5–8 + Chest-Supported T-Bar Row 2], Lateral Raise 3, [Preacher Curl 2 + Overhead Cable Triceps Extension 2] | ~40 min (was ~60) |
+| Tue | Lower: Squat 3×4–6, Romanian Deadlift 3, [Leg Extension 3 + Seated Leg Curl 3], [Standing Calf Raise 3 + Cable Crunch 2] | ~50 min (was ~60) |
+| Thu | Push: [Incline Bench Press 3 + Lateral Raise 4], Weighted Dips 2, [Machine Pec Deck 2 + Overhead Cable Triceps Extension 3] | ~35 min (was ~45) |
+| Fri | Pull: Pull-up 3, Chest-Supported T-Bar Row 3, [Reverse Pec Deck 3 + Bayesian Cable Curl 3], [Machine Lat Pullover 2 + Dumbbell Shrugs 2], Wrist Curls & Extensions 2 | ~45 min (was ~55) |
+| Sat | Legs: Deadlift 3×3–5, Walking Lunge 2, [Leg Extension 2 + Seated Leg Curl 2], [Nautilus Glute Drive 2 + Neck Curls & Extensions 2], [Standing Calf Raise 3 + Cable Crunch 2] | ~45 min (was ~55) |
+
+Times include a 10-minute warm-up and ~40 s per set.
+
+### Supersets
+
+- **Pairs share no working muscle** (chest/back, quads/hamstrings, biceps/triceps, calves/abs…), so one rests while the other works. Paired sets like these keep the same reps and load in much less time (Robbins 2010; Weakley 2017).
+- **Rest between the two** is worked out from both exercises' rests so each muscle still gets its full rest: (longer rest − 40 s) ÷ 2, at least 30 s. Example: Bench (3:30) + Pull-up (2:30) → 1:25 between, so the bench still gets ~3:30 between its own sets.
+- **Straight sets** for Squat, Deadlift, Romanian Deadlift, Walking Lunge, Weighted Dips and Friday's Pull-ups and Rows: they're either too tiring to pair or have no muscle that's free to pair with.
+- **In the app:** the Today sheet groups each pair (1a/1b). When you log a set, the logger switches to the other exercise and the rest timer runs the short between-pair rest; once one of the two is done, the other goes back to its normal rest. In Plan → Workouts, ⛓ pairs an exercise with the next one (tap again to unpair). Swapping an exercise keeps it in its superset.
+- **At the gym:** pick two stations close together, or use a cable and a dumbbell next to it. If the second machine is taken, do straight sets for that pair.
+
+### Changes from the original exercise list
+
+All 25 exercises from the original list are in the plan. Plan v1 → v2 had replaced Incline Bench Press with Incline Dumbbell Press and Thursday's Overhead Press with Cable Lateral Raise; v3 brings back Incline Bench Press and the dumbbell Lateral Raise, so no exercise outside the list remains. What v2 changed and v3 keeps is how often some lifts appear: Bench Press, Overhead Press, Squat, Romanian Deadlift, Weighted Dips, Preacher Curl, Reverse Pec Deck, Wrist Curls and Glute Drive went from twice a week to once (to keep each session at 14–18 sets), Overhead Cable Triceps Extension and Lateral Raise went from once to twice, and Deadlift moved from Friday to Saturday.
+
+- **Volume:** 84 working sets a week (14–18 a session, about 35–50 min with supersets), 8–13 weekly sets per main muscle, at most ~8 direct sets per muscle per session. Gains flatten past ~11 sets per muscle per session (Remmert 2025).
 - **Order:** heaviest lift for each muscle first, then alternate muscles. Pull-ups lead Friday and Deadlift moved to Saturday, so pull-ups no longer follow deadlifts, rows and pullovers.
 - **Heavy, low-rep work** only on Bench (Mon), Squat (Tue), Deadlift (Sat) and Overhead Press (Mon). Everything else is hypertrophy work at moderate to high reps.
 - **Tempo** (seconds: lower – pause – lift – squeeze): 2–8 s per rep grows muscle about equally (Androulakis Korakakis 2023; Enes 2025). The default is a 2–3 s lowering and a ~1 s lift, with an extra second where the muscle is stretched (3-0-1-0) or a 1 s squeeze where it's hardest at the top (2-0-1-1).
